@@ -1,7 +1,8 @@
 root -l ROOTfle_path/rootfilename.root
 T->MakeSelector("name")
 It will give you name.h and name.C
-name.h will have all the variables under T
+name.h will have all the variables under T and name.C is the script that you wish to run.
+To run it, load the rootfile as above and do T->Process("name.C") 
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jan  9 12:50:50 2019 by ROOT version 6.10/02
