@@ -1,0 +1,101 @@
+void HGC_EFF_PD2_6p8(){
+  gStyle->SetOptStat(1111);
+  TChain *tree = new TChain("T");
+  // tree->Add("coin_replay_production_392[3-5]*");
+  tree->Add("coin_replay_production_3923_-1.root");
+  tree->Add("coin_replay_production_3924_-1.root");
+  tree->Add("coin_replay_production_3925_-1.root");
+    
+  //  TFile *f = new TFile("coin_replay_production_3924_-1.root");//3923,3924,3925
+  //  if (!f) {
+  //  f = new TFile("coin_replay_production_3929_50000.root"); //3584 -2.53w
+  //}
+  TH1F *hTotal = new TH1F ("hTotal","",20,-10,20);
+  TH1F *hPass = new TH1F("hpass","",20,-10,20);
+  TH2F *h = new TH2F("h","Efficiency vs Delta  +6.8 GeV/c ",20,-10,20,100,0,1);
+  TH1F *h1 = new TH1F("h1","Missing Mass ",100,0.5,4);
+
+  
+  //  TH2F *h1[k] = new TH2F("h1[k]","Efficiency vs Aerogel Cut 3435 P = +3.37",20,0,3.5,100,0,1);
+
+
+  Double_t pgtrbeta,pgtrdp,paeronpesum,pcaleprtracknorm,pcaletottracknorm,pngcernpesum,phgcernpesum,pdcxfp,pdcxpfp,pcaletracknorm,pcaletotnorm,ctime,missmass,missmom,misseng;
+ 
+  // TTree *tree = (TTree*) f->Get("T");
+ 
+  tree->SetBranchAddress("CTime.ePiCoinTime_ROC2" ,&ctime);
+  tree->SetBranchAddress("P.gtr.beta" ,&pgtrbeta);
+  tree->SetBranchAddress("P.gtr.dp" ,&pgtrdp);
+  tree->SetBranchAddress("P.cal.eprtracknorm" ,&pcaleprtracknorm);
+  tree->SetBranchAddress("P.cal.etottracknorm" ,&pcaletottracknorm);
+  tree->SetBranchAddress("P.ngcer.npeSum" ,&pngcernpesum);
+  tree->SetBranchAddress("P.hgcer.npeSum" ,&phgcernpesum);
+  tree->SetBranchAddress("P.aero.npeSum" ,&paeronpesum);
+  tree->SetBranchAddress("P.dc.x_fp" ,&pdcxfp);
+  tree->SetBranchAddress("P.dc.xp_fp" ,&pdcxpfp);
+  tree->SetBranchAddress("P.cal.etracknorm" ,&pcaletracknorm);
+  tree->SetBranchAddress("P.cal.etotnorm" ,&pcaletotnorm);
+  tree->SetBranchAddress("P.kin.secondary.Mrecoil" ,&missmass);
+  tree->SetBranchAddress("P.kin.secondary.pmiss" ,&missmom);
+  tree->SetBranchAddress("P.kin.secondary.emiss" ,&misseng);//MM^2 = misseng^2-missmom^2 =W2
+  
+  
+
+  Long64_t nentries =tree->GetEntries();
+  for (Long64_t i=0; i<nentries; i++)
+    
+    {
+      tree->GetEntry(i);
+      // if (pgtrbeta > 0.8 && pgtrbeta<1.3 && pgtrdp < 20 && pgtrdp > -10 && paeronpesum>5 &&ctime-9.7>-1 && ctime-9.7<1 && sqrt(misseng*misseng-missmom*missmom)> 1.9 &&   sqrt(misseng*misseng-missmom*missmom) <2.1 )
+    
+      // 	{ h1->Fill(sqrt(misseng*misseng-missmom*missmom));
+      //  	    } 
+         if (pgtrbeta > 0.8 && pgtrbeta<1.3 && pgtrdp < 20 && pgtrdp > -10 && paeronpesum>5 &&ctime-9.7>-1 && ctime-9.7<1  && sqrt(misseng*misseng-missmom*missmom)> 1.85 && sqrt(misseng*misseng-missmom*missmom) <2.1)      
+
+      	{
+      	  hTotal->Fill(pgtrdp);  //  hTotal->Fill(pdcxfp);
+      	  if (phgcernpesum>1)
+      	    {
+      	      hPass->Fill(pgtrdp); // hPass->Fill(pdcxfp);
+      	    }
+      	}
+      
+      
+    }
+  
+ 
+  TEfficiency *pEff = new TEfficiency();
+  pEff = new TEfficiency(*hPass, *hTotal);
+  cout << "======================================================================" <<endl;
+   cout<<"ENTRIES ="<<nentries<<endl;
+   cout<<"hTotal nEntries ="<<hTotal->GetEntries()<<endl;
+  cout<<"hPass nEntries ="<<hPass->GetEntries()<<endl;
+  Double_t Should = hTotal->GetEntries();
+  Double_t Did = hPass->GetEntries();
+  if(Did == 0)
+    cout << "SHMS hgcer efficiency: "<< 0 <<" %"<<endl;
+  else
+    cout << "SHMS hgcer efficiency: "<< Did*100/Should <<" %"<<endl; 
+  cout<<"======================================================================" <<endl;
+      
+  
+  TCanvas *c1 = new TCanvas("c1", "", 500,500);
+  // c1->Divide(2,1);
+  c1->cd(1);
+  c1->SetGrid();
+  h->GetXaxis()->CenterTitle();
+  h->GetYaxis()->CenterTitle();
+  h->GetXaxis()->SetTitle("P.gtr.dp");
+  h->GetYaxis()->SetTitle(" Efficiency");
+  h->Draw("");
+  pEff->Draw("same");
+  // c1->cd(2);
+  //  h1->SetLineWidth(2);
+  //h1->Draw();
+ 
+}
+
+// T->Draw("sqrt(P.kin.secondary.emiss*P.kin.secondary.emiss-P.kin.secondary.pmiss*P.kin.secondary.pmiss)>>h(100,1.5,5)","CTime.ePiCoinTime_ROC2-9.7>-1&&CTime.ePiCoinTime_ROC2-9.7<1&&P.aero.npeSum>4&&P.gtr.beta>0.8&&P.gtr.beta<1.2&&P.gtr.dp>-10&&P.gtr.dp<20&&sqrt(P.kin.secondary.emiss*P.kin.secondary.emiss-P.kin.secondary.pmiss*P.kin.secondary.pmiss)>1.86&&sqrt(P.kin.secondary.emiss*P.kin.secondary.emiss-P.kin.secondary.pmiss*P.kin.secondary.pmiss)<2.08&&P.hgcer.npeSum>1")
+// (Long64_t) 711
+// root [16] 711/849.
+// (double) 0.837456
