@@ -1,0 +1,15 @@
+ Int_t bin_max_Q2c = h_Q2c->GetMaximumBin();
+  Double_t max_value_Q2c = h_Q2c->GetBinCenter(bin_max_Q2c);
+  cout<<"MAX BIN in Clean Q2 = "<<max_value_Q2c<<endl;
+  Double_t bin_error_Q2d = h_Q2d->GetBinError(bin_max_Q2c);
+  cout<< "Error in Q2 Data = "<<bin_error_Q2d<<endl;
+  Double_t bin_error_Q2a = h_Q2a->GetBinError(bin_max_Q2c);
+  cout<< "Error in Q2 acc = "<<bin_error_Q2a<<endl;
+  Double_t bin_error_Q2c = h_Q2c->GetBinError(bin_max_Q2c);
+  cout<< "Error in Q2 clean = "<<bin_error_Q2c<<endl;
+
+  Double_t binContentdata = h_Q2d->GetBinContent(bin_max_Q2c);
+  Double_t binContentacc = h_Q2a->GetBinContent(bin_max_Q2c);
+  cout <<" Data Entries = "<<binContentdata<<endl;
+  cout <<" Acc Entries = "<<binContentacc<<endl;
+  cout <<"MAX BIN = "<<bin_max_Q2c<<endl;
