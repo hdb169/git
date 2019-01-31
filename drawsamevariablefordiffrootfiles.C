@@ -1,3 +1,5 @@
+
+The Line color is wrong, fix it 
 #include "TH1F.h"
 #include <TH2.h>
 #include <TCanvas.h>
