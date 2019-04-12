@@ -1,0 +1,592 @@
+{
+    const int m=1;
+    const int n=1;
+    Int_t runLH2[m] = {14090};
+    Int_t rund[n] = {14091};
+
+    gStyle->SetOptFit(1);
+    gStyle->SetOptStat(0);
+    gStyle->SetTitleFontSize(0.06);
+    gStyle->SetNdivisions(505);
+    gStyle->SetCanvasColor(10);
+    gStyle->SetPadTopMargin(0.11);
+    gStyle->SetPadLeftMargin(0.14);
+    gStyle->SetPadRightMargin(0.08);
+    gStyle->SetPadBottomMargin(.14);
+    gStyle->SetTitleYOffset(1.05);
+    gStyle->SetTitleXOffset(0.85);
+    gStyle->SetTitleYSize(0.05);
+    gStyle->SetTitleXSize(0.05);
+    gStyle->SetLabelFont(62,"X");
+    gStyle->SetLabelFont(62,"Y");
+    gStyle->SetTitleFont(62,"X");
+    gStyle->SetTitleFont(62,"Y");
+    gStyle->SetLabelSize(0.055,"X");
+    gStyle->SetLabelSize(0.055,"Y");
+    gStyle->SetPaperSize(18,22);
+
+    const int nBins = 100;
+    const double dpmin = -0.05;
+    const double dpmax = 0.05;
+    const double th_min = -0.09;
+    const double th_max = 0.09;
+    const double ph_min = -0.041;
+    const double ph_max = 0.045;
+    const double y_min = -0.08;
+    const double y_max = 0.08;  
+    const double wmin = 0.84;
+    const double wmax = 1.08;
+
+    //cuts;
+    const double dp_cut = 0.035;
+    const double th_cutl = -0.08;
+    const double th_cutu = 0.08;
+    const double ph_cutl = -0.04;
+    const double ph_cutu = 0.04;
+    const double y_cut = 0.06;
+    const double cercut = 300.;
+    const double epcut = 0.6;
+    const double prl1cut = 0.1;
+    const double w_min = 0.85;
+    const double w_max = 1.07;
+
+    Double_t yp_off =  -0.0009;
+    Double_t y_off = -0.0009;
+    Double_t Z = 1.073;
+    Double_t yv_off = 0.00129 ;
+    Double_t w_off = 0.004;
+    Double_t xp_off = 0.0025;
+
+
+    TString kin = "Kinematics: K34";
+    TString kinn = "K-34";
+
+    Double_t Ebeam = 6427.0000;
+    Double_t angle = 24.2500;
+    Double_t momentum = 3962.0000;
+    Double_t normfac = 0.208130E+08;
+
+    Double_t E0 = Ebeam/1000.;
+    Double_t p0 = momentum/1000.;
+    Double_t simc_norm = normfac;
+
+    Double_t theta = angle;
+    const Double_t mup = 2.7928;  // magnetic momentum of proton 
+    const Double_t alpha = 1/137.036;
+    const Double_t hbarc2 = 0.389e3; // (hbar*c)^2 in GeV^2*ub
+    const Double_t mp = 0.938272;
+
+    Double_t th = angle*TMath::DegToRad();
+    Double_t S2 = pow(sin(th/2.),2);
+    Double_t C2 = pow(cos(th/2.),2);
+    Double_t t2 = pow(tan(th/2.),2);
+    Double_t ef = E0/(1.+2*E0/mp*S2);
+    Double_t Q2 = 2*E0*ef*(1-TMath::Cos(th));
+    Double_t tau = Q2/(4.*mp*mp);
+    Double_t epsilon = 1./(1+2*(1+tau)*t2);
+    Double_t tau2=tau*tau;
+    Double_t tau3=tau*tau*tau;
+    Double_t tau4=tau*tau*tau*tau;
+    Double_t tau5=tau*tau*tau*tau*tau;
+
+    Double_t mott = pow(alpha,2)/(4.*E0*E0)*C2/S2/S2*hbarc2;
+    Double_t recoil = ef/E0;
+    mott *= recoil;
+    Double_t Ge = (1. -1.651*tau +1.287*tau2 -0.185*tau3)/(1. + 9.531*tau + 0.591*tau2 + 4.994*tau5);
+    Double_t Gm = mup*(1. -2.151*tau +4.261*tau2 + 0.159*tau3)/(1. + 8.647*tau + 0.001*tau2 + 5.245*tau3 + 82.817*tau4 + 14.191*tau5);
+    Double_t sig_mod = mott*(Ge*Ge + tau/epsilon*Gm*Gm)/(1+tau);
+
+    ifstream inputfile,inputfiled;
+    inputfile.open(Form("/w/halla-scifs17exp/gmp12/disk1/gautam/aonl_thir/GMP_CrossSection/newOpt_Ana/Elastic_Fall16/norm/files/K34.dat"));
+    inputfiled.open(Form("/w/halla-scifs17exp/gmp12/disk1/gautam/aonl_thir/GMP_CrossSection/newOpt_Ana/Elastic_Fall16/norm/files/dummy_K34.dat"));
+
+    Double_t nmc = 500000;
+    Double_t simc_nf = simc_norm/(1000.*nmc);
+
+    string track = "L.vdc.u1.nclust == 1. && L.vdc.u2.nclust == 1.&&L.vdc.v1.nclust == 1. && L.vdc.v2.nclust == 1.&& L.tr.beta[0]>0.2 && (DL.evtypebits&1<<1)==1<<1";
+    string pid = Form("L.cer.asum_c>%f && (L.prl1.e+L.prl2.e)/L.tr.p[0]/1000.>%f && L.prl1.e/L.tr.p[0]/1000.> %f",cercut,epcut,prl1cut);
+    string acc = Form("abs(L.tr.tg_dp)<%f && abs(L.tr.tg_y)<%f && L.tr.tg_ph<%f && L.tr.tg_ph>%f&& L.tr.tg_th<%f && L.tr.tg_th>%f && (sqrt(EKLxe.W2)+%f)<%f && (sqrt(EKLxe.W2)+%f)>%f ",
+            dp_cut,y_cut,ph_cutu,ph_cutl,th_cutu,th_cutl,w_off,w_max,w_off,w_min);
+    string accxp = Form("abs(L.tr.tg_dp)<%f && abs(L.tr.tg_y)<%f && L.tr.tg_ph<%f && L.tr.tg_ph>%f && (sqrt(EKLxe.W2)+%f)<%f && (sqrt(EKLxe.W2)+%f)>%f ",
+            dp_cut,y_cut,ph_cutu,ph_cutl,w_off,w_max,w_off,w_min);
+    string accyp = Form("abs(L.tr.tg_dp)<%f && abs(L.tr.tg_y)<%f && L.tr.tg_th<%f && L.tr.tg_th>%f && (sqrt(EKLxe.W2)+%f)<%f && (sqrt(EKLxe.W2)+%f)>%f ",
+            dp_cut,y_cut,th_cutu,th_cutl,w_off,w_max,w_off,w_min);
+
+    TString    accd = Form("%s && %s && %s ",track.c_str(),pid.c_str(),acc.c_str());
+    TString    accdxp = Form("%s && %s && %s",track.c_str(),pid.c_str(),accxp.c_str());
+    TString    accdyp = Form("%s && %s && %s ",track.c_str(),pid.c_str(),accyp.c_str());
+
+    string accm1 = Form("(abs(ssdelta)<%f  && abs(ssytar)<%f && ssyptar<%f && ssyptar>%f && (ssxptar +%f)<%f && (ssxptar +%f)>%f && W<%f && W>%f)",
+            dp_cut*100.,y_cut*100.,ph_cutu,ph_cutl,xp_off,th_cutu,xp_off,th_cutl,w_max,w_min);
+    string accmxp1 = Form("(abs(ssdelta)<%f  && abs(ssytar)<%f && ssyptar<%f && ssyptar>%f && W<%f && W>%f)",
+            dp_cut*100.,y_cut*100.,ph_cutu,ph_cutl,w_max,w_min);
+    string accmyp1 = Form("(abs(ssdelta)<%f  && abs(ssytar)<%f && (ssxptar +%f)<%f && (ssxptar +%f)>%f && W<%f && W>%f)",
+            dp_cut*100.,y_cut*100.,xp_off,th_cutu,xp_off,th_cutl,w_max,w_min);
+
+    TString   accm = Form("(%s)*Weight",accm1.c_str());
+    TString  accmxp = Form("(%s)*Weight",accmxp1.c_str());
+    TString  accmyp = Form("(%s)*Weight",accmyp1.c_str());
+    TString  accmnw = Form("%s",accm1.c_str());
+    TString  accmnwxp = Form("%s",accmxp1.c_str());
+    TString  accmnwyp = Form("%s",accmyp1.c_str());
+
+
+    //Data
+    TChain *t = new TChain("T");	 
+
+   // const char* ROOTfilePath = gSystem->ExpandPathName("/volatile/halla/gmp12/longwu/rootfiles/Fall2016/K3-4");
+
+    const char* ROOTfilePath = gSystem->ExpandPathName("/w/halla-scifs17exp/gmp12/disk1/gautam/analysis_fall16/Rootfiles");
+    for(Int_t p=0;p<m;p++){
+        TString basename = Form("left_gmp_%d",runLH2[p]);
+        TString rootfile = basename + ".root";
+
+        Long_t split=0;
+        char* file = 0;
+        while (file = gSystem->Which(ROOTfilePath,rootfile)) {
+            t->Add(file);
+            //      cout << file << " added to TChain." << endl;
+            split++;
+            rootfile = basename + "_" +  ".root";
+            rootfile = basename + "_" + split + ".root";
+        }
+
+        if (split==0) {
+            cerr << "The secified run does not exist or has not been relayed." << endl;
+            return;
+        }
+
+    }
+    t->SetBranchStatus("*",0);
+    t->SetBranchStatus("*evleft*",1);
+    t->SetBranchStatus("DL.evtypebits",1);
+    t->SetBranchStatus("N.evleft.isrenewed");
+    t->SetBranchStatus("N.evleft.current_u1");
+    t->SetBranchStatus("L.vdc.u1.nclust",1);
+    t->SetBranchStatus("L.vdc.u2.nclust",1);
+    t->SetBranchStatus("L.vdc.v1.nclust",1);
+    t->SetBranchStatus("L.vdc.v2.nclust",1);
+    t->SetBranchStatus("L.prl1.e",1);
+    t->SetBranchStatus("L.tr.beta",1);
+    t->SetBranchStatus("L.prl2.e",1);
+    t->SetBranchStatus("L.cer.asum_c",1);
+    t->SetBranchStatus("L.tr.vz",1);
+    t->SetBranchStatus("EKLxe.W2",1);
+    t->SetBranchStatus("L.tr.tg_dp",1);
+    t->SetBranchStatus("L.tr.tg_ph",1);
+    t->SetBranchStatus("L.tr.tg_th",1);
+    t->SetBranchStatus("L.tr.tg_y",1);
+    t->SetBranchStatus("L.tr.p",1);
+    t->SetBranchStatus("L.tr.y",1);
+    t->SetBranchStatus("L.tr.x",1);
+    t->SetBranchStatus("L.tr.th",1);
+    t->SetBranchStatus("L.tr.ph",1);
+    t->SetBranchStatus("Lrb.y",1);
+
+    //Dummy
+    TChain *tdm = new TChain("T");
+    for(Int_t p=0;p<n;p++){
+        //const char* ROOTfilePathd = gSystem->ExpandPathName("/volatile/halla/gmp12/longwu/rootfiles");
+                 const char* ROOTfilePathd = gSystem->ExpandPathName("~/work/analysis_fall16/Rootfiles/");
+        TString basenamed = Form("left_gmp_%d",rund[p]);
+        TString rootfiled = basenamed + ".root";
+
+        Long_t splitd=0;
+        char* filed = 0;
+        while (filed = gSystem->Which(ROOTfilePathd,rootfiled)) {
+            tdm->Add(filed);
+            //        cout << filed << " added to TChain." << endl;
+            splitd++;
+            rootfiled = basenamed + "_" +  ".root";
+            rootfiled = basenamed + "_" + splitd + ".root";
+        }
+
+        if (splitd==0) {
+            cerr << "The secified run does not exist or has not been relayed." << endl;
+            return;
+        }
+    }
+    tdm->SetBranchStatus("*",0);
+    tdm->SetBranchStatus("*evleft*",1);
+    tdm->SetBranchStatus("DL.evtypebits",1);
+    tdm->SetBranchStatus("N.evleft.isrenewed");
+    tdm->SetBranchStatus("N.evleft.current_u1");
+    tdm->SetBranchStatus("L.vdc.u1.nclust",1);
+    tdm->SetBranchStatus("L.vdc.u2.nclust",1);
+    tdm->SetBranchStatus("L.vdc.v1.nclust",1);
+    tdm->SetBranchStatus("L.vdc.v2.nclust",1);
+    tdm->SetBranchStatus("L.prl1.e",1);
+    tdm->SetBranchStatus("L.tr.beta",1);
+    tdm->SetBranchStatus("L.prl2.e",1);
+    tdm->SetBranchStatus("L.cer.asum_c",1);
+    tdm->SetBranchStatus("L.tr.vz",1);
+    tdm->SetBranchStatus("EKLxe.W2",1);
+    tdm->SetBranchStatus("L.tr.tg_dp",1);
+    tdm->SetBranchStatus("L.tr.tg_ph",1);
+    tdm->SetBranchStatus("L.tr.tg_th",1);
+    tdm->SetBranchStatus("L.tr.tg_y",1);
+    tdm->SetBranchStatus("L.tr.p",1);
+    tdm->SetBranchStatus("L.tr.y",1);
+    tdm->SetBranchStatus("L.tr.x",1);
+    tdm->SetBranchStatus("L.tr.th",1);
+    tdm->SetBranchStatus("L.tr.ph",1);
+    tdm->SetBranchStatus("Lrb.y",1);
+
+
+    TFile *fm=new TFile("~/work/SIMC/simc_fall16/worksim/h2_K34.root");
+    TTree *tm = (TTree*)fm->Get("h666");
+    tm->SetBranchStatus("*",0);
+    tm->SetBranchStatus("W");
+    tm->SetBranchStatus("ssxfp");
+    tm->SetBranchStatus("ssyfp");
+    tm->SetBranchStatus("ssypfp");
+    tm->SetBranchStatus("ssxpfp");
+    tm->SetBranchStatus("ssdelta");
+    tm->SetBranchStatus("ssyptar");
+    tm->SetBranchStatus("ssxptar");
+    tm->SetBranchStatus("ssytar");
+    tm->SetBranchStatus("Weight");
+    tm->SetBranchStatus("fry");
+    Double_t Q,LT,Trk_eff,I,Qdm,LTdm,Trk_effdm,Idm;
+
+    inputfile>>Q>>I>>LT>>Trk_eff;
+    inputfiled>>Qdm>>Idm>>LTdm>>Trk_effdm;
+    inputfile.close();inputfiled.close();
+    //cout<<"  Charge:  "<<Q<<"  Current:  "<<I<<"  LT:  "<<LT<<" TE:   "<<Trk_eff<<endl;
+    //cout<<"  Charged:  "<<Qdm<<"  Currentd:  "<<Idm<<"  LTd:  "<<LTdm<<" TEd:   "<<Trk_effdm<<endl;
+    Double_t tr = 6.; 
+    Double_t data_nf = Q*LT*Trk_eff;
+    Double_t data_nfdm = tr*Qdm*LTdm*Trk_effdm;
+
+
+    TCanvas *c2 = new TCanvas("c2","",1500,1000);
+    c2->Divide(2,3);
+
+    TH1F * h_wd = new TH1F("h_wd","",nBins,wmin,wmax);
+    TH1F * h_wdm = new TH1F("h_wdm","",nBins,wmin,wmax);
+    TH1F * h_wdmU = new TH1F("h_wdmU","",nBins,wmin,wmax);
+    TH1F * h_wdU = new TH1F("h_wdU","",nBins,wmin,wmax);
+    TH1F * f_wd = new TH1F("f_wd","",nBins,wmin,wmax);
+    TH1F * h_wm = new TH1F("h_wm","SIMC",nBins,wmin,wmax);
+    TH1F * h_wmU = new TH1F("h_wmU","SIMC",nBins,wmin,wmax);
+    f_wd->GetXaxis()->SetTitle("W");
+    f_wd->GetXaxis()->CenterTitle();        
+    f_wd->GetYaxis()->SetTitle("N/(Q#timesLT#timesTE)");
+    f_wd->GetYaxis()->CenterTitle();      
+    h_wm->SetLineColor(kRed);    
+    f_wd->SetLineColor(kBlack);
+    h_wdm->SetLineColor(kBlue);
+    t->Draw(Form("(sqrt(EKLxe.W2) + %f)>>h_wd",w_off),accd.Data(),"goff");
+    t->Draw(Form("(sqrt(EKLxe.W2) + %f)>>h_wdU",w_off),accd.Data(),"goff");
+    tdm->Draw(Form("(sqrt(EKLxe.W2) + %f)>>h_wdm",w_off),accd.Data(),"goff");
+    tdm->Draw(Form("(sqrt(EKLxe.W2) + %f)>>h_wdmU",w_off),accd.Data(),"goff");
+    tm->Draw("W>>h_wmU",accmnw.Data(),"goff");
+    tm->Draw("W>>h_wm",accm.Data(),"goff");
+    h_wd->Scale(1/data_nf);
+    h_wdm->Scale(1/data_nfdm);
+    h_wd->Add(h_wdm,-1);
+    h_wm->Scale(simc_nf);
+
+    TH1F * h_dd = new TH1F("h_dd","",nBins,dpmin,dpmax);
+    TH1F * h_ddm = new TH1F("h_ddm","",nBins,dpmin,dpmax);
+    TH1F * h_ddmU = new TH1F("h_ddmU","",nBins,dpmin,dpmax);
+    TH1F * h_ddU = new TH1F("h_ddU","",nBins,dpmin,dpmax);
+    TH1F * f_dd = new TH1F("f_dd","",nBins,dpmin,dpmax);  
+    TH1F * h_dm = new TH1F("h_dm","SIMC",nBins,dpmin,dpmax);
+    f_dd->GetXaxis()->SetTitle("#delta");
+    f_dd->GetXaxis()->CenterTitle();    
+    f_dd->GetYaxis()->SetTitle("N/(Q#timesLT#timesTE)");
+    f_dd->GetYaxis()->CenterTitle();      
+    h_dm->SetLineColor(kRed);    
+    f_dd->SetLineColor(kBlack);
+    h_ddm->SetLineColor(kBlue);
+    t->Draw("L.tr.tg_dp[0]>>h_dd",accd.Data(),"goff");
+    t->Draw("L.tr.tg_dp[0]>>h_ddU",accd.Data(),"goff");
+    tdm->Draw("L.tr.tg_dp[0]>>h_ddm",accd.Data(),"goff");
+    tdm->Draw("L.tr.tg_dp[0]>>h_ddmU",accd.Data(),"goff");
+    tm->Draw("ssdelta/100.>>h_dm",accm.Data(),"goff");
+    h_dd->Scale(1/data_nf);
+    h_ddm->Scale(1/data_nfdm);
+    h_dd->Add(h_ddm,-1);
+    h_dm->Scale(simc_nf);
+
+    TH1F * h_ypd = new TH1F("h_ypd","",nBins,ph_min,ph_max);
+    TH1F * h_ypdU = new TH1F("h_ypdU","",nBins,ph_min,ph_max);
+    TH1F * h_ypdm = new TH1F("h_ypdm","",nBins,ph_min,ph_max);
+    TH1F * h_ypdmU = new TH1F("h_ypdmU","",nBins,ph_min,ph_max);
+    TH1F * f_ypd = new TH1F("f_ypd","",nBins,ph_min,ph_max);
+    TH1F * h_ypm = new TH1F("h_ypm","SIMC",nBins,ph_min,ph_max);
+    TH1F * h_ypmU = new TH1F("h_ypmU","SIMC",nBins,ph_min,ph_max);
+    f_ypd->GetXaxis()->SetTitle("Y'_{tar}(In-plane angle)");
+    f_ypd->GetXaxis()->CenterTitle();
+    f_ypd->GetYaxis()->SetTitle("N/(Q#timesLT#timesTE)");
+    f_ypd->GetYaxis()->CenterTitle();
+    h_ypm->SetLineColor(kRed);
+    f_ypd->SetLineColor(kBlack);
+    h_ypdm->SetLineColor(kBlue);
+    t->Draw("L.tr.tg_ph[0]>>h_ypd",accdyp.Data(),"goff");
+    t->Draw("L.tr.tg_ph[0]>>h_ypdU",accdyp.Data(),"goff");
+    tdm->Draw("L.tr.tg_ph[0]>>h_ypdm",accdyp.Data(),"goff");
+    tdm->Draw("L.tr.tg_ph[0]>>h_ypdmU",accdyp.Data(),"goff");
+    tm->Draw("ssyptar>>h_ypm",accmyp.Data(),"goff");
+    tm->Draw("ssyptar>>h_ypmU",accmnwyp.Data(),"goff");
+    h_ypd->Scale(1/data_nf);
+    h_ypdm->Scale(1/data_nfdm);
+    h_ypd->Add(h_ypdm,-1);
+    h_ypm->Scale(simc_nf);
+
+    TH1F * h_xpd = new TH1F("h_xpd","",nBins,th_min,th_max);
+    TH1F * h_xpdU = new TH1F("h_xpdU","",nBins,th_min,th_max);
+    TH1F * h_xpdm = new TH1F("h_xpdm","",nBins,th_min,th_max);
+    TH1F * h_xpdmU = new TH1F("h_xpdmU","",nBins,th_min,th_max);
+    TH1F * f_xpd = new TH1F("f_xpd","",nBins,th_min,th_max);
+
+    f_xpd->GetXaxis()->SetTitle("X'_{tar}(Out of plane angle)");
+    f_xpd->GetXaxis()->CenterTitle();
+    f_xpd->GetYaxis()->SetTitle("N/(Q#timesLT#timesTE)");
+    f_xpd->GetYaxis()->CenterTitle();
+    TH1F * h_xpm = new TH1F("h_xpm","SIMC",nBins,th_min,th_max);
+    TH1F * h_xpmU = new TH1F("h_xpmU","SIMC",nBins,th_min,th_max);
+    h_xpm->SetLineColor(kRed);
+    f_xpd->SetLineColor(kBlack);
+    h_xpdm->SetLineColor(kBlue);
+    t->Draw("L.tr.tg_th[0]>>h_xpd",accdxp.Data(),"goff");
+    t->Draw("L.tr.tg_th[0]>>h_xpdU",accdxp.Data(),"goff");
+    tdm->Draw("L.tr.tg_th[0]>>h_xpdm",accdxp.Data(),"goff");
+    tdm->Draw("L.tr.tg_th[0]>>h_xpdmU",accdxp,"goff");
+    tm->Draw(Form("ssxptar+%f>>h_xpm",xp_off),accmxp.Data(),"goff");
+    tm->Draw(Form("ssxptar+%f>>h_xpmU",xp_off),accmnwxp.Data(),"goff");
+    h_xpd->Scale(1/data_nf);
+    h_xpdm->Scale(1/data_nfdm);
+    h_xpd->Add(h_xpdm,-1);
+    h_xpm->Scale(simc_nf);
+
+
+
+
+    TH1F * h_yd = new TH1F("h_yd","",nBins,y_min,y_max);
+    TH1F * h_ydU = new TH1F("h_ydU","",nBins,y_min,y_max);
+    TH1F * h_ydm = new TH1F("h_ydm","",nBins,y_min,y_max);
+    TH1F * h_ydmU = new TH1F("h_ydmU","",nBins,y_min,y_max);
+    TH1F * f_yd = new TH1F("f_yd","",nBins,y_min,y_max);  
+    TH1F * h_ym = new TH1F("h_ym","SIMC",nBins,y_min,y_max);
+    TH1F * h_ymU = new TH1F("h_ymU","SIMC",nBins,y_min,y_max);
+    f_yd->GetXaxis()->SetTitle("Y_{tar}");
+    f_yd->GetXaxis()->CenterTitle();      
+    f_yd->GetYaxis()->SetTitle("N/(Q#timesLT#timesTE)");
+    f_yd->GetYaxis()->CenterTitle();      
+    h_ym->SetLineColor(kRed);    
+    f_yd->SetLineColor(kBlack);
+    h_ydm->SetLineColor(kBlue);
+    t->Draw("L.tr.tg_y[0]>>h_yd",accd.Data(),"goff");
+    t->Draw("L.tr.tg_y[0]>>h_ydU",accd.Data(),"goff");
+    tdm->Draw("L.tr.tg_y[0]>>h_ydm",accd.Data(),"goff");
+    tdm->Draw("L.tr.tg_y[0]>>h_ydmU",accd.Data(),"goff");
+    tm->Draw("ssytar/100.>>h_ym",accm.Data(),"goff");
+    tm->Draw("ssytar/100.>>h_ymU",accmnw.Data(),"goff");
+    h_yd->Scale(1/data_nf);
+    h_ydm->Scale(1/data_nfdm);
+    h_yd->Add(h_ydm,-1);
+    h_ym->Scale(simc_nf);
+
+
+    TH1F * hfyp = new TH1F("hfyp","",nBins,ph_min,ph_max);
+    hfyp->GetXaxis()->SetTitle("Y'_{tar}(In-plane angle)");
+    hfyp->GetXaxis()->CenterTitle();      
+    hfyp->GetYaxis()->SetTitle("Event number ratio (Exp/MC)");
+    hfyp->GetYaxis()->CenterTitle();      
+    TH1F * hfxp = new TH1F("hfxp","",nBins,th_min,th_max);
+    hfxp->GetXaxis()->SetTitle("X'_{tar}(Out of plane angle)");
+    hfxp->GetXaxis()->CenterTitle();      
+    hfxp->GetYaxis()->SetTitle("Event number ratio (Exp/MC)");
+    hfxp->GetYaxis()->CenterTitle();      
+
+
+
+    Double_t dataw_count[nBins],udataw_count[nBins],datawn_count[nBins],udummyw_count[nBins],ewd[nBins];
+    Double_t datadd_count[nBins],udatadd_count[nBins],dataddn_count[nBins],udummydd_count[nBins],edd[nBins];
+
+    Double_t data_countyp[nBins],udata_countyp[nBins],udummy_countyp[nBins],MC_countyp[nBins],uMC_countyp[nBins];
+    Double_t edatayp[nBins],eMCyp[nBins],Ratioyp[nBins],eRatioyp[nBins],eypd[nBins];
+
+    Double_t data_countxp[nBins],udata_countxp[nBins],udummy_countxp[nBins],MC_countxp[nBins],uMC_countxp[nBins];
+    Double_t edataxp[nBins],eMCxp[nBins],Ratioxp[nBins],eRatioxp[nBins],expd[nBins];;
+    Double_t datayd_count[nBins],udatayd_count[nBins],dataydn_count[nBins],udummy_county[nBins],eyd[nBins];
+
+    for(Int_t c=0;c<nBins;c++)
+    {
+        dataw_count[c] = h_wd->GetBinContent(c+1);
+        udataw_count[c] = h_wdU->GetBinContent(c+1);
+        udummyw_count[c] =h_wdmU->GetBinContent(c+1);
+        if(dataw_count[c]>0 && udataw_count[c]>0)
+        {
+            datawn_count[c] = dataw_count[c];
+            //ewd[c] = datawn_count[c]*sqrt(1./udataw_count[c]);
+            ewd[c] = sqrt((1./data_nf*sqrt(udataw_count[c]))**2 + (1./data_nfdm*sqrt(udummyw_count[c]))**2); 
+            f_wd->SetBinContent(c+1,datawn_count[c]);
+            f_wd->SetBinError(c+1,ewd[c]); 
+
+
+        }
+
+        datadd_count[c] = h_dd->GetBinContent(c+1);
+        udatadd_count[c] = h_ddU->GetBinContent(c+1);
+        udummydd_count[c] =h_ddmU->GetBinContent(c+1);
+        if(datadd_count[c]>0 && udatadd_count[c]>0)
+        {
+            dataddn_count[c] = datadd_count[c];
+            //edd[c] = dataddn_count[c]*sqrt(1./udatadd_count[c]);
+            edd[c] = sqrt((1./data_nf*sqrt(udatadd_count[c]))**2 + (1./data_nfdm*sqrt(udummydd_count[c]))**2); 
+            f_dd->SetBinContent(c+1,dataddn_count[c]);
+            f_dd->SetBinError(c+1,edd[c]); 	    
+        }
+
+
+        data_countyp[c] = h_ypd->GetBinContent(c+1);
+        udata_countyp[c] = h_ypdU->GetBinContent(c+1);
+        udummy_countyp[c] = h_ypdmU->GetBinContent(c+1);
+        MC_countyp[c] = h_ypm->GetBinContent(c+1);
+        uMC_countyp[c] = h_ypmU->GetBinContent(c+1);
+        if(data_countyp[c]>0 && MC_countyp[c]>0 && udata_countyp[c]>0 && udummy_countyp[c]>0 && uMC_countyp[c]>0)
+        {
+
+            Ratioyp[c] = data_countyp[c]/MC_countyp[c];
+            eRatioyp[c] = Ratioyp[c]*sqrt((1./data_nf**2*udata_countyp[c] + udummy_countyp[c]*1./data_nfdm**2)/(udata_countyp[c]*1./data_nf -udummy_countyp[c]*1./data_nfdm)**2+1/uMC_countyp[c]);
+            hfyp->SetBinContent(c+1,Ratioyp[c]);
+            hfyp->SetBinError(c+1,eRatioyp[c]);
+
+        }           
+
+        if(data_countyp[c]>0 && udata_countyp[c]>0)
+        {
+            //eypd[c] = data_countyp[c]*sqrt(1./udata_countyp[c]);
+            eypd[c] = sqrt((1./data_nf*sqrt(udata_countyp[c]))**2 + (1./data_nfdm*sqrt(udummy_countyp[c]))**2); 
+            f_ypd->SetBinContent(c+1,data_countyp[c]);
+            f_ypd->SetBinError(c+1,eypd[c]); 	  
+        }
+
+        data_countxp[c] = h_xpd->GetBinContent(c+1);
+        udata_countxp[c] = h_xpdU->GetBinContent(c+1);
+        udummy_countxp[c] = h_xpdmU->GetBinContent(c+1);
+        MC_countxp[c] = h_xpm->GetBinContent(c+1);
+        uMC_countxp[c] = h_xpmU->GetBinContent(c+1);
+        if(data_countxp[c]>0 && MC_countxp[c]>0 && udata_countxp[c]>0 && udummy_countxp[c]>0 && uMC_countxp[c]>0)
+        {
+
+            Ratioxp[c] = data_countxp[c]/MC_countxp[c];
+            eRatioxp[c] = Ratioxp[c]*sqrt((1./data_nf**2*udata_countxp[c] + udummy_countxp[c]*1./data_nfdm**2)/(udata_countxp[c]*1./data_nf -udummy_countxp[c]*1./data_nfdm)**2+1/uMC_countxp[c]);
+            //cout<<Ratioxp[c]<<"   "<<eRatioxp[c]<<endl;
+            hfxp->SetBinContent(c+1,Ratioxp[c]);
+            hfxp->SetBinError(c+1,eRatioxp[c]); 
+
+        }
+
+        if(data_countxp[c]>0 && udata_countxp[c]>0)
+
+        {
+            expd[c] = sqrt((1./data_nf*sqrt(udata_countxp[c]))**2 + (1./data_nfdm*sqrt(udummy_countxp[c]))**2); 
+
+            f_xpd->SetBinContent(c+1,data_countxp[c]);
+            f_xpd->SetBinError(c+1,expd[c]); 	  
+        }
+
+
+        datayd_count[c] = h_yd->GetBinContent(c+1);
+        udatayd_count[c] = h_ydU->GetBinContent(c+1);
+        udummy_county[c] = h_ydmU->GetBinContent(c+1);
+        if(datayd_count[c]>0 && udatayd_count[c]>0)
+        {
+            dataydn_count[c] = datayd_count[c];
+            //  eyd[c] = dataydn_count[c]*sqrt(1./udatayd_count[c]);
+            eyd[c] = sqrt((1./data_nf*sqrt(udatayd_count[c]))**2 + (1./data_nfdm*sqrt(udummy_county[c]))**2); 
+            f_yd->SetBinContent(c+1,dataydn_count[c]);
+            f_yd->SetBinError(c+1,eyd[c]); 	    
+        }
+
+    }
+
+    c2->cd(1);
+    f_wd->Draw();
+    h_wdm->Draw("same");
+    h_wm->Draw("same");
+    h_wd->SetMaximum(1.05*TMath::Max(h_wd->GetMaximum(),h_wm->GetMaximum()));
+    TLegend *leg = new TLegend(0.53,0.7,0.8,0.88);
+    leg->AddEntry(h_wd,"Data - dummy","lp");
+    leg->AddEntry(h_wdm,"Dummy","lp");
+    leg->AddEntry(h_wm,"MC","lp");
+    leg->SetTextSize(0.06);
+    leg->Draw();
+    Double_t data_countwM = h_wd->Integral();
+    Double_t udata_countwM = h_wdU->Integral();
+    Double_t udummy_countwM = h_wdmU->Integral();
+    Double_t MC_countwM = h_wm->Integral();
+    Double_t uMC_countwM = h_wmU->Integral();
+    Double_t RatioM = data_countwM/MC_countwM;
+    Double_t eRatioM = RatioM*sqrt((1./data_nf**2*udata_countwM + udummy_countwM*1./data_nfdm**2)/(udata_countwM*1./data_nf -udummy_countwM*1./data_nfdm)**2+1/uMC_countwM);
+    cout<<RatioM<<"   "<<eRatioM<<endl;
+
+
+    c2->cd(2);
+    f_dd->Draw();
+    h_ddm->Draw("same");
+    h_dm->Draw("same");
+    h_dd->SetMaximum(1.05*TMath::Max(h_dd->GetMaximum(),h_dm->GetMaximum()));
+
+    c2->cd(3);   
+    f_ypd->Draw();
+    h_ypdm->Draw("same");
+    h_ypm->Draw("same");
+    f_ypd->SetMaximum(1.1*TMath::Max(f_ypd->GetMaximum(),h_ypm->GetMaximum()));
+    Double_t max_yp = f_ypd->GetMaximum();
+
+    c2->cd(4);   
+    f_xpd->Draw();
+    h_xpdm->Draw("same");
+    h_xpm->Draw("same");
+    f_xpd->SetMaximum(1.1*TMath::Max(f_xpd->GetMaximum(),h_xpm->GetMaximum()));
+    TPaveText *t11 = new TPaveText(0.42,0.25,0.62,0.4,"NDC");
+    t11->AddText(Form("#Deltax= %0.1f mrad",xp_off*1000.));
+    t11->SetShadowColor(0);
+    t11->SetTextSize(0.06);
+    t11->SetFillColor(0);
+    t11->Draw();
+
+
+    c2->cd(5);   
+    f_yd->Draw();
+    h_ydm->Draw("same");
+    h_ym->Draw("same");
+    h_yd->SetMaximum(1.05*TMath::Max(h_yd->GetMaximum(),h_ym->GetMaximum()));
+
+    c2->cd(6);
+    TPaveText *t011 = new TPaveText(0.1,0.1,0.9,0.9,"NDC");
+
+    t011->AddText(Form("%s",kin.Data()));
+    t011->AddText(Form("E = %1.3f GeV, #theta = %2.1f #circ, p_{0} = %1.3fGeV , Q2 = %2.3f GeV^{2}",E0,theta,p0,Q2));
+    t011->AddText(Form(" Y^{data}/Y^{MC} = %f #pm %f",RatioM,eRatioM));
+    t011->AddText(Form("Cross section = %e #pm %e #mubarn/sr",RatioM*sig_mod,eRatioM*sig_mod));
+
+    t011->AddText("   ");
+    t011->AddText("Cuts:");
+    t011->AddText(Form("PID, One cluster cut"));            
+    t011->AddText(Form("-%0.3f<#delta<%0.3f",dp_cut,dp_cut));            
+    t011->AddText(Form("%0.2f<y'_{tar}(rad)<%0.3f, %0.2f<W(GeV)<%1.2f ",ph_cutl,ph_cutu,w_min,w_max));
+    t011->AddText(Form("%0.3f<x'_{tar}(rad)<%0.3f, |y_{tar}(cm)|<%1.0f",th_cutl,th_cutu,y_cut*100));
+    t011->SetShadowColor(0);
+    t011->SetTextSize(0.065);
+    t011->Draw();
+
+
+
+    c2->SaveAs(Form("plots/%s_dMC.pdf",kinn.Data()));
+    c2->SaveAs(Form("plots/%s_dMC.root",kinn.Data()));
+
+
+
+
+
+
+
+}
+
+
