@@ -1,0 +1,84 @@
+//gr15_7 1.7
+void hodo_fall_15_7(){
+
+  TChain * t = new TChain("T");
+  t->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_Apr24_6410_-1.root");
+  t->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_Apr24_6411_-1.root");
+  t->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_Apr24_6412_-1.root");
+  t->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_Apr24_6413_-1.root");
+  t->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_Apr24_6417_-1.root");
+  
+  TH1D *h1 = new TH1D("h1", "hms_beta",100, 0.1, 2);
+  TH2D *h2 = new TH2D ("h2", "hms delta vs beta", 100, 0.1, 2, 100, -10, 12);
+  TH1D *h3 = new TH1D("h3", "shms_beta",100, 0.1, 2);
+  TH2D *h4 = new TH2D ("h4", "shms delta vs beta", 100, 0.1, 2, 100, -10, 20);
+
+
+  t->Draw("H.hod.beta>>h1"," H.gtr.dp>-10 &&H.gtr.dp <12 && H.cal.etottracknorm >0.7 && H.cal.etottracknorm <1.3 && H.gtr.beta >0.6 && H.gtr.beta < 1.5 &&H.cer.npeSum>1.0  && H.hod.goodstarttime==1  ","  ");
+  t->Draw("H.gtr.dp:H.hod.beta>>h2","  H.gtr.dp>-10 &&H.gtr.dp <12 && H.cal.etottracknorm >0.7 && H.cal.etottracknorm <1.3 && H.gtr.beta >0.6 && H.gtr.beta < 1.5 &&H.cer.npeSum>1.0 &&  H.hod.goodstarttime==1   ", "  ");
+
+  t->Draw("P.hod.beta>>h3"," P.gtr.dp>-10 &&P.gtr.dp <20 &&  P.aero.npeSum >1  &&P.cal.eprtracknorm < 0.2  &&P.cal.eprtracknorm >0    && P.gtr.beta > 0.6 && P.gtr.beta< 1.5 && P.hod.goodstarttime==1 ","  ");
+  t->Draw("P.gtr.dp:H.hod.beta>>h4"," P.gtr.dp>-10 &&P.gtr.dp <20 &&  P.aero.npeSum >1 &&P.cal.eprtracknorm < 0.2 &&P.cal.eprtracknorm >0    && P.gtr.beta > 0.6 && P.gtr.beta< 1.5  && P.hod.goodstarttime==1   ", "  ");
+
+
+  TCanvas *c1 = new TCanvas("c1"," c1",1000, 1000);
+  c1->Divide(2,2);
+
+    c1->cd(1);
+  h1->Draw();
+  h1->GetXaxis()->SetTitle("H.Hod.Beta");
+  h1->GetXaxis()->CenterTitle("");
+  //h1->GetXaxis()->SetLabelOffset(0.2);
+  h1->GetXaxis()->SetTitleOffset(1.3);
+  h1->GetYaxis()->SetTitle("Entries");
+  h1->GetYaxis()->CenterTitle("");
+  //h1->GetYaxis()->SetLabelOffset(0.2);
+  h1->GetYaxis()->SetTitleOffset(1.5);
+
+  c1->cd(2);gPad->SetLogz();
+  h2->Draw("colz");
+  h2->GetXaxis()->SetTitle("H.Hod.Beta");
+  h2->GetXaxis()->CenterTitle("");
+  //h2->GetXaxis()->SetLabelOffset(0.2);
+  h2->GetXaxis()->SetTitleOffset(1.3);
+  h2->GetYaxis()->SetTitle("H.gtr.dp");
+  h2->GetYaxis()->CenterTitle("");
+  //h2->GetYaxis()->SetLabelOffset(0.2);
+  h2->GetYaxis()->SetTitleOffset(1.5);
+
+
+  c1->cd(3);
+  h3->Draw();
+  h3->GetXaxis()->SetTitle("P.Hod.Beta");
+  h3->GetXaxis()->CenterTitle("");
+  //h3->GetXaxis()->SetLabelOffset(0.2);
+  h3->GetXaxis()->SetTitleOffset(1.3);
+  h3->GetYaxis()->SetTitle("Entries");
+  h3->GetYaxis()->CenterTitle("");
+  //h3->GetYaxis()->SetLabelOffset(0.2);
+  h3->GetYaxis()->SetTitleOffset(1.5);
+
+  c1->cd(4);gPad->SetLogz();
+  h4->Draw("colz");
+  h4->GetXaxis()->SetTitle("P.Hod.Beta");
+  h4->GetXaxis()->CenterTitle("");
+  //h4->GetXaxis()->SetLabelOffset(0.2);
+  h4->GetXaxis()->SetTitleOffset(1.3);
+  h4->GetYaxis()->SetTitle("P.gtr.dp");
+  h4->GetYaxis()->CenterTitle("");
+  //h4->GetYaxis()->SetLabelOffset(0.2);
+  h4->GetYaxis()->SetTitleOffset(1.5);
+
+  c1->SaveAs("plots/15_7_1p7.pdf");
+
+  TCanvas *c2 = new TCanvas("c2"," c2",1000, 1000);
+  c2->Divide(1,2);
+  c2->cd(1);
+
+  t->Draw("P.cal.etottracknorm>>h(100, 0.00,2)"," P.gtr.dp>-10 &&P.gtr.dp <20 &&P.gtr.beta > 0.6 && P.gtr.beta< 1.5&&P.cal.etottracknorm>0 ");
+
+  c2->cd(2);
+  t->Draw("P.cal.eprtracknorm>>h(100, 0.00,2)"," P.gtr.dp>-10 &&P.gtr.dp <20 &&P.gtr.beta > 0.6 && P.gtr.beta< 1.5&&P.cal.eprtracknorm>0&&P.cal.etottracknorm<0.7 &&P.aero.npeSum>1 ");
+
+
+}
