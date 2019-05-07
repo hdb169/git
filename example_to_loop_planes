@@ -1,0 +1,148 @@
+#include "TGraph.h"
+#include <fstream>
+#include <iostream>
+#include <TROOT.h>
+
+void dc_time_win(TString spec)
+{
+  Int_t num = 2;
+  Int_t runNo[] = {6018,6029,6049,6065,6073,6091,6104,6142,6256,6285,6300, 6315,6393,6429,6449,6485,6517, 6549};
+
+  // int runNo[1]={2872};
+  int j = 0;
+  gROOT->SetBatch(1);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptStat(0);
+  gStyle->SetTitleFontSize(0.05);
+  gStyle->SetNdivisions(505);
+  gStyle->SetCanvasColor(10);
+  gStyle->SetPadTopMargin(0.10);
+  gStyle->SetPadLeftMargin(0.08);
+  gStyle->SetPadRightMargin(0.08);
+  gStyle->SetPadBottomMargin(.14);
+  gStyle->SetTitleYOffset(1.09);
+  gStyle->SetTitleXOffset(0.855);
+  gStyle->SetTitleYSize(0.03);
+  gStyle->SetTitleXSize(0.03);
+  gStyle->SetLabelFont(62,"X");
+  gStyle->SetLabelFont(62,"Y");
+  gStyle->SetTitleFont(62,"X");
+  gStyle->SetTitleFont(62,"Y");
+  gStyle->SetLabelSize(0.025,"X");
+  gStyle->SetLabelSize(0.025,"Y");
+  gStyle->SetPaperSize(23,24);
+  gStyle->SetOptFit(1);
+
+  const int NPLANES = 12;
+
+  for (int i= 0; i<num; i++)
+    {
+      TFile *f = new TFile(Form("ROOTfiles/coin_replay_production_%d_-1.root", runNo[i]));
+      TTree *t = (TTree*)f->Get("T");
+      
+      TH1F * raw_histo[NPLANES]; 
+      TH1F * reftime_histo[NPLANES];
+      
+      TString sp, ss, hh;
+      Int_t spect;  
+      string plane[2][NPLANES] = {{"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"}, // plane for SHMS
+				  {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"}};
+      
+      
+      if (spec == "shms")
+	{
+	  sp = "P";
+	  ss = "p";
+	  spect =0;     
+	  //cout << "I am SHMS :" <<endl;
+	}
+      
+      else 
+	{
+	  sp = "H";
+	  hh ="h";
+	  spect = 1;
+	  //	cout << "I am HMS :" <<endl;
+	  
+	}
+      
+      for (int ip = 0; ip<NPLANES; ip++)
+	{
+	  raw_histo[ip] = new TH1F(Form("raw_histo_%s", plane[spect][ip].c_str()), " ", 200, -15000, -8000);
+	  reftime_histo[ip] = new TH1F(Form("reftime_histo_%s", plane[spect][ip].c_str()), " ", 500,  8000,  16000);
+	  
+	  t->Draw(Form("%s.dc.%s.rawtdc>>raw_histo_%s", sp.Data(), plane[spect][ip].c_str(), plane[spect][ip].c_str()));
+	  if (ip<10)
+	    t->Draw(Form("T.coin.%sDCREF%d_tdcTimeRaw>>reftime_histo_%s" , ss.Data(), ip+1, plane[spect][ip].c_str()));
+	  
+	}
+      
+      TCanvas *c1 = new TCanvas ("c1", "rawtdc" , 500, 500);
+      c1->Divide(2,1);
+      TCanvas *c2 = new TCanvas ("c2", " ref_Time" , 500, 500);
+      
+      TLegend* leg = new TLegend(0.7,0.7,0.89,0.9);
+      TLegend* leg1 = new TLegend(0.7,0.7,0.89,0.9);
+      TLegend* leg2 = new TLegend(0.8,0.7,0.89,0.9);
+
+      for (int i =0; i<6 ; i++)
+	{
+	  c1->cd(1);
+	  gPad->SetLogy();
+	  //raw_histo[0]->Draw();
+	  raw_histo[i]->Draw("same");
+	  // raw_histo[i]->GetYaxis()->SetRangeUser(0, 554443);
+	  raw_histo[i]->SetTitle(Form("DC1_run_number_%d",runNo[j]));
+	  raw_histo[i]->SetLineColor(i+1);
+	  leg->AddEntry(raw_histo[i],Form("%s", plane[spect][i].c_str()),"L");
+	  leg->Draw(); 
+	  TLine *line = new TLine(-13500, 0, -13500, 554443);// this draw vertical line	 
+	  line->SetLineColor(4);
+	  line->Draw();
+	  TLine *line1 = new TLine(-10500, 0, -10500, 554443);// this draw vertical line	 
+	  line1->SetLineColor(4);
+	  line1->Draw();
+	  c1->cd(2); 
+	  gPad->SetLogy();
+	  // c1->cd(2);
+	  raw_histo[i+6]->Draw("same");raw_histo[i+6]->SetTitle(Form("DC2_run_number_%d",runNo[j]));
+	  raw_histo[i+6]->SetLineColor(i+1);
+	  leg1->AddEntry(raw_histo[i+6],Form("%s", plane[spect][i].c_str()),"L");
+	  leg1->Draw();
+	  TLine *line3 = new TLine(-13500, 0, -13500, 466835);// this draw vertical line	 
+	  line3->SetLineColor(4);
+	  line3->Draw();
+	  TLine *line4 = new TLine(-10500, 0, -10500, 466835);// this draw vertical line	 
+	  line4->SetLineColor(4);
+	  line4->Draw();
+	}
+      for (int i =0; i<10 ; i++)
+	{
+	  c2->cd();
+	  gPad->SetLogy();
+	  if(i<9)
+	    {
+	      reftime_histo[i]->Draw("same");
+	      reftime_histo[i] ->SetLineColor(i+1); 
+	      leg2->AddEntry(reftime_histo[i],Form("REF%d",i+1),"L");
+	      leg2->Draw();
+	    }
+	  if(i==9)
+	    { 
+	      reftime_histo[i]->Draw("same");
+	      reftime_histo[i] ->SetLineColor(i+3); 
+	      leg2->AddEntry(reftime_histo[i],Form("REF%d",i+1),"L");
+	      leg2->Draw();
+	      
+	    }
+	  TLine *line5 = new TLine(13500, 0, 13500, 409533);// this draw vertical line	 
+	  line5->SetLineColor(4);
+	  line5->Draw();
+	}
+      
+      c1->SaveAs(Form("Plots/rawtdc_%d.pdf",runNo[j]));
+      c2->SaveAs(Form("Plots/ref_time_%d.pdf",runNo[j]));
+      j++;
+    }//run loop
+	
+}
