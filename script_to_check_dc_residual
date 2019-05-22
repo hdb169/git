@@ -1,0 +1,261 @@
+//2019 May 20
+//This is the script to test the hms and shms Drift distance, residual, drift time, residual vs wire number, drift time vs wire number,distance vs wirenum 
+//need to run separately for hms and shms, and the bins in wire number is made 1 bin for 1 wire
+
+using namespace std;
+void  wirenum_vs4_deltacut(Int_t runNo, TString spec)  
+{
+  const Int_t  NPLANES = 12;
+  gStyle->SetOptStat(1);
+  // gROOT->SetBatch(0);
+  //gROOT->Reset();
+  // TString fpath = "/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/";
+  //TFile *f =  new TFile(Form(fpath + "dc_calib_t1_%d_-1.root", runNo));
+   
+   TFile *f =  new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/all_t1/all_may21_t1_%d_-1.root", runNo));
+  //  TFile *f =  new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/other_with_6091_param_t1/dc_calib_t1_with6091param_%d_20000.root", runNo));
+  // TFile *f =  new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/6091_applied_to_other_may21_t1/test_with_6091_%d_-1.root", runNo));
+  //TFile *f =  new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/6091_applied_to_other_may21_t1/test_with_6091_%d_500000.root", runNo));
+
+  TTree *tree = (TTree*)f->Get("T");
+   
+  TH1F *drift_dist_histo[NPLANES];
+  TH1F *resid_histo[NPLANES];
+  TH1F *drift_time_histo[NPLANES];
+  TH1F *drift_wirenum_histo[NPLANES];
+  TH2D *drift_wirenum_time_histo[NPLANES];//drift time vs wire num
+  TH2D *drift_wirenum_res_histo[NPLANES]; //residual vs wirenum
+  TH2D *drift_wirenum_dist_histo[NPLANES]; //dist vs wirenum
+
+   
+  TString sp;
+  Int_t spect;
+  Double_t delta;
+  Double_t npe;
+  Double_t cal;
+  string plane_names[2][NPLANES] = {{"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"},    // shms plane 
+  				    {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"}};   // hms  plane 
+
+  
+  int num[2][NPLANES] = {{107, 107, 79, 79, 107, 107, 107, 107, 79, 79, 107, 107},  //shms
+  			 { 96, 96, 102, 102, 96, 96, 96, 96, 102, 102, 96, 96 }};   //hms
+
+  if (spec == "shms")
+    {
+      sp = "P";
+      spect = 0; 
+      tree->SetBranchAddress(Form("%s.gtr.dp", sp.Data()), &delta);
+      tree->SetBranchAddress(Form("%s.ngcer.npeSum", sp.Data()), &npe);
+      tree->SetBranchAddress(Form("%s.cal.etotnorm", sp.Data()), &cal);
+
+    }
+      
+  else 
+    {
+      sp = "H";
+      spect = 1;
+      tree->SetBranchAddress(Form("%s.gtr.dp", sp.Data()), &delta);
+      tree->SetBranchAddress(Form("%s.cer.npeSum", sp.Data()), &npe);
+      tree->SetBranchAddress(Form("%s.cal.etotnorm", sp.Data()), &cal);
+
+
+    }
+   
+   
+  //********************************** name of the leaf *********************************//
+  TString base_name, base;
+  TString drift_dist_name;
+  TString drift_wirenum_time_name;
+  TString drift_wirenum_res_name;
+  TString drift_wirenum_name;
+  TString nhit_name;
+  TString ndatatime;  
+  TString time_name;
+  TString drift_wirenum_dist_name;
+   
+  //************************variable to store the value ******************************//
+   
+  Double_t drift_dist[NPLANES][1000];
+  Double_t drift_wirenum[NPLANES][1000];
+  Double_t drift_wirenum_time[NPLANES][1000]; 
+  Double_t drift_wirenum_res[NPLANES][1000];//2
+  Double_t drift_wirenum_dist[NPLANES][1000];//2
+  Double_t nhit[NPLANES];
+  Double_t pl_time[NPLANES][1000];
+  Int_t ndata_time[NPLANES];
+  Double_t residual[NPLANES]; 
+  
+   
+  for (int ip = 0; ip < NPLANES; ip++)
+    {
+       
+      drift_dist_histo[ip] = new TH1F(Form("drift_dist_%s", plane_names[spect][ip].c_str()), " ", 28, -0.05, 0.55 );// histo defined
+       
+      resid_histo[ip] = new TH1F(Form("resi_%s", plane_names[spect][ip].c_str()), " ", 100, -0.3, 0.3 );
+       
+      drift_time_histo[ip] = new TH1F(Form("drift_time_%s", plane_names[spect][ip].c_str()), " ", 300, -50.0, 250.0 );
+
+      drift_wirenum_histo[ip] = new TH1F(Form("wirenumbers_%s", plane_names[spect][ip].c_str()), " ", num[spect][ip], 0, num[spect][ip] );
+
+      drift_wirenum_time_histo[ip] = new TH2D(Form("drift_time_vs_wirenum_%s", plane_names[spect][ip].c_str()), " ", num[spect][ip], 0, num[spect][ip], 300, -50, 250 );
+
+      drift_wirenum_res_histo[ip] = new TH2D(Form("residual_vs_wirenum_%s", plane_names[spect][ip].c_str()), " ", num[spect][ip], 0, num[spect][ip], 100, -0.3, 0.3);//3
+
+      drift_wirenum_dist_histo[ip] = new TH2D(Form("drift_distance_vs_wirenum_%s", plane_names[spect][ip].c_str()), " ", num[spect][ip], 0, num[spect][ip], 28, -0.1, 0.6);//3
+
+       
+      base_name = sp +"."+"dc"+"."+plane_names[spect][ip].c_str();
+       
+      drift_dist_name = base_name + ".dist";
+      drift_wirenum_name = base_name + ".wirenum";
+      nhit_name = base_name+".nhit";
+      time_name = base_name+".time";
+      ndatatime = "Ndata."+base_name+".time";
+       
+      // residual_name = base +".residual";
+       
+      //*********************Set Branch Address ************************//
+       
+      tree->SetBranchAddress(drift_dist_name, drift_dist[ip]);
+      tree->SetBranchAddress(drift_wirenum_name, drift_wirenum[ip]);
+      tree->SetBranchAddress(ndatatime, &ndata_time[ip]); 
+      tree->SetBranchAddress(nhit_name, &nhit[ip]);
+      tree->SetBranchAddress(time_name, pl_time[ip]);
+      tree->SetBranchAddress(Form("%s.dc.residualExclPlane",sp.Data()), &residual);
+      // tree->SetBranchAddress(Form("%s.dc.residual",sp.Data()), &residual);
+
+      // cout <<base_name<<endl;
+      // cout <<nhit_name<<endl; 
+       
+       
+    }//end of plane
+   
+  Long64_t nentries =tree->GetEntries();
+   
+  for (Long64_t i=0; i<nentries; i++) 
+    {
+      //cout << "entries " << i <<endl;
+       
+      tree->GetEntry(i);  
+       
+      for (int ip =0 ; ip<NPLANES ; ip++)
+  	{    
+  	  // cout << "plane :" << ip<<endl;
+   
+  	  // cout<<"entry :" <<i <<" " << "plane :" << ip<< "indata value " << ndata_time[ip] <<endl;
+   
+  	  if (abs(ndata_time[ip]) > 100)
+  	    {
+  	      ndata_time[ip] = 0;
+  	    }
+  	  for (int indata = 0; indata<ndata_time[ip]; indata++)
+  	    {
+  	      //cout<<"entry :" <<i <<" " << "plane :" << ip<< "indata value " << indata <<endl;
+  	      if (spec=="shms")
+  		{
+  		  if (nhit[ip]==1 && pl_time[ip][indata]>0.0 && pl_time[ip][indata]<190.0  && delta>-10 && delta<22)  //npe>2 was here &&cal>0.8 was here
+  		    {
+  		      drift_dist_histo[ip]->Fill(drift_dist[ip][indata]);// filling drift_distance histogram with looping over all hits
+  		      drift_wirenum_histo[ip]->Fill(drift_wirenum[ip][indata]);// filling dr histogram with looping over all hits
+  		      drift_wirenum_time_histo[ip]->Fill(drift_wirenum[ip][indata],pl_time[ip][indata]);
+  		      drift_wirenum_res_histo[ip]->Fill(drift_wirenum[ip][indata],residual[ip]);// filling drift_distance histogram with looping over all hits//4
+  		      drift_wirenum_dist_histo[ip]->Fill(drift_wirenum[ip][indata],drift_dist[ip][indata]);
+  		      resid_histo[ip]->Fill(residual[ip]); 
+  		      drift_time_histo[ip]->Fill(pl_time[ip][indata]);
+  		    }
+  		}
+  	      else if (spec=="hms")
+  		{ 
+  		  if (nhit[ip]==1 && pl_time[ip][indata]>0.0 && pl_time[ip][indata]<190.0  && delta>-8 && delta<8) //&& cal>0.8 && npe>2.0
+  		    {
+  		      drift_dist_histo[ip]->Fill(drift_dist[ip][indata]);// filling drift_distance histogram with looping over all hits
+  		      drift_wirenum_histo[ip]->Fill(drift_wirenum[ip][indata]);// filling drift_distance histogram with looping over all hits
+  		      drift_wirenum_time_histo[ip]->Fill(drift_wirenum[ip][indata],pl_time[ip][indata]);// filling drift_time histogram with looping over all hits
+  		      drift_wirenum_res_histo[ip]->Fill(drift_wirenum[ip][indata],residual[ip]);// filling drift_distance histogram with looping over all hits//4
+  		      drift_wirenum_dist_histo[ip]->Fill(drift_wirenum[ip][indata],drift_dist[ip][indata]);
+  		      resid_histo[ip]->Fill(residual[ip]); 
+  		      drift_time_histo[ip]->Fill(pl_time[ip][indata]);
+  		    } 
+  		}
+  	    }// end of ndata loop     
+  	}//endof plane
+    }//end of entries loop
+   
+  // cout << "hi"<<endl;
+  gStyle->SetOptStat();
+  gStyle->SetOptFit(1);
+  gStyle->SetOptTitle(1);
+
+  TCanvas *c1 = new TCanvas ("c1", " drift_distance" , 500, 500);
+  c1->Divide(3,4);
+  TCanvas *c2 = new TCanvas ("c2", " residual" , 500, 500);
+  c2->Divide(3,4);
+  TCanvas *c3 = new TCanvas ("c3", " drift_time" , 500, 500);
+  c3->Divide(3,4);
+  TCanvas *c4 = new TCanvas ("c4", " drift_wirenum" , 500, 500);
+  c4->Divide(3,4);
+  TCanvas *c5 = new TCanvas ("c5", " drift_wirenum_time" , 500, 500);
+  c5->Divide(3,4);
+  TCanvas *c6 = new TCanvas ("c6", " drift_wirenum_res" , 500, 500);
+  c6->Divide(3,4);
+  TCanvas *c7 = new TCanvas ("c7", " drift_wirenum_time" , 500, 500);
+  c7->Divide(3,4);
+
+
+  double mean, sigma;
+   
+  //TPaveLabel *title = new TPaveLabel(.11,.95,.35,.99,"new title","brndc");
+
+  for (int i =0; i<12 ; i++)
+    {
+       
+      c1->cd(i+1);
+      drift_dist_histo[i]->Draw();
+      drift_dist_histo[i]->SetTitle(Form("%s_drift_distance : %s run:%d",spec.Data(),plane_names[spect][i].c_str(), runNo));
+      mean = resid_histo[i]->GetMean();
+      sigma = resid_histo[i]->GetStdDev();
+
+      c2->cd(i+1);
+      TF1 * myfun = new TF1("myfun","gaus",mean-sigma,mean+sigma);
+      resid_histo[i]->Fit("myfun","QR");
+      resid_histo[i]->SetTitle(Form("%s_residual_ex:%s run:%d",spec.Data(), plane_names[spect][i].c_str(), runNo));
+      //resid_histo[i]->SetTitle(Form("%s_residual_all:%s run:%d",spec.Data(), plane_names[spect][i].c_str(), runNo));
+
+      c3->cd(i+1);
+      drift_time_histo[i]->Draw();
+      drift_time_histo[i]->SetTitle(Form("%s_drift_time:%s run:%d", spec.Data(),plane_names[spect][i].c_str(), runNo));
+
+      c4->cd(i+1);
+      drift_wirenum_histo[i]->Draw();
+      drift_wirenum_histo[i]->SetTitle(Form("%s_drift_wirenum : %s run:%d",spec.Data(),plane_names[spect][i].c_str(), runNo));
+
+      c5->cd(i+1);
+      drift_wirenum_time_histo[i]->Draw("colz");
+      drift_wirenum_time_histo[i]->SetTitle(Form("%s_drift_time_vs_wire_num : %s run:%d",spec.Data(),plane_names[spect][i].c_str(), runNo));
+         
+      c6->cd(i+1);
+      drift_wirenum_res_histo[i]->Draw("colz");
+      drift_wirenum_res_histo[i]->SetTitle(Form("%s_residual_vs_wirenumber : %s run:%d",spec.Data(),plane_names[spect][i].c_str(), runNo));
+         
+      c7->cd(i+1);
+      drift_wirenum_dist_histo[i]->Draw("colz");
+      drift_wirenum_dist_histo[i]->SetTitle(Form("%s_drift_dist_vs_wirenumber : %s run:%d",spec.Data(),plane_names[spect][i].c_str(), runNo));
+        
+    
+      // title->Draw(); 
+   
+       
+      // c2->cd(i+1);
+      //resid_histo[i]->Draw();
+    }
+  c1->SaveAs(Form("delta_cut/%s_drift_distance_%d.pdf",spec.Data(),runNo));
+  c2->SaveAs(Form("delta_cut/%s_residual_ex_%d.pdf", spec.Data(), runNo));
+  c3->SaveAs(Form("delta_cut/%s_drift_time_%d.pdf",spec.Data(), runNo));
+  c4->SaveAs(Form("delta_cut/%s_wirenumber_%d.pdf", spec.Data(), runNo));
+  c5->SaveAs(Form("delta_cut/%s_drift_time_vs_wirenum_%d.pdf", spec.Data(), runNo));
+  c6->SaveAs(Form("delta_cut/%s_residual_vs_wirenum_%d.pdf", spec.Data(), runNo));
+  c7->SaveAs(Form("delta_cut/%s_drift_distance_vs_wirenum_%d.pdf", spec.Data(), runNo));
+
+
+  
+}
