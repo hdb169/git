@@ -1,0 +1,64 @@
+  void tcoin_offset (Int_t runNo, Int_t eventNo) {
+
+   gROOT->Reset();
+
+  TFile *f =  new TFile(Form("/net/cdaq/cdaql3data/cdaq/sidis-fall-18/ROOTfiles/coin_replay_production_%d_%d.root", runNo,eventNo));
+  TTree *t = (TTree*)f->Get("T");
+  
+  TH1D *h1 = new TH1D("h1", "SHMS_ROC1_tdcTime",100,0,500);
+  TH1D *h2 = new TH1D("h2", "SHMS_ROC2_tdcTimeRaw",100,0,4000);
+  TH1D *h3 = new TH1D("h3", "HMS_ROC1_tdcTime",100,0,500);
+  TH1D *h4 = new TH1D("h4", "HMS_ROC2_tdcTimeRaw",100,0,4000);
+    
+  //TCut pid_cut;
+
+  //pid_cut ="H.gtr.dp>=-12&&H.gtr.dp<=12&&H.cer.npeSum>=0.5&&H.gtr.beta<=1.3&&H.gtr.beta>=0.8&&H.cal.etottracknorm>=0.8&&H.cal.etottracknorm<=1.5&&H.cal.eprtracknorm>=0.2&&H.hod.goodstarttime == 1";
+  
+  t->Draw("T.coin.pTRIG1_ROC1_tdcTime>>h1");//SHMS
+  t->Draw("T.coin.pTRIG1_ROC2_tdcTimeRaw>>h2");//SHMS
+  t->Draw("T.coin.pTRIG4_ROC1_tdcTime>>h3");//HMS
+  t->Draw("T.coin.pTRIG4_ROC2_tdcTimeRaw>>h4");//HMS
+
+  gStyle->SetOptFit(1);
+  TCanvas *c1 = new TCanvas("c1", "TCoin Offset Plots", 1000, 1000);
+  c1->Divide(2,2);
+
+  c1->cd(1);
+  gPad->SetLogy(1);
+  h1->Draw("");
+  h1->GetXaxis()->SetTitle("");
+  h1->GetXaxis()->CenterTitle("");
+  h1->GetYaxis()->SetTitle("");
+  h1->GetYaxis()->SetTitleOffset(1.56);
+  h1->GetYaxis()->CenterTitle("");
+
+  c1->cd(2);
+  gPad->SetLogy(1);
+  h2->Draw("");
+  h2->GetXaxis()->SetTitle("");
+  h2->GetXaxis()->CenterTitle("");
+  h2->GetYaxis()->SetTitle("");
+  h2->GetYaxis()->SetTitleOffset(1.56);
+  h2->GetYaxis()->CenterTitle("");
+
+  c1->cd(3);
+  gPad->SetLogy(1);
+  h3->Draw("");
+  h3->GetXaxis()->SetTitle("");
+  h3->GetXaxis()->CenterTitle("");
+  h3->GetYaxis()->SetTitle("");
+  h3->GetYaxis()->SetTitleOffset(1.56);
+  h3->GetYaxis()->CenterTitle("");
+
+  c1->cd(4);
+  gPad->SetLogy(1);
+  h4->Draw("");
+  h4->GetXaxis()->SetTitle("");
+  h4->GetXaxis()->CenterTitle("");
+  h4->GetYaxis()->SetTitle("");
+  h4->GetYaxis()->SetTitleOffset(1.56);
+  h4->GetYaxis()->CenterTitle("");
+
+  //c1->SaveAs(Form("../PLOTS/TCoin_Offset_Plots_%d.pdf",runNo));
+
+  }
