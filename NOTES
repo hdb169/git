@@ -1,0 +1,6 @@
+Drawing many histograms 
+
+ for (int i=0; i<m;i++){
+h[i] = new TH1F(TString::Format("h0_%d", i), "event", 1000, 0., 1000.);
+
+}
