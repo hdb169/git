@@ -1,0 +1,38 @@
+//script to see the values to fill in PARAM/TRIG/tcoin.param
+//Need the following variable and look at the maximum and minimum values
+
+//using namespace std;
+void tcoin(){
+  int Ncan = 4;
+  char name[20];
+  TCanvas *cc[Ncan];
+
+  TFile *f = new TFile("/home/hdbhatt/Desktop/CALIBRATION/hgcer/coin_replay_production_6263_10000.root");
+  TTree *T = (TTree*)f->Get("T");
+
+  
+  for (int i=0; i<Ncan;i++)
+    {
+      
+      sprintf(name, "cc_%d",i+1);
+      cc[i] = new TCanvas(name,name, 1000,500);
+
+      if(i ==0)
+
+	T->Draw("T.coin.pT1_tdcTimeRaw>>h1()");
+      else if(i==1)
+	T->Draw("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw>>h2()");
+      else if(i==2)
+	T->Draw("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw>>h3()");
+      
+      else
+	T->Draw("T.coin.hT2_tdcTimeRaw>>h4()");
+      gPad->SetLogy();
+      sprintf(name, "pdf/cc_%d.pdf",i+1);
+      cc[i]->SaveAs(name);
+      cc[i]->~TCanvas();//not to display the plots on canvas
+      
+    }
+   
+
+}
