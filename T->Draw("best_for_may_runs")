@@ -1,6 +1,6 @@
 //script to see the values to fill in PARAM/TRIG/tcoin.param
 //Need the following variable and look at the maximum and minimum values
-//Still need to work to get the differnt names of all the shistograms based on the run number
+//Still need to work to get the differnt names of all the histograms based on the run number
 using namespace std;
 void tcoin_vs2(){
   int ncanvas = 8;
