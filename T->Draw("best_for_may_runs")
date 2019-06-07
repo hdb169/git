@@ -1,0 +1,55 @@
+//script to see the values to fill in PARAM/TRIG/tcoin.param
+//Need the following variable and look at the maximum and minimum values
+//Still need to work to get the differnt names of all the shistograms based on the run number
+using namespace std;
+void tcoin_vs2(){
+  int ncanvas = 8;
+  char name[20];//20 is the maximum character for the name of canvas or anything that follow "name"
+  TCanvas *cc[ncanvas];
+
+
+  Int_t runNum =12;
+  Int_t runs[] = {6009, 7593, 6018, 6145, 6245, 6306, 6410, 6536, 7593, 7635, 7723, 7808, 7830};
+
+  
+  for (int j =0;j<runNum;j++)
+
+    {
+
+  
+      TFile *f = new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/cal_calib_june1/coin_replay_production_%d_500000.root",runs[j]));
+      TTree *T = (TTree*)f->Get("T");
+
+      
+      for (int i=0; i<ncanvas;i++)
+	{
+      
+	  sprintf(name, "cc_%d_%d",i+1,j+1);//sprintf makes the loop
+	  cc[i] = new TCanvas(name,name);
+
+	  if(i ==0)
+	    T->Draw("T.coin.pT1_tdcTimeRaw>>h1()");
+	  else if(i==1)
+	    T->Draw("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw>>h2()");
+	  else if(i==2)
+	    T->Draw("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw>>h3()");
+	  else if (i==3)
+	    T->Draw("T.coin.pTRIG1_ROC1_tdcTimeRaw>>h4()");
+	  else if (i==4)
+	    T->Draw("T.coin.pTRIG4_ROC1_tdcTimeRaw>>h5()");
+	  else if (i==5)
+	    T->Draw("T.coin.pT1_tdcTimeRaw>>h6()");
+	  else if (i==6)
+	    T->Draw("T.coin.pTRIG1_ROC2_tdcTimeRaw>>h7()");
+	  else
+	    T->Draw("T.coin.hT2_tdcTimeRaw>>h8()");
+	  gPad->SetLogy();
+	  gPad->SetGridx();
+	  sprintf(name, "pdf/cc_%d_%d.pdf",i+1,runs[j]);//saves all pdfs as we use sprintf
+	  cc[i]->SaveAs(name);
+	  cc[i]->~TCanvas();//not to display the plots on canvas
+      
+	}
+   
+    }//runs loop
+}
