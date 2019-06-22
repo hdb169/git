@@ -1,0 +1,409 @@
+//mixplot4.C is just to apply graphical cut on ctime vs beta plot to select the lower blob and upper blob and look atthe x and y at cal, and shower vs preshower plot, to identify which one is pion and which one is pion region. del
+#include "TH1F.h"
+#include <TH2.h>
+#include <TCanvas.h>
+#include <TObject.h>
+#define NRUNS 1
+using namespace std;
+
+void mixplots3(){
+  Int_t runs[NRUNS] = {7671};//7593, 7735};//, 7595};// 7596, 7597, 7635, 7636, 7637, 7671, 7672, 7699, 7702, 7703, 7735, 7736, 7768, 7769, 7770, 7771};
+  // Int_t runs[NRUNS] = /*{7593, 7594, 7595, 7596, 7597, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7608, 7609, 7610, 7611, 7612, 7613, 7614, 7615, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7625, 7626, 7627, 7628, 7629, 7630, 7631, 7632, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, 7646, 7647, 7648, 7649, 7650, 7651, 7652, 7654, 7655, 7657, 7658, 7659, 7660, 7661, 7662, 7663, 7666, 7667, 7668, 7669 ,7670 ,7671, 7672, 7673, 7674, 7675, 7676, 7677, 7678, 7679, 7680, 7681, 7682, 7684, 7685, 7686, 7687, 7688, 7689, 7690, 7692, 7694, 7695, 7697, 7698, 7699, 7702, 7703, 7706,*/{ 7708, 7709, 7710, 7711, 7712, 7713, 7714, 7715, 7716, 7717, 7718, 7719, 7720, 7721, 7722, 7723, 7724, 7725, 7727, 7728, 7730, 7733, 7735, 7736, 7737, 7738, 7739, 7740, 7741, 7742, 7743, 7747, 7748, 7749, 7750, 7751, 7752, 7753, 7754, 7755, 7757, 7758, 7759, 7760, 7762, 7763, 7765, 7766, 7768, 7769, 7770, 7771, 7772, 7773, 7774, 7775, 7776, 7777, 7778, 7779, 7781, 7782, 7783, 7784, 7785, 7786, 7787, 7790, 7791, 7792, 7793, 7794, 7796, 7797, 7798, 7799, 7800, 7801, 7802, 7803, 7804, 7805, 7806, 7807, 7808, 7809, 7811, 7812, 7813, 7814, 7815, 7816, 7817, 7820, 7822, 7823, 7824, 7826, 7827, 7828, 7829, 7830    };//7707 need to replay
+
+  // Int_t runs[NRUNS]= {6400, 6208};
+
+  TFile *f[NRUNS];
+  TTree *t[NRUNS];
+  TH1F *h1[NRUNS];
+  TH2F *h2[NRUNS];
+  TH1F *h3[NRUNS];
+  TH2F *h4[NRUNS];
+  TH1F *h5[NRUNS];
+  TH2F *h6[NRUNS];
+  TH1F *h7[NRUNS];
+  TH2F *h8[NRUNS];
+  TH2F *h9[NRUNS];//shower vs preshower
+  TH2F *h10[NRUNS];//hbeta vs ctime
+  TH2F *h11[NRUNS];//pbeta vs ctime
+  TH2F *h12[NRUNS];//hbeta vs ctime
+  TH2F *h13[NRUNS];//pbeta vs ctime
+  TH1F *h14[NRUNS];
+  TH1F *h15[NRUNS];
+  TH1F *h16[NRUNS];
+  TH1F *h17[NRUNS];
+  TH1F *h18[NRUNS];
+  TH1F *h19[NRUNS];
+  TH1F *h20[NRUNS];
+
+
+  TCanvas *c1[NRUNS];
+  TCanvas *c2[NRUNS];
+  TCanvas *c3[NRUNS];
+  TCanvas *c4[NRUNS];
+
+
+  for(Int_t i=0; i<NRUNS; i++){
+
+    f[i]=new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/delta_-12_23/coin_replay_production_%d_500000.root",runs[i]),"read");
+    t[i]=(TTree *)f[i]->Get("T");
+
+    h1[i] = new TH1F(Form("h1[%d]", i), Form(""),100, -0.2, 1.5);
+    h1[i]->SetLineWidth(2);
+    h1[i]->SetLineColor(kBlue);
+    h1[i]->SetTitle(Form("Hms_hodo_#beta_Run_%d",runs[i]));
+    h1[i]->GetYaxis()->SetTitle("Entries");
+    h1[i]->GetYaxis()->CenterTitle();
+    h1[i]->GetXaxis()->SetTitle("H_hod_beta");
+    h1[i]->GetXaxis()->CenterTitle();
+    h1[i]->GetXaxis()->SetTitleOffset(1.2);
+    h1[i]->GetXaxis()->SetAxisColor(17);
+    h1[i]->GetYaxis()->SetAxisColor(17);
+
+    h2[i] = new TH2F(Form("h2[%d]", i), Form(""),100, -0.2, 1.5, 100, -10, 10);
+    h2[i]->SetLineWidth(2);
+    h2[i]->SetLineColor(kBlue);
+    h2[i]->SetTitle(Form("Hms_#delta_vs_#beta_Run_%d",runs[i]));
+    h2[i]->GetYaxis()->SetTitle("hms_delta");
+    h2[i]->GetYaxis()->CenterTitle();
+    h2[i]->GetXaxis()->SetTitle("H_hod_beta");
+    h2[i]->GetXaxis()->CenterTitle();
+    h2[i]->GetXaxis()->SetTitleOffset(1.2);
+    h2[i]->GetXaxis()->SetAxisColor(17);
+    h2[i]->GetYaxis()->SetAxisColor(17);
+
+    h3[i] = new TH1F(Form("h3[%d]", i), Form(""),100, -0.2, 1.5);
+    h3[i]->SetLineWidth(2);
+    h3[i]->SetLineColor(kBlue);
+    h3[i]->SetTitle(Form("Shms_hodo_#beta_Run_%d",runs[i]));
+    h3[i]->GetYaxis()->SetTitle("Entries");
+    h3[i]->GetYaxis()->CenterTitle();
+    h3[i]->GetXaxis()->SetTitle("P_hod_beta");
+    h3[i]->GetXaxis()->CenterTitle();
+    h3[i]->GetXaxis()->SetTitleOffset(1.2);
+    h3[i]->GetXaxis()->SetAxisColor(17);
+    h3[i]->GetYaxis()->SetAxisColor(17);
+
+
+    h4[i] = new TH2F(Form("h4[%d]", i), Form(""),100, -0.2, 1.5, 100, -10, 20);
+    h4[i]->SetLineWidth(2);
+    h4[i]->SetLineColor(kBlue);
+    h4[i]->SetTitle(Form("Shms_#delta_vs_#beta_Run_%d",runs[i]));
+    h4[i]->GetYaxis()->SetTitle("shms_delta");
+    h4[i]->GetYaxis()->CenterTitle();
+    h4[i]->GetXaxis()->SetTitle("P_hod_beta");
+    h4[i]->GetXaxis()->CenterTitle();
+    h4[i]->GetXaxis()->SetTitleOffset(1.2);
+    h4[i]->GetXaxis()->SetAxisColor(17);
+    h4[i]->GetYaxis()->SetAxisColor(17);
+
+    //calorimeter
+
+
+    h5[i] = new TH1F(Form("h5[%d]", i), Form(""),100, -0.2, 1.5);
+    h5[i]->SetLineWidth(2);
+    h5[i]->SetLineColor(kBlue);
+    h5[i]->SetTitle(Form("Hms_cal_%d",runs[i]));
+    h5[i]->GetYaxis()->SetTitle("Entries");
+    h5[i]->GetYaxis()->CenterTitle();
+    h5[i]->GetXaxis()->SetTitle("H_cal_etottracknorm");
+    h5[i]->GetXaxis()->CenterTitle();
+    h5[i]->GetXaxis()->SetTitleOffset(1.2);
+    h5[i]->GetXaxis()->SetAxisColor(17);
+    h5[i]->GetYaxis()->SetAxisColor(17);
+
+
+    h6[i] = new TH2F(Form("h6[%d]", i), Form(""),100, -0.2, 1.5, 100, -10, 10);
+    h6[i]->SetLineWidth(2);
+    h6[i]->SetLineColor(kBlue);
+    h6[i]->SetTitle(Form("Hms_cal_etot_vs_#delta_Run_%d",runs[i]));
+    h6[i]->GetYaxis()->SetTitle("H_gtr_delta");
+    h6[i]->GetYaxis()->CenterTitle();
+    h6[i]->GetXaxis()->SetTitle("hms_cal_etot");
+    h6[i]->GetXaxis()->CenterTitle();
+    h6[i]->GetXaxis()->SetTitleOffset(1.2);
+    h6[i]->GetXaxis()->SetAxisColor(17);
+    h6[i]->GetYaxis()->SetAxisColor(17);
+
+
+    h7[i] = new TH1F(Form("h7[%d]", i), Form(""),100, -0.2, 1.5);
+    h7[i]->SetLineWidth(2);
+    h7[i]->SetLineColor(kBlue);
+    h7[i]->SetTitle(Form("Shms_cal_%d",runs[i]));
+    h7[i]->GetYaxis()->SetTitle("Entries");
+    h7[i]->GetYaxis()->CenterTitle();
+    h7[i]->GetXaxis()->SetTitle("P_cal_etottracknorm");
+    h7[i]->GetXaxis()->CenterTitle();
+    h7[i]->GetXaxis()->SetTitleOffset(1.2);
+    h7[i]->GetXaxis()->SetAxisColor(17);
+    h7[i]->GetYaxis()->SetAxisColor(17);
+
+    h8[i] = new TH2F(Form("h8[%d]", i), Form(""),100, -0.2, 1.5, 100, -10, 10);
+    h8[i]->SetLineWidth(2);
+    h8[i]->SetLineColor(kBlue);
+    h8[i]->SetTitle(Form("Shms_cal_etot_vs_#delta_Run_%d",runs[i]));
+    h8[i]->GetYaxis()->SetTitle("P_gtr_dp");
+    h8[i]->GetYaxis()->CenterTitle();
+    h8[i]->GetXaxis()->SetTitle("shms_cal_etot");
+    h8[i]->GetXaxis()->CenterTitle();
+    h8[i]->GetXaxis()->SetTitleOffset(1.2);
+    h8[i]->GetXaxis()->SetAxisColor(17);
+    h8[i]->GetYaxis()->SetAxisColor(17);
+
+    //shower vs preshower
+
+    h9[i] = new TH2F(Form("h9[%d]", i), Form(""),100, -0.2, 1.5, 100, -0.2, 1.5);
+    h9[i]->SetLineWidth(2);
+    h9[i]->SetLineColor(kBlue);
+    h9[i]->SetTitle(Form("Shms_shower_vs_preshower_Run_%d",runs[i]));
+    h9[i]->GetYaxis()->SetTitle("shms_shower");
+    h9[i]->GetYaxis()->CenterTitle();
+    h9[i]->GetXaxis()->SetTitle("shms_preshower");
+    h9[i]->GetXaxis()->CenterTitle();
+    h9[i]->GetXaxis()->SetTitleOffset(1.2);
+    h9[i]->GetXaxis()->SetAxisColor(17);
+    h9[i]->GetYaxis()->SetAxisColor(17);
+
+    //hbeta vs ctime
+    h10[i] = new TH2F(Form("h10[%d]", i), Form(""),100, -0.2, 1.5, 100, 20,60);
+    h10[i]->SetLineWidth(2);
+    h10[i]->SetLineColor(kBlue);
+    h10[i]->SetTitle(Form("hms_beta_vs_ctime_Run_%d",runs[i]));
+    h10[i]->GetYaxis()->SetTitle("ctime");
+    h10[i]->GetYaxis()->CenterTitle();
+    h10[i]->GetXaxis()->SetTitle("hms_beta");
+    h10[i]->GetXaxis()->CenterTitle();
+    h10[i]->GetXaxis()->SetTitleOffset(1.2);
+    h10[i]->GetXaxis()->SetAxisColor(17);
+    h10[i]->GetYaxis()->SetAxisColor(17);
+
+   
+    //pbeta vs ctime
+    h11[i] = new TH2F(Form("h11[%d]", i), Form(""),100, -0.2, 1.5, 100, 20,60);
+    h11[i]->SetLineWidth(2);
+    h11[i]->SetLineColor(kBlue);
+    h11[i]->SetTitle(Form("shms_beta_vs_ctime_Run_%d",runs[i]));
+    h11[i]->GetYaxis()->SetTitle("ctime");
+    h11[i]->GetYaxis()->CenterTitle();
+    h11[i]->GetXaxis()->SetTitle("shms_beta");
+    h11[i]->GetXaxis()->CenterTitle();
+    h11[i]->GetXaxis()->SetTitleOffset(1.2);
+    h11[i]->GetXaxis()->SetAxisColor(17);
+    h11[i]->GetYaxis()->SetAxisColor(17);
+
+    h12[i] = new TH2F(Form("h12[%d]", i), Form(""),100, -0.2, 1.5, 100, -0.2, 1.5);
+    h12[i]->SetLineWidth(2);
+    h12[i]->SetLineColor(kBlue);
+    h12[i]->SetTitle(Form("hms_beta_vs_hcaletot_Run_%d",runs[i]));
+    h12[i]->GetYaxis()->SetTitle("hcaletot");
+    h12[i]->GetYaxis()->CenterTitle();
+    h12[i]->GetXaxis()->SetTitle("hms_beta");
+    h12[i]->GetXaxis()->CenterTitle();
+    h12[i]->GetXaxis()->SetTitleOffset(1.2);
+    h12[i]->GetXaxis()->SetAxisColor(17);
+    h12[i]->GetYaxis()->SetAxisColor(17);
+
+    h13[i] = new TH2F(Form("h13[%d]", i), Form(""),100, -0.2, 1.5, 100,-0.2, 1.5);
+    h13[i]->SetLineWidth(2);
+    h13[i]->SetLineColor(kBlue);
+    h13[i]->SetTitle(Form("shms_beta_vs_pcaletot_Run_%d",runs[i]));
+    h13[i]->GetYaxis()->SetTitle("pcaletot");
+    h13[i]->GetYaxis()->CenterTitle();
+    h13[i]->GetXaxis()->SetTitle("shms_beta");
+    h13[i]->GetXaxis()->CenterTitle();
+    h13[i]->GetXaxis()->SetTitleOffset(1.2);
+    h13[i]->GetXaxis()->SetAxisColor(17);
+    h13[i]->GetYaxis()->SetAxisColor(17);
+
+    h14[i] = new TH1F(Form("h14[%d]", i), Form(""),100, -0.2, 1.5);
+    h14[i]->SetLineWidth(2);
+    h14[i]->SetLineColor(kBlue);
+    h14[i]->SetTitle(Form("Shms_cal_shower_%d",runs[i]));
+    h14[i]->GetYaxis()->SetTitle("Entries");
+    h14[i]->GetYaxis()->CenterTitle();
+    h14[i]->GetXaxis()->SetTitle("P_cal_etottracknorm-P.cal.eprtracknorm");
+    h14[i]->GetXaxis()->CenterTitle();
+    h14[i]->GetXaxis()->SetTitleOffset(1.2);
+    h14[i]->GetXaxis()->SetAxisColor(17);
+    h14[i]->GetYaxis()->SetAxisColor(17);
+
+    h15[i] = new TH1F(Form("h15[%d]", i), Form(""),100, -0.2, 0.8);
+    h15[i]->SetLineWidth(2);
+    h15[i]->SetLineColor(kBlue);
+    h15[i]->SetTitle(Form("Shms_cal_pre-shower_%d",runs[i]));
+    h15[i]->GetYaxis()->SetTitle("Entries");
+    h15[i]->GetYaxis()->CenterTitle();
+    h15[i]->GetXaxis()->SetTitle("P.cal.eprtracknorm");
+    h15[i]->GetXaxis()->CenterTitle();
+    h15[i]->GetXaxis()->SetTitleOffset(1.2);
+    h15[i]->GetXaxis()->SetAxisColor(17);
+    h15[i]->GetYaxis()->SetAxisColor(17);
+
+
+    h16[i] = new TH1F(Form("h16[%d]", i), Form(""),100, -2, 10);
+    h16[i]->SetLineWidth(2);
+    h16[i]->SetLineColor(kBlue);
+    h16[i]->SetTitle(Form("missing Mass_%d",runs[i]));
+    h16[i]->GetYaxis()->SetTitle("Entries");
+    h16[i]->GetYaxis()->CenterTitle();
+    h16[i]->GetXaxis()->SetTitle("sqrt(miss-energy^2-miss-mom^2)");
+    h16[i]->GetXaxis()->CenterTitle();
+    h16[i]->GetXaxis()->SetTitleOffset(1.2);
+    h16[i]->GetXaxis()->SetAxisColor(17);
+    h16[i]->GetYaxis()->SetAxisColor(17);
+
+    h17[i] = new TH1F(Form("h17[%d]", i), Form(""),100, -2, 10);
+    h17[i]->SetLineWidth(2);
+    h17[i]->SetLineColor(kBlue);
+    h17[i]->SetTitle(Form("Invariant Mass_%d",runs[i]));
+    h17[i]->GetYaxis()->SetTitle("Entries");
+    h17[i]->GetYaxis()->CenterTitle();
+    h17[i]->GetXaxis()->SetTitle("P.kin.primary.W");
+    h17[i]->GetXaxis()->CenterTitle();
+    h17[i]->GetXaxis()->SetTitleOffset(1.2);
+    h17[i]->GetXaxis()->SetAxisColor(17);
+    h17[i]->GetYaxis()->SetAxisColor(17);
+
+
+    h18[i] = new TH1F(Form("h18[%d]", i), Form(""),100, -2, 10);
+    h18[i]->SetLineWidth(2);
+    h18[i]->SetLineColor(kBlue);
+    h18[i]->SetTitle(Form("Missing Energy_%d",runs[i]));
+    h18[i]->GetYaxis()->SetTitle("Entries");
+    h18[i]->GetYaxis()->CenterTitle();
+    h18[i]->GetXaxis()->SetTitle("P.kin.secondary.emiss");
+    h18[i]->GetXaxis()->CenterTitle();
+    h18[i]->GetXaxis()->SetTitleOffset(1.2);
+    h18[i]->GetXaxis()->SetAxisColor(17);
+    h18[i]->GetYaxis()->SetAxisColor(17);
+
+
+    h19[i] = new TH1F(Form("h19[%d]", i), Form(""),100, -2, 10);
+    h19[i]->SetLineWidth(2);
+    h19[i]->SetLineColor(kBlue);
+    h19[i]->SetTitle(Form("Missing Momentum_%d",runs[i]));
+    h19[i]->GetYaxis()->SetTitle("Entries");
+    h19[i]->GetYaxis()->CenterTitle();
+    h19[i]->GetXaxis()->SetTitle("P.kin.secondary.pmiss");
+    h19[i]->GetXaxis()->CenterTitle();
+    h19[i]->GetXaxis()->SetTitleOffset(1.2);
+    h19[i]->GetXaxis()->SetAxisColor(17);
+    h19[i]->GetYaxis()->SetAxisColor(17);
+
+    //just the copy of h11, but in one canvas
+    h20[i] = new TH2F(Form("h20[%d]", i), Form(""),100, -0.2, 1.5, 100, 20,60);
+    h20[i]->SetLineWidth(2);
+    h20[i]->SetLineColor(kBlue);
+    h20[i]->SetTitle(Form("shms_beta_vs_ctime_Run_%d",runs[i]));
+    h20[i]->GetYaxis()->SetTitle("ctime");
+    h20[i]->GetYaxis()->CenterTitle();
+    h20[i]->GetXaxis()->SetTitle("shms_beta");
+    h20[i]->GetXaxis()->CenterTitle();
+    h20[i]->GetXaxis()->SetTitleOffset(1.2);
+    h20[i]->GetXaxis()->SetAxisColor(17);
+    h20[i]->GetYaxis()->SetAxisColor(17);
+    //T->Draw() in code is Y vs X but the axis is x first then y
+    //T->Draw("y:x>>h(xbin,xlow,xhig,ybin,ylow,yhig)","","");
+    //hodobeta
+
+    c1[i] = new TCanvas(Form("c%d]", i),"",1000,1000); 
+    c1[i]->Divide(3,3); 
+
+    c1[i]->cd(1);gPad->SetGridx();
+    t[i]->Draw(Form("H.hod.beta>>h1[%d]", i ),"H.gtr.dp>-10 &&H.gtr.dp <10 ");//&&H.hod.beta>0");
+
+    c1[i]->cd(2);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("H.gtr.dp:H.hod.beta>>h2[%d]", i ), "H.gtr.dp>-10 &&H.gtr.dp <10 ","colz");// &&H.hod.beta>0 
+
+    c1[i]->cd(3);gPad->SetGridx();
+    t[i]->Draw(Form("P.hod.beta>>h3[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20  ");
+
+    c1[i]->cd(4);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("P.gtr.dp:P.hod.beta>>h4[%d]", i ), "P.gtr.dp>-10 &&P.gtr.dp <20  ","colz");
+
+    c1[i]->cd(5);gPad->SetGridx();
+    t[i]->Draw(Form("sqrt(P.kin.secondary.emiss*P.kin.secondary.emiss-P.kin.secondary.pmiss*P.kin.secondary.pmiss) >>h16[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20  ");
+
+    c1[i]->cd(6);gPad->SetGridx();
+    t[i]->Draw(Form("H.kin.primary.W>>h17[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20  ");
+
+    c1[i]->cd(7);gPad->SetGridx();
+    t[i]->Draw(Form("P.kin.secondary.emiss>>h18[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20  ");
+
+    c1[i]->cd(8);gPad->SetGridx();
+    t[i]->Draw(Form("P.kin.secondary.pmiss>>h19[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20  ");
+
+
+    c1[i]->SaveAs(Form("pdf_widedelta/hodo_miss_%d.pdf",runs[i]));
+
+
+    //calorimeter
+    c2[i] = new TCanvas(Form("c%d]", i),"",1000,1000); 
+    c2[i]->Divide(3,2); 
+
+    c2[i]->cd(1);gPad->SetGridx();
+    t[i]->Draw(Form("H.cal.etottracknorm>>h5[%d]", i ),"H.gtr.dp>-10 &&H.gtr.dp <10");// &&  H.cal.etottracknorm>0");
+
+    c2[i]->cd(2);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("H.gtr.dp:H.cal.etottracknorm>>h6[%d]", i ), "H.gtr.dp>-10 &&H.gtr.dp <10  ","colz");//&&  H.cal.etottracknorm>0
+
+    c2[i]->cd(3);gPad->SetGridx();
+    t[i]->Draw(Form("P.cal.etottracknorm>>h7[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20 &&P.hgcer.npeSum>1 ");//&&  P.cal.etottracknorm>0 ");
+
+    c2[i]->cd(4);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("P.gtr.dp:P.cal.etottracknorm>>h8[%d]", i ), "P.gtr.dp>-10 &&P.gtr.dp <20&&P.hgcer.npeSum>1","colz");// && P.cal.etottracknorm>0
+
+    c2[i]->cd(5);gPad->SetGridx();
+    t[i]->Draw(Form("P.cal.etottracknorm-P.cal.eprtracknorm>>h14[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20");// &&  P.cal.etottracknorm-P.cal.eprtracknorm>0 ");
+
+    c2[i]->cd(6);gPad->SetGridx();
+    t[i]->Draw(Form("P.cal.eprtracknorm>>h15[%d]", i ),"P.gtr.dp>-10 &&P.gtr.dp <20");//&& P.cal.eprtracknorm>0 ");
+
+
+    c2[i]->SaveAs(Form("pdf_widedelta/cal_%d.pdf",runs[i]));
+    
+    //shower vs preshower
+    c3[i] = new TCanvas(Form("c%d]", i),"",1000,1000); 
+    c3[i]->Divide(2,2); 
+    c3[i]->cd(1);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("P.cal.etottracknorm-P.cal.eprtracknorm:P.cal.eprtracknorm>>h9[%d]", i ), "P.gtr.dp>-10 &&P.gtr.dp <20  ","colz");//&& P.cal.eprtracknorm>0 && P.cal.etottracknorm-P.cal.eprtracknorm>0
+    //hbeta vs ctime
+    c3[i]->cd(2);gPad->SetGridx();gPad->SetLogz();gPad->SetGridy();
+    t[i]->Draw(Form("CTime.ePiCoinTime_ROC2:H.gtr.beta>>h10[%d]", i ), "H.gtr.dp>-10 &&H.gtr.dp <10 ","colz");
+
+    //pbeta vs ctime
+    c3[i]->cd(3);gPad->SetGridx();gPad->SetLogz();gPad->SetGridy();
+    t[i]->Draw(Form("CTime.ePiCoinTime_ROC2:P.gtr.beta>>h11[%d]", i ), "P.gtr.dp>-10 &&P.gtr.dp <20 ","colz");
+   
+    c3[i]->cd(4);gPad->Divide(2,1);gPad->SetGridx();gPad->SetLogz();
+    c3[i]->cd(4); gPad->cd(1);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("H.cal.etottracknorm:H.gtr.beta>>h12[%d]", i ), "H.gtr.dp>-10 &&H.gtr.dp <10 ","colz");// && H.cal.etottracknorm>0
+
+    c3[i]->cd(4); gPad->cd(2);gPad->SetGridx();gPad->SetLogz();
+    t[i]->Draw(Form("P.cal.etottracknorm:P.gtr.beta>>h13[%d]", i ), "P.gtr.dp>-10 &&P.gtr.dp <20 ","colz");//&& P.cal.etottracknorm>0 
+
+
+    c3[i]->SaveAs(Form("pdf_widedelta/ctime_cal_%d.pdf",runs[i]));
+
+
+    c4[i] = new TCanvas(Form("c%d]", i),"",1000,1000); 
+
+    c4[i]->cd(1);gPad->SetGridx();gPad->SetLogz();gPad->SetGridy();
+    t[i]->Draw(Form("P.cal.etottracknorm-P.cal.eprtracknorm:P.cal.eprtracknorm>>h20[%d]", i ), "P.gtr.dp>-10 &&P.gtr.dp <20  ","colz");//&& P.cal.eprtracknorm>0 && P.cal.etottracknorm-P.cal.eprtracknorm>0
+    c4[i]->SaveAs(Form("pdf_widedelta/ctime_vs_beta_%d.pdf",runs[i]));
+
+  }
+
+
+
+}
+
+
+
+// T->Draw("sqrt(P.kin.secondary.emiss*P.kin.secondary.emiss-P.kin.secondary.pmiss*P.kin.secondary.pmiss)>>h(100,-1,10)","sqrt(P.kin.secondary.emiss*P.kin.secondary.emiss-P.kin.secondary.pmiss*P.kin.secondary.pmiss)>0")
+
+
+
+
+
+
+
