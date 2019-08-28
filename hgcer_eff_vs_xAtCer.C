@@ -16,6 +16,7 @@ tree->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/hgc_au
   
   TFile *MyFile = new TFile(Form("output_root/new_hist%d.root",runNumber),"RECREATE");
   
+  
   TH1F *hTotalx          = new TH1F("hTotalx", "Eff vs X ", 40, -20., 20.);
   TH1F *hPassx           = new TH1F("hPassx" , "         ", 40, -20., 20.);
   TH1F *hTotaly         = new TH1F("hTotaly","Eff vs Y ", 40, -20., 20.);
@@ -81,21 +82,16 @@ tree->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/hgc_au
 	  XvsYpass ->Fill(my_y, my_x);	  
 	}
     }
-    
-  // cout << "avg Eff: " << hPass->GetEntries()/hTotal->GetEntries() << endl;     
-
-  // TGraphAsymmErrors * gr = new  TGraphAsymmErrors( hPass , hTotal);
-
-
+ 
   TEfficiency *pEff = new TEfficiency();
   pEff  = new TEfficiency(*hPassx, *hTotalx);
- pEff->SetTitle(" ; x_{cer};Efficiency"); 
-pEff->GetYaxis()->SetRangeUsers(0.65, 1.10);
+  pEff->SetTitle(" ; x_{cer};Efficiency"); 
+  pEff->GetYaxis()->SetRangeUsers(0.65, 1.10);
 
-TEfficiency *pEff2 = new TEfficiency();
-pEff2 = new TEfficiency(*hPassy, *hTotaly);
-pEff2->SetTitle(" ;y_{cer};Efficiency");
-pEff2->GetYaxis()->SetRangeUsers(0.65,1.10);
+  TEfficiency *pEff2 = new TEfficiency();
+  pEff2 = new TEfficiency(*hPassy, *hTotaly);
+  pEff2->SetTitle(" ;y_{cer};Efficiency");
+  pEff2->GetYaxis()->SetRangeUsers(0.65,1.10);
 
   TEfficiency *pEff1 = new TEfficiency();
   pEff1  = new TEfficiency(*XvsYpass, *XvsYtotal);
@@ -104,9 +100,9 @@ pEff2->GetYaxis()->SetRangeUsers(0.65,1.10);
   c1  ->cd();
   pEff1->Draw("colz");
 
-TCanvas *c3 = new TCanvas( "c3","", 1500, 800);
-c3->cd();
-pEff2->Draw();
+  TCanvas *c3 = new TCanvas( "c3","", 1500, 800);
+  c3->cd();
+  pEff2->Draw();
 
   TCanvas *c2 = new TCanvas("c2", "", 1500, 800);
   c2->cd();
