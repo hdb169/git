@@ -86,12 +86,10 @@ tree->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/hgc_au
   TEfficiency *pEff = new TEfficiency();
   pEff  = new TEfficiency(*hPassx, *hTotalx);
   pEff->SetTitle(" ; x_{cer};Efficiency"); 
-  pEff->GetYaxis()->SetRangeUsers(0.65, 1.10);
 
   TEfficiency *pEff2 = new TEfficiency();
   pEff2 = new TEfficiency(*hPassy, *hTotaly);
   pEff2->SetTitle(" ;y_{cer};Efficiency");
-  pEff2->GetYaxis()->SetRangeUsers(0.65,1.10);
 
   TEfficiency *pEff1 = new TEfficiency();
   pEff1  = new TEfficiency(*XvsYpass, *XvsYtotal);
