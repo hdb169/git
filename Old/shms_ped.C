@@ -106,7 +106,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 	    cout<<"___________________________________________________________________________________"<<endl;
 	    cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
 	    cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
-	    cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 	    cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 	    cout<<"___________________________________________________________________________________"<<endl;
 	    cout << setprecision(2) << fixed <<"chan"<<" "<< channel[i] << " " <<"bar"<<" "<< bar[i] 
@@ -195,7 +194,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 			  cout<<"___________________________________________________________________________________"<<endl;
 			  cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
 			  cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
-			  cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 			  cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 			  cout<<"___________________________________________________________________________________"<<endl;
 			  first_error=false;
@@ -264,7 +262,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 		      cout<<"___________________________________________________________________________________"<<endl;
 		      cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
 		      cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
-		      cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
 		      first_error=false;
@@ -331,7 +328,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 		      cout<<"___________________________________________________________________________________"<<endl;
 		      cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
 		      cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
-		      cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"____________________________________________________________________________________"<<endl;
 		      first_error=false;
@@ -392,7 +388,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
 		      cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
-		      cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
 		      cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
@@ -456,7 +451,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
 		      cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
-		      cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
 		      cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
@@ -522,7 +516,6 @@ void shms_ped(Int_t runNumber, Int_t eventNumber)
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
 		      cout<<" HERE THE MEAN DIFFERNCE OF PULSE PEDUSTAL BETWEEN GOLDEN RUN (MG) AND"<<endl;
-		      cout<<"CURRENT RUN (M) IS GREATER THAN 2.5 mV FOR THE FOLLOWING HISTOGRAM(S)"<<endl;
 		      cout<<"PLEASE CONSULT WITH BRAD SAWATZKY (brads@jlab.org) or ERIC POOSER(pooser@jlab.org)"<<endl;
 		      cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Attention Needed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		      cout<<"___________________________________________________________________________________"<<endl;
