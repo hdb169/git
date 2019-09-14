@@ -2,10 +2,10 @@
 //2019 Sept 12 , Mark Jones Changes to this file
 
 //1)we already selected 25 hits per dc plane, so no need to cut down to < 21 hits,so dont apply nhit cut anymore.
-//2)The purning algorithm is applied by puting  psel_using_prune = 1 in line num 49.
+//2)The pruning algorithm is applied by puting  psel_using_prune = 1 in line num 49.
 //whatever we had earlier is alos included in the git as ptracking.param_beforesep12_2019
 //CHANGES ARE: ORIGINAL_VS_MARK'S_CHANGES
-//1) psel_using_prune = 0 vs  psel_using_prune = 1, around line num = 
+//1) psel_using_prune = 0 vs  psel_using_prune = 1, around line num = 61
 
 
 //==============================================================================================
