@@ -1,4 +1,4 @@
-#to run this, you have to do python read_lins_from_reportfile.py
+#to run this, you have to do python read_reportfile.py
 
 
 #import various modules 
