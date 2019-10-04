@@ -1,0 +1,112 @@
+
+
+#Data
+#run elreal elcleancharge(mC) shms_rate(kHz) elreal/Q error in elreal/Q    elclean/Q    error in elreal/Q
+6482 289627479 225791879 25898.579     775.724 11183.13  0.657118  8718.31 0.580201
+6483 313219584 249126665 27827.465     540.128 11255.77  0.635991  8952.54 0.567200
+6484 136957187 110111655 12082.153     391.593 11335.49  0.968608  9113.57 0.868504
+6485 123919111 100608041 10839.418     265.065 11432.26  1.026982  9281.68 0.925359
+
+#/////////////////////////////
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void plotelreal()
+{
+  //std::ifstream infile("singles.txt"); //reads first txtfile
+  std::ifstream infile("elreal.txt"); //reads first txtfile
+
+  std::string line;// read line by line
+  vector <int> run; // define the following quantities which are actually the columns in the shms_eff.txt file, specify which is of int or float or double type
+  vector <double> elreal;
+  vector <double> elclean;
+  vector <double> charge;
+  vector <double> rate;
+  vector <double> elreal_div_q;
+  vector <double> elreal_div_q_err;  
+  vector <double> elclean_div_q;
+  vector <double> elclean_div_q_err;
+
+  while (std::getline(infile, line))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line);// to read the whole strings in a line
+      double a, b, c, d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a >> b >> c >> d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run.push_back(a);//now run is stored in a
+      elreal.push_back(b);//did is stored in b
+      elclean.push_back(c);//should is stored as c
+      charge.push_back(d);//eff = d
+      rate.push_back(e);//eff err = e
+      elreal_div_q.push_back(f);//rate = f
+      elreal_div_q_err.push_back(g);//rate = f
+      elclean_div_q.push_back(h);//rate = f
+      elclean_div_q_err.push_back(i);//rate = f
+
+    }
+
+
+  /*The following portion of code is for reading the second txt file, for now I have only one txt file.
+
+    std::ifstream infile1("shms_rate.txt");//reads the second txt file
+    
+    std::string line1;//read all lines, there are just two columns
+    vector <int> run1;//first column
+    vector <double> rate;//second column
+    
+    while (std::getline(infile1, line1))
+    {
+    std::istringstream iss(line1);//pass each column of line1 tp a1, b1
+    double a1, b1;   ;
+        
+    if (!(iss >> a1>> b1)) 
+    {
+            
+    break; 
+            
+    } // error
+    run1.push_back(a1);//first column
+    rate.push_back(b1);//second column
+    }
+  */
+  //=========================================================//
+
+  
+  for (int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+    {
+      cout <<  elclean_div_q_err[i]<<endl;//you have to cout each elements , so need i
+      cout<<  elclean_div_q[i]<<endl;
+    }
+  
+  auto gr = new TGraphErrors(run.size(), &rate[0], &elreal_div_q[0],  0, &elreal_div_q_err[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+  gr->Draw("ap");
+  gr->SetMarkerStyle(kFullTriangleUp);
+  gr->GetXaxis()->SetTitle("SHMS 3/4 Rate (kHz)");
+  gr->GetYaxis()->SetTitle("Elreal_divide_Q (per mC)");
+  gr->SaveAs("pdf/singles_elreal.pdf");
+  //r->GetYaxis()->SetRangeUser(0.98,1);
+  gr->SetTitle("Elreal divide Q vs Rate Singles Runs");
+  gr->GetXaxis()->CenterTitle();
+  gr->GetYaxis()->CenterTitle();
+  //gr->GetYaxis()->SetRangeUser(0.85,1.0);
+  
+ // auto gr1 = new TGraphErrors(run.size(), &rate[0], &elclean_div_q[0],  0, &elclean_div_q_err[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+ //  gr1->Draw("ap");
+ //  gr1->SetMarkerStyle(kFullTriangleUp);
+ //  gr1->GetXaxis()->SetTitle("SHMS 3/4 Rate (kHz)");
+ //  gr1->GetYaxis()->SetTitle("Elclean_divide_Q (per mC)");
+ //  gr1->SaveAs("pdf/singles_elclean.pdf");
+ //  //r->GetYaxis()->SetRangeUser(0.98,1);
+ //  gr1->SetTitle("Elclean divide Q vs Rate Singles Runs");
+ //  gr1->GetXaxis()->CenterTitle();
+ //  gr1->GetYaxis()->CenterTitle();
+ //  //gr1->GetYaxis()->SetRangeUser(0.85,1.0);
+  
+
+}
