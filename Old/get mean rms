@@ -1,0 +1,177 @@
+
+
+#include <TH1F.h>
+#include <TH2F.h>
+
+
+void sp_vs1()
+{   
+    TFile *f = new TFile("ROOTfiles/shms_replay_production_1583_250000.root");
+    
+ TH2F *hist1 = (TH2F*)gDirectory->Get("phodo_1x_good_pped_vs_pmt_pos");
+ TH2F *hist2 = (TH2F*)gDirectory->Get("phodo_1x_good_pped_vs_pmt_neg");
+ TH2F *hist3 = (TH2F*)gDirectory->Get("phodo_1y_good_pped_vs_pmt_pos");
+ TH2F *hist4 = (TH2F*)gDirectory->Get("phodo_1y_good_pped_vs_pmt_neg");
+ 
+ TH2F *hist5 = (TH2F*)gDirectory->Get("phodo_2x_good_pped_vs_pmt_pos");
+ TH2F *hist6 = (TH2F*)gDirectory->Get("phodo_2x_good_pped_vs_pmt_neg");
+ TH2F *hist7 = (TH2F*)gDirectory->Get("phodo_2y_good_pped_vs_pmt_pos");
+ TH2F *hist8 = (TH2F*)gDirectory->Get("phodo_2y_good_pped_vs_pmt_pos");
+
+    
+ // hist1->Draw();
+    TH1D *projHist1;
+    TH1D *projHist2;
+    TH1D *projHist3;
+    TH1D *projHist4;
+    TH1D *projHist5;
+    TH1D *projHist6;
+    TH1D *projHist7;
+    TH1D *projHist8;
+    
+     TGraphErrors *gr1 = new TGraphErrors();
+     TGraphErrors *gr2 = new TGraphErrors();
+     TGraphErrors *gr3 = new TGraphErrors();
+     TGraphErrors *gr4 = new TGraphErrors();
+     TGraphErrors *gr5 = new TGraphErrors();
+     TGraphErrors *gr6 = new TGraphErrors();
+     TGraphErrors *gr7 = new TGraphErrors();
+     TGraphErrors *gr8 = new TGraphErrors();
+     
+    for(int i = 0; i< 13; ++i)
+    {
+    	projHist1 = hist1->ProjectionY("hodo_proj", i+1, i+1);
+	projHist2 = hist2->ProjectionY("hodo_proj", i+1, i+1);
+       	projHist3 = hist3->ProjectionY("hodo_proj", i+1, i+1);
+	projHist4 = hist4->ProjectionY("hodo_proj", i+1, i+1);
+
+	
+	
+    	gr1->SetPoint(i+1, i+1, projHist1->GetMean());
+	gr1->SetPointError(i+1, 0, projHist1->GetRMS());
+	gr2->SetPoint(i+1, i+1, projHist2->GetMean());
+	gr2->SetPointError(i+1, 0, projHist2->GetRMS());
+	gr3->SetPoint(i+1, i+1, projHist3->GetMean());
+	gr3->SetPointError(i+1, 0, projHist3->GetRMS());
+	gr4->SetPoint(i+1, i+1, projHist4->GetMean());
+	gr4->SetPointError(i+1, 0, projHist4->GetRMS());
+
+    }
+
+    for (int j = 0; j <14; j++)//2x plane pos/neg
+      {
+
+       	projHist5 = hist5->ProjectionY("hodo_proj", j+1, j+1);
+       	projHist6 = hist6->ProjectionY("hodo_proj", j+1, j+1);
+
+	gr5->SetPoint(j+1, j+1, projHist5->GetMean());
+	gr5->SetPointError(j+1, 0, projHist5->GetRMS());
+	gr6->SetPoint(j+1, j+1, projHist6->GetMean());
+	gr6->SetPointError(j+1, 0, projHist6->GetRMS());
+      }
+
+    for(int k = 0; k<21; k++)//2y plane pos/neg
+      
+      {
+      	projHist7 = hist7->ProjectionY("hodo_proj", k+1, k+1);
+       	projHist8 = hist8->ProjectionY("hodo_proj", k+1, k+1);
+	
+	gr7->SetPoint(k+1, k+1, projHist7->GetMean());
+	gr7->SetPointError(k+1, 0, projHist7->GetRMS());
+	gr8->SetPoint(k+1, k+1, projHist8->GetMean());
+	gr8->SetPointError(k+1, 0, projHist8->GetRMS());
+	
+	  }
+
+
+
+
+	
+	//	cout << "Bin:" << i+1 << " Mean: "<< projHist->GetMean() << " RMS: "<< projHist->GetRMS() <<endl;
+
+    // }
+
+   TCanvas *c1 = new TCanvas("c1","Positive",400,400);
+   
+   c1-> Divide(2,4); 
+   c1->cd(1);
+   gr1->Draw("AP");
+   gr1->GetXaxis()->SetTitle("pmt_no");
+   gr1->GetYaxis()->SetTitle("Pedestal");
+   gr1->SetTitle("Phodo_1X_pos");
+   gr1->SetMarkerColor(2);
+   gr1->SetMarkerSize(1);
+   gr1->SetMarkerStyle(3);
+
+  
+   c1->cd(2);
+   gr2->Draw("AP");
+   gr2->GetXaxis()->SetTitle("pmt_no");
+   gr2->GetYaxis()->SetTitle("Pedestal");
+   gr2->SetTitle("Phodo_1X_neg");
+   gr2->SetMarkerColor(2);
+   gr2->SetMarkerSize(1);
+   gr2->SetMarkerStyle(3);
+
+   c1->cd(3);
+   gr3->Draw("AP");
+   gr3->GetXaxis()->SetTitle("pmt_no");
+   gr3->GetYaxis()->SetTitle("Pedestal");
+   gr3->SetTitle("Phodo_1y_pos");
+   gr3->SetMarkerColor(2);
+   gr3->SetMarkerSize(1);
+   gr3->SetMarkerStyle(3);
+
+
+   c1->cd(4);
+   gr4->Draw("AP");
+   gr4->GetXaxis()->SetTitle("pmt_no");
+   gr4->GetYaxis()->SetTitle("Pedestal");
+   gr4->SetTitle("Phodo_1y_neg");
+   gr4->SetMarkerColor(2);
+   gr4->SetMarkerSize(1);
+   gr4->SetMarkerStyle(3);
+
+
+   c1->cd(5);
+   gr5->Draw("AP");
+   gr5->GetXaxis()->SetTitle("pmt_no");
+   gr5->GetYaxis()->SetTitle("Pedestal");
+   gr5->SetTitle("Phodo_2X_pos");
+   gr5->SetMarkerColor(2);
+   gr5->SetMarkerSize(1);
+   gr5->SetMarkerStyle(3);
+
+
+   c1->cd(6);
+   gr6->Draw("AP");
+   gr6->GetXaxis()->SetTitle("pmt_no");
+   gr6->GetYaxis()->SetTitle("Pedestal");
+   gr6->SetTitle("Phodo_2X_neg");
+   gr6->SetMarkerColor(2);
+   gr6->SetMarkerSize(1);
+   gr6->SetMarkerStyle(3);
+
+   c1->cd(7);
+   gr7->Draw("AP");
+   gr7->GetXaxis()->SetTitle("pmt_no");
+   gr7->GetYaxis()->SetTitle("Pedestal");
+   gr7->SetTitle("Phodo_2Y_pos");
+   gr7->SetMarkerColor(2);
+   gr7->SetMarkerSize(1);
+   gr7->SetMarkerStyle(3);
+
+   c1->cd(8);
+   gr8->Draw("AP");
+   gr8->GetXaxis()->SetTitle("pmt_no");
+   gr8->GetYaxis()->SetTitle("Pedestal");
+   gr8->SetTitle("Phodo_2Y_neg");
+   gr8->SetMarkerColor(2);
+   gr8->SetMarkerSize(1);
+   gr8->SetMarkerStyle(3);
+
+   c1->Update();
+   
+   
+   
+}
