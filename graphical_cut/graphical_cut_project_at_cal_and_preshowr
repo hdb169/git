@@ -108,7 +108,7 @@ void plot_final(){
     TCut eventcut;
     //Bool_t eventcut = delta>-10 && delta<20 && beta>0.5 && beta<1.5 && hgc >2 && aero>2;
 
-    eventcut = "P.gtr.dp>-10&& P.gtr.dp< 20 && P.gtr.beta>0.5 && P.gtr.beta<1.5 && P.hgcer.npSum>2.0 && P.aero.npeSum >2.0 && P.dc.InsideDipoleExit==1";
+    eventcut = "P.gtr.dp>-10&& P.gtr.dp< 20 && P.gtr.beta>0.5 && P.gtr.beta<1.5 && P.hgcer.npeSum>2.0 && P.aero.npeSum >2.0 && P.dc.InsideDipoleExit==1";
    
  
     TCutG *cutg = new TCutG("cutg",9);
