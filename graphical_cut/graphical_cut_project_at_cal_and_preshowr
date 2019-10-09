@@ -1,0 +1,186 @@
+#include "TH1F.h"
+#include <TH2.h>
+#include <TCanvas.h>
+#include <TObject.h>
+#define NRUNS 1
+using namespace std;
+
+void plot_final(){
+
+  Int_t runs[NRUNS] = {6545};
+
+  TH2F *h1;
+  TH2F *h2;
+  TH2F *h3;
+  TH2F *h4;
+
+  TTree   *t;
+  TCanvas *c1;
+  TCanvas *c2;
+
+  for(Int_t i=0; i<NRUNS; i++){
+    //f[i]=new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/6545_test/coin_replay_production_%d_-1.root", runs[i]),"read");
+
+
+    h1 = new TH2F(Form("h1[%d]", i), Form(""),100, 0.001,2, 100, 0.001, 2);
+    h1->SetLineWidth(2);
+    h1->SetLineColor(kBlue);
+    h1->SetTitle(Form("shower vs preshower all events,  Run_%d",runs[i]));
+    h1->GetYaxis()->SetTitle("shms_shower");
+    h1->GetYaxis()->CenterTitle();
+    h1->GetXaxis()->SetTitle("shms_preshower");
+    h1->GetXaxis()->CenterTitle();
+    h1->GetXaxis()->SetTitleOffset(1.2);
+
+    h2 = new TH2F(Form("h2[%d]", i), Form(""),100, 0.001,2, 100, 0.001, 2);
+    h2->SetLineWidth(2);
+    h2->SetLineColor(kBlue);
+    h2->SetTitle(Form(" right band of shower vs preshower,  Run_%d",runs[i]));
+    h2->GetYaxis()->SetTitle("shms_shower");
+    h2->GetYaxis()->CenterTitle();
+    h2->GetXaxis()->SetTitle("shms_preshower");
+    h2->GetXaxis()->CenterTitle();
+    h2->GetXaxis()->SetTitleOffset(1.2);
+
+
+    h3 = new TH2F(Form("h3[%d]", i), Form(""),100, -50,50, 100, -50,50);
+    h3->SetLineWidth(2);
+    h3->SetLineColor(kBlue);
+    h3->SetTitle(Form("events of right band projected at cal Run_%d",runs[i]));
+    h3->GetYaxis()->SetTitle("P.dc.x at cal");
+    h3->GetYaxis()->CenterTitle();
+    h3->GetXaxis()->SetTitle("P.dc.y at cal");
+    h3->GetXaxis()->CenterTitle();
+    h3->GetXaxis()->SetTitleOffset(1.2);
+
+    h4 = new TH2F(Form("h4[%d]", i), Form(""),100, -50,50, 100, -50,50);
+    h4->SetLineWidth(2);
+    h4->SetLineColor(kBlue);
+    h4->SetTitle(Form("events of right band projected at shower Run_%d",runs[i]));
+    h4->GetYaxis()->SetTitle("P.dc.x at shower");
+    h4->GetYaxis()->CenterTitle();
+    h4->GetXaxis()->SetTitle("P.dc.y at shower");
+    h4->GetXaxis()->CenterTitle();
+    h4->GetXaxis()->SetTitleOffset(1.2);
+
+
+    TString fname = "/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/6545_test/";
+
+    TFile *f = new TFile(Form(fname + "coin_replay_production_%d_-1.root", runs[i]),"read");
+
+    t=(TTree *)f->Get("T");
+
+    Double_t nentries = t->GetEntries();
+
+    cout << nentries<< endl;
+
+     
+       
+    Double_t hgc,aero,caletot,calepr,delta,xfp,yfp,xpfp,ypfp,beta;
+
+    Double_t dipoleExit;	
+       
+       
+
+    t->SetBranchAddress("P.hgcer.npeSum", &hgc);
+    t->SetBranchAddress("P.aero.npeSum", &aero);
+    t->SetBranchAddress("P.cal.etottracknorm", &caletot);
+    t->SetBranchAddress("P.cal.eprtracknorm", &calepr);
+    t->SetBranchAddress("P.gtr.dp", &delta);
+    t->SetBranchAddress("P.gtr.beta", &beta);
+    t->SetBranchAddress("P.dc.x_fp", &xfp);
+    t->SetBranchAddress("P.dc.y_fp", &yfp);
+    t->SetBranchAddress("P.dc.xp_fp", &xpfp);
+    t->SetBranchAddress("P.dc.yp_fp", &ypfp);
+    t->SetBranchAddress("P.dc.InsideDipoleExit", &dipoleExit);
+
+    Double_t dist_pr_z  = 292.64;
+    Double_t dist_cal_z = 306.44; 
+
+    TCut eventcut;
+    //Bool_t eventcut = delta>-10 && delta<20 && beta>0.5 && beta<1.5 && hgc >2 && aero>2;
+
+    eventcut = "P.gtr.dp>-10&& P.gtr.dp< 20 && P.gtr.beta>0.5 && P.gtr.beta<1.5 && P.hgcer.npSum>2.0 && P.aero.npeSum >2.0 && P.dc.InsideDipoleExit==1";
+   
+ 
+    TCutG *cutg = new TCutG("cutg",9);
+    cutg->SetVarX("");
+    cutg->SetVarY("");
+ 
+    cutg->SetPoint(0, 0.415392, 0.834294);
+    cutg->SetPoint(1, 0.390353, 0.730081);
+    cutg->SetPoint(2, 0.510182, 0.598443);
+    cutg->SetPoint(3, 0.719434, 0.400987);
+    cutg->SetPoint(4, 1.00559,  0.287175);
+    cutg->SetPoint(5, 0.976082, 0.4051);
+    cutg->SetPoint(6, 0.416286, 0.83018);
+    cutg->SetPoint(7, 0.416286, 0.83018);
+    cutg->SetPoint(8, 0.415392, 0.834294);
+
+
+    Double_t xval, yval;
+
+    for (int k= 0;k < nentries; k++)
+      {
+	     
+	t->GetEntry(k);
+	     
+	auto  my_x_pr  = xfp - dist_pr_z * xpfp;
+	auto  my_x_cal = xfp - dist_cal_z * xpfp;
+	 
+	auto  my_y_pr = yfp - dist_pr_z * ypfp;
+	auto  my_y_cal = yfp - dist_cal_z * ypfp;
+	     
+	if (eventcut)
+	  {
+	    h1->Fill(calepr,caletot-calepr);
+	  }
+	     
+	if (cutg->IsInside(calepr, caletot-calepr )) {
+		 
+	  h2->Fill(calepr,caletot-calepr);
+	  h3->Fill(my_y_cal,my_x_cal);
+	  h4->Fill(my_y_pr,my_x_pr);	
+		 
+	}
+      }
+	 
+    c1 = new TCanvas();    
+    c1->Divide(2,2);
+	 
+    c1->cd(1);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h1->Draw("colz");
+	 
+    c1->cd(2);;gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h2->Draw("colz");
+	 
+    c1->cd(3);;gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h3->Draw("colz");
+	 
+    c1->cd(4);;gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h4->Draw("colz");
+	 
+    c1->SaveAs(Form("pdf/x_y_at_cal_%d.pdf",runs[i]));
+	 
+	 
+	 
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
