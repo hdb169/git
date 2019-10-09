@@ -21,16 +21,19 @@ void plot_final(){
   TH2F *h2;
   TH2F *h3;
   TH2F *h4;
-
+  TH2F *h5;
+  TH2F *h6;
+  TH2F *h7;
+  TH2F *h8;
+ 
   TTree   *t;
   TCanvas *c1;
   TCanvas *c2;
 
   for(Int_t i=0; i<NRUNS; i++){
-    //f[i]=new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/6545_test/coin_replay_production_%d_-1.root", runs[i]),"read");
 
 
-    h1 = new TH2F(Form("h1[%d]", i), Form(""),100, 0.001,2, 100, 0.001, 2);
+    h1 = new TH2F(Form("h1[%d]", i), Form(""),100, 0.001,1.2, 100, 0.001, 1.5);
     h1->SetLineWidth(2);
     h1->SetLineColor(kBlue);
     h1->SetTitle(Form("shower vs preshower all events,  Run_%d",runs[i]));
@@ -40,7 +43,7 @@ void plot_final(){
     h1->GetXaxis()->CenterTitle();
     h1->GetXaxis()->SetTitleOffset(1.2);
 
-    h2 = new TH2F(Form("h2[%d]", i), Form(""),100, 0.001,2, 100, 0.001, 2);
+    h2 = new TH2F(Form("h2[%d]", i), Form(""),100, 0.001,1.2, 100, 0.001, 1.5);
     h2->SetLineWidth(2);
     h2->SetLineColor(kBlue);
     h2->SetTitle(Form(" right band of shower vs preshower,  Run_%d",runs[i]));
@@ -51,7 +54,7 @@ void plot_final(){
     h2->GetXaxis()->SetTitleOffset(1.2);
 
 
-    h3 = new TH2F(Form("h3[%d]", i), Form(""),100, -50,50, 100, -50,50);
+    h3 = new TH2F(Form("h3[%d]", i), Form(""),100, -20, 20, 100, -20, 20);
     h3->SetLineWidth(2);
     h3->SetLineColor(kBlue);
     h3->SetTitle(Form("events of right band projected at cal Run_%d",runs[i]));
@@ -61,7 +64,7 @@ void plot_final(){
     h3->GetXaxis()->CenterTitle();
     h3->GetXaxis()->SetTitleOffset(1.2);
 
-    h4 = new TH2F(Form("h4[%d]", i), Form(""),100, -50,50, 100, -50,50);
+    h4 = new TH2F(Form("h4[%d]", i), Form(""),100, -20, 20, 100, -20, 20);
     h4->SetLineWidth(2);
     h4->SetLineColor(kBlue);
     h4->SetTitle(Form("events of right band projected at shower Run_%d",runs[i]));
@@ -70,6 +73,48 @@ void plot_final(){
     h4->GetXaxis()->SetTitle("P.dc.y at shower");
     h4->GetXaxis()->CenterTitle();
     h4->GetXaxis()->SetTitleOffset(1.2);
+
+    h5 = new TH2F(Form("h5[%d]", i), Form(""),100, -45,45, 100, -45,45);
+    h5->SetLineWidth(2);
+    h5->SetLineColor(kBlue);
+    h5->SetTitle(Form("y_fp vs x_fp Run_%d",runs[i]));
+    h5->GetYaxis()->SetTitle("P.dc.xfp");
+    h5->GetYaxis()->CenterTitle();
+    h5->GetXaxis()->SetTitle("P.dc.yfp");
+    h5->GetXaxis()->CenterTitle();
+    h5->GetXaxis()->SetTitleOffset(1.2);
+
+
+    h6 = new TH2F(Form("h6[%d]", i), Form(""),100, -0.1, 0.1, 100, -0.1, 0.1);
+    h6->SetLineWidth(2);
+    h6->SetLineColor(kBlue);
+    h6->SetTitle(Form("yp_fp vs xp_fp Run_%d",runs[i]));
+    h6->GetYaxis()->SetTitle("P.dc.xp_fp");
+    h6->GetYaxis()->CenterTitle();
+    h6->GetXaxis()->SetTitle("P.dc.yp_fp");
+    h6->GetXaxis()->CenterTitle();
+    h6->GetXaxis()->SetTitleOffset(1.2);
+
+
+    h7 = new TH2F(Form("h7[%d]", i), Form(""),100, -45, 45,  100, -45, 45);
+    h7->SetLineWidth(2);
+    h7->SetLineColor(kBlue);
+    h7->SetTitle(Form("y_fp vs x_fp with events at Right Band  Run_%d",runs[i]));
+    h7->GetYaxis()->SetTitle("P.dc.xfp");
+    h7->GetYaxis()->CenterTitle();
+    h7->GetXaxis()->SetTitle("P.dc.yfp");
+    h7->GetXaxis()->CenterTitle();
+    h7->GetXaxis()->SetTitleOffset(1.2);
+
+    h8 = new TH2F(Form("h8[%d]", i), Form(""),100, -0.1, 0.1, 100, -0.1,0.1);
+    h8->SetLineWidth(2);
+    h8->SetLineColor(kBlue);
+    h8->SetTitle(Form("yp_fp vs xp_fp with events at Right Band Run_%d",runs[i]));
+    h8->GetYaxis()->SetTitle("P.dc.xp_fp");
+    h8->GetYaxis()->CenterTitle();
+    h8->GetXaxis()->SetTitle("P.dc.yp_fp");
+    h8->GetXaxis()->CenterTitle();
+    h8->GetXaxis()->SetTitleOffset(1.2);
 
 
     TString fname = "/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/6545_test/";
@@ -81,14 +126,13 @@ void plot_final(){
     Double_t nentries = t->GetEntries();
 
     cout << nentries<< endl;
-
-     
        
     Double_t hgc,aero,caletot,calepr,delta,xfp,yfp,xpfp,ypfp,beta;
 
     Double_t dipoleExit;	
        
        
+  Int_t cntsepi=0;
 
     t->SetBranchAddress("P.hgcer.npeSum", &hgc);
     t->SetBranchAddress("P.aero.npeSum", &aero);
@@ -102,13 +146,13 @@ void plot_final(){
     t->SetBranchAddress("P.dc.yp_fp", &ypfp);
     t->SetBranchAddress("P.dc.InsideDipoleExit", &dipoleExit);
 
-    Double_t dist_pr_z  = 292.64;
+    Double_t dist_pr_z  = 292.64; //from SHMS CAL geom.param file
     Double_t dist_cal_z = 306.44; 
-
-    TCut eventcut;
+    Bool_t eventcut;
+    // TCut eventcut;
     //Bool_t eventcut = delta>-10 && delta<20 && beta>0.5 && beta<1.5 && hgc >2 && aero>2;
 
-    eventcut = "P.gtr.dp>-10&& P.gtr.dp< 20 && P.gtr.beta>0.5 && P.gtr.beta<1.5 && P.hgcer.npeSum>2.0 && P.aero.npeSum >2.0 && P.dc.InsideDipoleExit==1";
+    // eventcut = "P.gtr.dp>-10&& P.gtr.dp< 20 && P.gtr.beta>0.5 && P.gtr.beta<1.5 && P.hgcer.npeSum>2.0 && && P.aero.npeSum >2.0 && P.dc.InsideDipoleExit==1 && P.cal.eprtracknorm>0 && P.cal.etottracknorm-P.cal.eprtracknorm) >0";
    
  
     TCutG *cutg = new TCutG("cutg",9);
@@ -132,8 +176,9 @@ void plot_final(){
       {
 	     
 	t->GetEntry(k);
-	     
-	auto  my_x_pr  = xfp - dist_pr_z * xpfp;
+	 eventcut = delta>-10 && delta<20 && beta>0.5 && beta<1.5 && hgc >2 && aero>2 &&dipoleExit==1;  
+  
+	auto  my_x_pr  = xfp - dist_pr_z * xpfp; // 
 	auto  my_x_cal = xfp - dist_cal_z * xpfp;
 	 
 	auto  my_y_pr = yfp - dist_pr_z * ypfp;
@@ -141,37 +186,86 @@ void plot_final(){
 	     
 	if (eventcut)
 	  {
-	    h1->Fill(calepr,caletot-calepr);
-	  }
+	    cntsepi++;
+	   
+            h1->Fill(calepr,caletot-calepr);// always : h1->Fill(x variable, y variable)  
+	    h5->Fill(yfp,xfp); //all evts
+	    h6->Fill(ypfp,xpfp);//all evts
+	  
 	     
-	if (cutg->IsInside(calepr, caletot-calepr )) {
+	    if (cutg->IsInside(calepr, caletot-calepr ))
+	      { //becuase we had used graphical cut from showr vs prshwr, so we have to define this way
 		 
-	  h2->Fill(calepr,caletot-calepr);
-	  h3->Fill(my_y_cal,my_x_cal);
-	  h4->Fill(my_y_pr,my_x_pr);	
-		 
-	}
+		h2->Fill(calepr,caletot-calepr);//with fraphical_cut only
+		h3->Fill(my_y_cal,my_x_cal);   //with fraphical_cut only
+		h4->Fill(my_y_pr,my_x_pr);	//with fraphical_cut only
+		h7->Fill(yfp,xfp);         //with fraphical_cut only
+		h8->Fill(ypfp,xpfp);     //with fraphical_cut only
+	      }	 
+	
+	  }
+
       }
+	cout << cntsepi <<" events passed all data cuts " << endl;
+	/*
 	 
-    c1 = new TCanvas();    
+	c1 = new TCanvas("","", 1500, 1200);    
     c1->Divide(2,2);
 	 
-    c1->cd(1);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    c1->cd(1);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//all evts
     h1->Draw("colz");
 	 
-    c1->cd(2);;gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    c1->cd(2);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//with fraphical_cut only
     h2->Draw("colz");
 	 
-    c1->cd(3);;gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    c1->cd(3);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//with fraphical_cut only
     h3->Draw("colz");
 	 
-    c1->cd(4);;gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    c1->cd(4);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//with fraphical_cut only
     h4->Draw("colz");
 	 
-    c1->SaveAs(Form("pdf/x_y_at_cal_%d.pdf",runs[i]));
+     c1->SaveAs(Form("pdf/2x_y_at_cal_%d.pdf",runs[i]));
+
+
+     */
+    	 
+    c2 = new TCanvas("c2","c2", 1500,1200);	 
+    c2->Divide(2,2);	 
+    c2->cd(1);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h5->Draw("colz");
 	 
+    c2->cd(2);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h6->Draw("colz");
 	 
+    c2->cd(3);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h7->Draw("colz");
 	 
+    c2->cd(4);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();
+    h8->Draw("colz");
+
+	 
+    c2->SaveAs(Form("pdf/2focal_plane_quantity_%d.pdf",runs[i]));
+	 
+   	 
+	c1 = new TCanvas("","", 1500, 1200);    
+    c1->Divide(2,2);
+	 
+    c1->cd(1);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//all evts
+    h1->Draw("colz");
+	 
+    c1->cd(2);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//with graphical_cut only
+    h2->Draw("colz");
+	 
+    c1->cd(3);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//with graphical_cut only
+    h3->Draw("colz");
+	 
+    c1->cd(4);gPad->SetGridx();gPad->SetGridy();gPad->SetLogz();//with graphical_cut only
+    h4->Draw("colz");
+	 
+     c1->SaveAs(Form("pdf/2x_y_at_cal_%d.pdf",runs[i]));
+
+
+    
   }
 }
 
@@ -188,6 +282,9 @@ void plot_final(){
 
 
 
+
+
+ 
 
 
 
