@@ -1,10 +1,10 @@
-Steps for graphical cut
-1)Plot 2d histogram
-2)Toolbar
-3)scisoor sign
-4)start at a desired point , click once, slowly drag, return to starttng point, double click
-5)right clock on boundary and go to setname, u can choose any name u want, say mycut
-6)in ther terminal do mycut->Print(), it displays x and y points, then follow the following procedure.
+//Steps for graphical cut and later T->Draw()method
+//1)Plot 2d histogram
+//2)Toolbar
+//3)scisoor sign
+//4)start at a desired point , click once, slowly drag, return to starttng point, double click
+//5)right clock on boundary and go to setname, u can choose any name u want, say mycut
+//6)in ther terminal do mycut->Print(), it displays x and y points, then follow the following procedure.
 
 #include "TH1F.h"
 #include <TH2.h>
