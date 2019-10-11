@@ -1,0 +1,168 @@
+#include "header.h"
+void ratio_x45_rd() {
+
+  double Rd;
+
+  TH1D *h_Rd_meas = new TH1D("h_Rd_meas", "h_Rd_meas", binz, loz,hiz);
+
+
+  //-----------
+  gStyle->SetOptStat(0);
+  TFile * f1 = new TFile("root/pim_x45_z_70_60_50_40.root");//pim---------------> f1  -----pi -
+  TFile * f2 = new TFile("root/pip_x45_z_70_60_50_40.root");//pip---------------->f2  -----pi+
+  TFile * f3 = new TFile("root/ratio_hist_x45_rd.root","RECREATE");
+
+
+  TH1D *h_pim = (TH1D*)f1->Get("h_norm_z_pim_x45");
+  TH1D *h_pip = (TH1D*)f2->Get("h_norm_z_pip_x45");
+
+ 
+  TH1D *h_ratio_x45_data = new TH1D ("h_ratio_x45_data", "", binz, loz, hiz);
+
+  
+  TCanvas *c1 = new TCanvas ("c1", "Yield of pi + / Yield  of pi - ", 800, 500);
+  c1->Divide(2,2);gPad->SetGrid();
+  c1->cd(1); //gPad->Divide(1,2);
+  c1->cd(1);//gPad->cd(1);
+ 
+  h_pip->GetYaxis()->SetTitle(" Yield for Pi +");
+  h_pip->GetXaxis()->SetTitle("z_hadron ");
+  h_pip->SetTitle("Yield for pi + for x = 0.45 (Hz/mA)");
+  h_pip->GetXaxis()->CenterTitle();
+  h_pip->GetYaxis()->SetTitleFont(62);
+  h_pip->GetYaxis()->SetTitleOffset(0.5);
+  h_pip->GetYaxis()->SetTitleSize(0.042);
+  h_pip->GetYaxis()->SetTitleOffset(1.2);
+  h_pip->GetYaxis()->SetLabelSize(0.03);
+  h_pip->GetYaxis()->SetLabelFont(62);
+  h_pip->GetYaxis()->SetTitleFont(62);
+  h_pip->GetXaxis()->SetTitleSize(0.05);
+  h_pip->GetXaxis()->SetTitleFont(62);
+  h_pip->GetXaxis()->SetTitleOffset(1.0);
+  h_pip->GetXaxis()->SetLabelFont(62);
+  h_pip->GetYaxis()->CenterTitle();
+  h_pip->SetMarkerStyle(21);
+  // h_pip->GetXaxis()->SetRangeUser(0.,1.0);
+  // h_pip->GetYaxis()->SetRangeUser(-0.2,2.0);
+  h_pip->SetMarkerSize(0.75);
+  h_pip->SetMarkerColor(4);
+  h_pip->Draw();
+
+  c1->cd(2);//gPad->cd(2);
+ 
+  h_pim->GetYaxis()->SetTitle(" Yield for Pi -");
+  h_pim->GetXaxis()->SetTitle("z_hadron ");
+  h_pim->SetTitle("  Yield for Pi - for x = 0.45 (Hz/mA) ");
+
+  h_pim->GetXaxis()->CenterTitle();
+  h_pim->GetYaxis()->SetTitleFont(62);
+  h_pim->GetYaxis()->SetTitleOffset(0.5);
+  h_pim->GetYaxis()->SetTitleSize(0.042);
+  h_pim->GetYaxis()->SetTitleOffset(1.2);
+  h_pim->GetYaxis()->SetLabelSize(0.03);
+  h_pim->GetYaxis()->SetLabelFont(62);
+  h_pim->GetYaxis()->SetTitleFont(62);
+  h_pim->GetXaxis()->SetTitleSize(0.05);
+  h_pim->GetXaxis()->SetTitleFont(62);
+  h_pim->GetXaxis()->SetTitleOffset(1.0);
+  h_pim->GetXaxis()->SetLabelFont(62);
+  h_pim->GetYaxis()->CenterTitle();
+  h_pim->SetMarkerStyle(21);
+  // h_pim->GetXaxis()->SetRangeUser(0.,1.0);
+  // h_pim->GetYaxis()->SetRangeUser(-0.2,2.0);
+  h_pim->SetMarkerColor(4);
+  h_pim->SetMarkerSize(0.75);
+  h_pim->Draw();
+
+
+
+  
+
+  c1->cd(3);//gPad->SetGrid();
+  // h_ratio_x45_data->Divide(h_pip, h_pim);//------------------>reversed oct07,19
+
+  h_ratio_x45_data->Divide(h_pip, h_pim);
+  h_ratio_x45_data->GetYaxis()->SetTitle(" Yield Ratio (Pi + / Pi - )");
+  h_ratio_x45_data->SetTitle("Yield Ratio (Pi + / Pi - for x = 0.45");
+  h_ratio_x45_data->GetXaxis()->SetTitle("z_hadron  ");
+  h_ratio_x45_data->GetXaxis()->CenterTitle();
+  h_ratio_x45_data->GetYaxis()->SetTitleFont(62);
+  h_ratio_x45_data->GetYaxis()->SetTitleOffset(0.5);
+  h_ratio_x45_data->GetYaxis()->SetTitleSize(0.042);
+  h_ratio_x45_data->GetYaxis()->SetTitleOffset(1.2);
+  h_ratio_x45_data->GetYaxis()->SetLabelSize(0.03);
+  h_ratio_x45_data->GetYaxis()->SetLabelFont(62);
+  h_ratio_x45_data->GetYaxis()->SetTitleFont(62);
+  h_ratio_x45_data->GetXaxis()->SetTitleSize(0.05);
+  h_ratio_x45_data->GetXaxis()->SetTitleFont(62);
+  h_ratio_x45_data->GetXaxis()->SetTitleOffset(1.0);
+  h_ratio_x45_data->GetXaxis()->SetLabelFont(62);
+  h_ratio_x45_data->GetYaxis()->CenterTitle();
+  h_ratio_x45_data->SetMarkerSize(0.75);
+  h_ratio_x45_data->SetMarkerColor(4);
+  h_ratio_x45_data->GetXaxis()->SetAxisColor(17);
+  h_ratio_x45_data->GetYaxis()->SetAxisColor(17);
+  h_ratio_x45_data->SetMarkerStyle(21);//22 default
+  //h_ratio_x45_data->GetXaxis()->SetRangeUser(0.43,0.79);
+  //  h_ratio_x45_data->GetYaxis()->SetRangeUser(0.,3.0);
+  h_ratio_x45_data->Draw();
+
+
+  c1->cd();
+  h_pim->Write();
+  h_pip->Write();
+  h_ratio_x45_data->Write();
+
+  f3->Write();
+
+  c1->SaveAs("PDF/h_ratio_x45_data_rd.pdf");
+
+
+  cout<<h_ratio_x45_data->GetNbinsX()<<endl;
+
+  for (int i=1; i <= h_ratio_x45_data->GetNbinsX(); i++)
+
+    {//good piece
+	Rd = 4.0 - h_ratio_x45_data->GetBinContent(i);
+      Rd /= h_ratio_x45_data->GetBinContent(i) - 1.0;
+      h_Rd_meas->SetBinContent(i, Rd);
+
+      // Rd = (4.0 - h_ratio_x45_data->GetBinContent(i)) /(h_ratio_x45_data->GetBinContent(i) - 1.0 );
+      // Rd /= h_ratio_x45_data->GetBinContent(i) - 1.0;
+      // hrd->SetBinContent(i, Rd);
+
+    }
+
+  c1->cd(4);
+  h_Rd_meas->Draw();
+  h_Rd_meas->GetYaxis()->SetTitle(" Rd_Measured");
+  h_Rd_meas->SetTitle(" Rd_Measured for x = 0.45");
+  h_Rd_meas->GetXaxis()->SetTitle("z_hadron  ");
+  h_Rd_meas->GetXaxis()->CenterTitle();
+  h_Rd_meas->GetYaxis()->SetTitleFont(62);
+  h_Rd_meas->GetYaxis()->SetTitleOffset(0.5);
+  h_Rd_meas->GetYaxis()->SetTitleSize(0.042);
+  h_Rd_meas->GetYaxis()->SetTitleOffset(1.2);
+  h_Rd_meas->GetYaxis()->SetLabelSize(0.03);
+  h_Rd_meas->GetYaxis()->SetLabelFont(62);
+  h_Rd_meas->GetYaxis()->SetTitleFont(62);
+  h_Rd_meas->GetXaxis()->SetTitleSize(0.05);
+  h_Rd_meas->GetXaxis()->SetTitleFont(62);
+  h_Rd_meas->GetXaxis()->SetTitleOffset(1.0);
+  h_Rd_meas->GetXaxis()->SetLabelFont(62);
+  h_Rd_meas->GetYaxis()->CenterTitle();
+  h_Rd_meas->SetMarkerSize(0.75);
+  h_Rd_meas->SetMarkerColor(4);
+  h_Rd_meas->GetXaxis()->SetAxisColor(17);
+  h_Rd_meas->GetYaxis()->SetAxisColor(17);
+  h_Rd_meas->SetMarkerStyle(21);//22 default
+  // h_Rd_meas->GetXaxis()->SetRangeUser(0.43,0.79);
+  // h_Rd_meas->GetYaxis()->SetRangeUser(-20,50);
+  h_Rd_meas->Draw("p e1");
+
+
+
+
+  h_Rd_meas->Write();
+    c1->SaveAs("PDF/h_Rd_meas_rd.pdf");
+}
