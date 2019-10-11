@@ -1,0 +1,13 @@
+
+    h_x40_ratio_simc->SetMarkerStyle(kFullTriangleUp);
+    h_x40_ratio_simc->SetMarkerSize(0.7);
+    h_x40_ratio_simc->SetMarkerColor(kRed);
+    h_x40_ratio_simc->SetLineColor(kBlack);
+     h_x40_ratio_simc->Draw("samehist, AP");
+    // h_x40_ratio_simc->Draw("HIST SAME");
+
+
+ 
+  f3->Write();
+  c1->SaveAs("PDF/final_data_simc_plot_x40.pdf");
+}
