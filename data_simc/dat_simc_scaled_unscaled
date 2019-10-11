@@ -1,0 +1,102 @@
+#include "header.h"
+
+void x40_simulation_fit(){
+  double z[100];
+  double R_D[100];
+  double ratio[100];
+
+  
+  gStyle->SetOptStat(0);
+
+  TFile * f1 = new TFile("root/ratio_hist_x40.root");
+  TFile * f2 = new TFile("simulation/simc_root/yield_ratio_x40_simc.root");
+
+  TFile * f3 = new TFile("root/final_data_simc_plot_x40.root","RECREATE");
+  TH1D * h_x40_ratio_data = (TH1D*)f1->Get("h_ratio_x40_data");
+  TH1D * h_x40_ratio_simc = (TH1D*)f2->Get("h_ratio_x40_simc");
+
+
+  TGraph *gr = new TGraph(100, z, ratio);
+  TCanvas *c1 = new TCanvas ("c1", "Yield Ratio", 800, 500);
+ 
+
+  c1->Divide(2,2);gPad->SetGrid();//gPad->SetGrid();
+  c1 ->cd(1);//gPad->SetGrid();
+
+  /*
+  h_x40_ratio_data->Draw();
+  gr->SetLineWidth(2);
+  gr->SetLineColor(kRed); //  gr->Draw("same");
+  // Double_t data_scale =  h_x40_ratio_data->GetBinContent(h_x40_ratio_data->FindBin(0.6));
+  //Double_t simc_scale =  h_x40_ratio_simc->GetBinContent(h_x40_ratio_simc->FindBin(0.6));
+
+  // cout <<data_scale<< " " <<simc_scale<<"  " <<data_scale/simc_scale<< " " <<simc_scale/data_scale<<endl;
+  //1.38054 1.72497  0.800325 1.24949
+  //  h_x40_ratio_simc->Scale(data_scale/simc_scale);
+    h_x40_ratio_simc->SetMarkerStyle(kFullTriangleUp);
+    h_x40_ratio_simc->SetMarkerSize(0.7);
+    h_x40_ratio_simc->SetMarkerColor(kRed);
+    h_x40_ratio_simc->SetLineColor(kBlack);
+    h_x40_ratio_simc->Draw("samehist, AP");
+    // h_x40_ratio_simc->Draw("HIST SAME");
+    //h_x40_ratio_data->SetTitle("actual_data_simc_x = 0.4");
+
+    */
+
+  /*  c1->cd(2);
+
+
+
+  h_x40_ratio_data->Draw();
+  gr->SetLineWidth(2);
+  gr->SetLineColor(kRed); //  gr->Draw("same");
+  Double_t data_scale =  h_x40_ratio_data->GetBinContent(h_x40_ratio_data->FindBin(0.6));
+  Double_t simc_scale =  h_x40_ratio_simc->GetBinContent(h_x40_ratio_simc->FindBin(0.6));
+
+    cout <<data_scale<< " " <<simc_scale<<"  " <<data_scale/simc_scale<< " " <<simc_scale/data_scale<<endl;
+  //1.38054 1.72497  0.800325 1.24949
+    h_x40_ratio_simc->Scale(data_scale/simc_scale);
+    h_x40_ratio_simc->SetMarkerStyle(kFullTriangleUp);
+    h_x40_ratio_simc->SetMarkerSize(0.7);
+    h_x40_ratio_simc->SetMarkerColor(kRed);
+    h_x40_ratio_simc->SetLineColor(kBlack);
+    h_x40_ratio_simc->Draw("samehist, AP");
+    // h_x40_ratio_simc->Draw("HIST SAME");
+    //h_x40_ratio_data->SetTitle("scaled simc by 0.8");
+    */
+ for (int i = 0; i < 100; i++)//taking all int numbers from 0 t0 1
+    {
+      z[i] = i/100.0;//made each number 0.1, 0.2, 0.3, ..
+    
+      R_D[i] = pow((1.0-z[i]),0.083583)/pow((1.0+z[i]),1.9838);
+
+      // ratio[i]=(4*R_D[i]+1)/(R_D[i]+4);//---------------pi-/pi+--------------------------commented oct 7, 19 to take pi+/pi- instead of pi-/pi+
+
+
+      ratio[i]= (R_D[i]+4)/ (4*R_D[i]+1);//pi+/pi-
+      cout << z[i]<< endl;
+
+
+    }
+
+  
+  TGraph *gr1 = new TGraph(100, z, ratio);
+
+  // TCanvas *c2 = new TCanvas ("c1", "Yield Ratio", 800, 500);
+  c1 ->cd(3);
+
+
+  h_x40_ratio_data->Draw();
+  gr1->SetLineWidth(2);
+  gr1->SetLineColor(kRed); 
+  gr1->Draw("same");
+  // gr1->SetTitle("data and the ratio function plot");
+  //c2->SaveAs("PDF/yield_ratio_data_function.pdf");
+
+
+ 
+  f3->Write();
+   c1->SaveAs("PDF/final_data_simc_3_versions.pdf");
+    
+
+}
