@@ -1,0 +1,133 @@
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void read_cal()
+{
+  std::ifstream infile("txt/hcal_oct12.txt");//hcal.txt"); //reads first txtfile
+  // std::ifstream infile("cal_mean_hms_only.txt");//hcal.txt"); //reads first txtfile
+
+  std::string line;// read line by line
+  vector <Double_t> run; // define the following quantities which are actually the columns in the shms_eff.txt file, specify which is of int or float or double type
+  vector <double> mean;
+  vector <double> error;
+  vector <double> sigma;
+  vector <double> sigma_error;
+  vector <Double_t> run1;
+
+  // vector <double> shms_eff;
+  // vector <double> shms_eff_err;
+ 
+    
+  while (std::getline(infile, line))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line);// to read the whole strings in a line
+      double a, b, c, d, e;//, d, e;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a >> b >> c >>d >>e))// >> d >> e)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run.push_back(a);//now run is stored in a
+      mean.push_back(b);//did is stored in b
+      error.push_back(c);//should is stored as c
+      sigma.push_back(d);//eff = d
+      sigma_error.push_back(e);//eff err = e
+    }
+
+  //---------------
+  std::ifstream infile1("txt/run_no.txt");//reads the second txt file
+    
+  std::string line1;//read all lines, there are just two columns
+  //vector <int> run1;//first column
+  //vector <double> rate;//second column
+    
+  while (std::getline(infile1, line1))
+    {
+      std::istringstream iss(line1);//pass each column of line1 tp a1, b1
+      double a1   ;
+        
+      if (!(iss >> a1)) 
+        {
+            
+  	  break; 
+            
+        } // error
+      run1.push_back(a1);//first column
+      //rate.push_back(b1);//second column
+    }
+  //=========================================================//
+
+
+  // for (int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+  //   {  	
+  //     cout << run[i]<<endl;//you have to cout each elements , so need i
+  //     //	cout << mean[i]<<endl;//you have to cout each elements , so need i
+  //     //cout<< error[i]<<endl;
+  //   }
+
+  //vector <Double_t> err_y = 0;
+  auto gr = new TGraphErrors(run.size(), &run1[0], &mean[0] , 0, &error[0]);
+//, 0, &shms_eff_err[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+   gr->Draw("ap");
+  // gr->SetMarkerStyle(kFullTriangleUp);
+  gr->GetXaxis()->SetTitle("Run Number");
+  gr->GetYaxis()->SetTitle("(E/P) Mean value");
+  gr->SaveAs("pdf/hms_mean_dnp.pdf");
+  // gr->GetYaxis()->SetRangeUser(0.98,1);
+   gr->SetTitle("HMS Calorimeter E/P vs Run Number ");
+   gr->GetXaxis()->CenterTitle();
+   gr->GetYaxis()->CenterTitle();
+   gr->GetXaxis()->SetAxisColor(17);
+   gr->GetYaxis()->SetAxisColor(17);
+  gr->SetMarkerStyle(21);
+  gr->GetXaxis()->CenterTitle();
+  gr->GetYaxis()->SetTitleFont(62);
+  gr->GetYaxis()->SetTitleOffset(0.5);
+  gr->GetYaxis()->SetTitleSize(0.042);
+  gr->GetYaxis()->SetTitleOffset(1.2);
+  gr->GetYaxis()->SetLabelSize(0.03);
+  gr->GetYaxis()->SetLabelFont(62);
+  gr->GetYaxis()->SetTitleFont(62);
+  gr->GetXaxis()->SetTitleSize(0.05);
+  gr->GetXaxis()->SetTitleFont(62);
+  gr->GetXaxis()->SetTitleOffset(1.0);
+  gr->GetXaxis()->SetLabelFont(62);
+  gr->GetYaxis()->CenterTitle();
+  gr->SetMarkerStyle(21);
+  gr->Draw(" AP");
+
+  
+ auto gr_sigma = new TGraphErrors(run.size(), &run1[0], &sigma[0] , 0, &sigma_error[0]);
+//, 0, &shms_eff_err[0]);// you are including Gr_Sigmaaph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+   gr_sigma->Draw("ap");
+   //gr_sigma->SetMarkerStyle(kFullTriangleUp);
+  gr_sigma->GetXaxis()->SetTitle("Run Number");
+  gr_sigma->GetYaxis()->SetTitle("(E/P) Sigma");
+  gr_sigma->SaveAs("pdf/hms_sigma_dnp.pdf");
+  // gr_sigma->GetYaxis()->SetRangeUser(0.98,1);
+   gr_sigma->SetTitle("HMS Calorimeter E/P Sigma vs Run Number ");
+   gr_sigma->GetXaxis()->CenterTitle();
+   gr_sigma->GetYaxis()->CenterTitle();
+   gr_sigma->GetXaxis()->SetAxisColor(17);
+   gr_sigma->GetYaxis()->SetAxisColor(17);
+  gr_sigma->SetMarkerStyle(21);
+  gr_sigma->GetXaxis()->CenterTitle();
+  gr_sigma->GetYaxis()->SetTitleFont(62);
+  gr_sigma->GetYaxis()->SetTitleOffset(0.5);
+  gr_sigma->GetYaxis()->SetTitleSize(0.042);
+  gr_sigma->GetYaxis()->SetTitleOffset(1.2);
+  gr_sigma->GetYaxis()->SetLabelSize(0.03);
+  gr_sigma->GetYaxis()->SetLabelFont(62);
+  gr_sigma->GetYaxis()->SetTitleFont(62);
+  gr_sigma->GetXaxis()->SetTitleSize(0.05);
+  gr_sigma->GetXaxis()->SetTitleFont(62);
+  gr_sigma->GetXaxis()->SetTitleOffset(1.0);
+  gr_sigma->GetXaxis()->SetLabelFont(62);
+  gr_sigma->GetYaxis()->CenterTitle();
+  gr_sigma->SetMarkerStyle(21);
+  gr_sigma->Draw("AP");
+  
+}
