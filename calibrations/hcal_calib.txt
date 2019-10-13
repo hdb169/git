@@ -1,3 +1,5 @@
+
+//oct 12 2019
 run  mean     err           sigma error in sigma
 
 6018   0.998602   4.48304e-05   0.0341106   3.78757e-05
