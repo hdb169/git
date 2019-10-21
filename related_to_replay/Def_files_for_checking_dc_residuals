@@ -1,0 +1,65 @@
+block P.gtr.dp
+
+block P.dc.1u1.nhit
+block P.dc.1u2.nhit
+block P.dc.1x1.nhit
+block P.dc.1x2.nhit
+block P.dc.1v1.nhit
+block P.dc.1v2.nhit
+block P.dc.2V1.nhit
+block P.dc.2V2.nhit
+block P.dc.2x2.nhit
+block P.dc.2x1.nhit
+block P.dc.2u2.nhit
+block P.dc.2u1.nhit
+
+block P.dc.1u1.time
+block P.dc.1u2.time
+block P.dc.1x1.time
+block P.dc.1x2.time
+block P.dc.1v1.time
+block P.dc.1v2.time
+block P.dc.2V1.time
+block P.dc.2V2.time
+block P.dc.2x2.time
+block P.dc.2x1.time
+block P.dc.2u2.time
+block P.dc.2u1.time
+
+block P.dc.residualExclPlane
+block P.dc.residual
+
+block P.dc.ntrack
+block H.dc.ntrack
+
+
+block H.gtr.dp
+
+block H.dc.1u1.nhit
+block H.dc.1u2.nhit
+block H.dc.1x1.nhit
+block H.dc.1x2.nhit
+block H.dc.1v1.nhit
+block H.dc.1v2.nhit
+block H.dc.2V1.nhit
+block H.dc.2V2.nhit
+block H.dc.2x2.nhit
+block H.dc.2x1.nhit
+block H.dc.2u2.nhit
+block H.dc.2u1.nhit
+
+block H.dc.1u1.time
+block H.dc.1u2.time
+block H.dc.1x1.time
+block H.dc.1x2.time
+block H.dc.1v1.time
+block H.dc.1v2.time
+block H.dc.2V1.time
+block H.dc.2V2.time
+block H.dc.2x2.time
+block H.dc.2x1.time
+block H.dc.2u2.time
+block H.dc.2u1.time
+
+block H.dc.residualExclPlane
+block H.dc.residual
