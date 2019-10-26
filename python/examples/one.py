@@ -47,3 +47,13 @@ bachha = "my daughter is {} years old"
 print(bachha.format(8))
 
 #Syntax : { } { } .format(value1, value2)
+#always keep your string inside  ------------->  " " i.e. my_string = (" ......")
+my_string = "{} is a good {}, but his brother is {}"
+print (my_string.format("Ram","boy","naughty kid."))
+
+#or you can do so
+
+print(("{} is a good {}, but his brother is {} kid.").format("Ram","boy","naughty"))
+print(("Hi my name is {} and I am learning {}, so I am {}.").format("Bhatt", "Python", "excited"))
+print(("Today is {} {} {}, {}").format("October", "25", "2019","Friday."))
+
