@@ -48,3 +48,49 @@ print("The {0} of 10 is {1:b}".format("binary", 10)) #convert integer to binary
 print("The {0} of 18 is  {1:b}".format("binary", 18)) #convert integer to binary
 
 print("The {0} of 30 is {1:b}".format("binary", 30))
+#Add two numbers
+num1 = 18.08
+num2 = 16.90
+sum = num1 + num2
+print("sum of {0} and {1} is {2}".format(num1, num2, sum))
+"""
+# OR
+
+num11 = input("first  num: ")
+num22 = input("Second num: ")
+sum12 = float (num11) + float (num22)
+print(" The sum of {0} and {1} is {2}".format(num11, num22, sum12))
+"""
+
+"""
+python for  ROOT
+
+TF1 * f1 = new TF1("f2", "[0]*sin([1]*x)/x", 0., 10.);
+f1->SetParameter(0,1);
+f1->SetParameter(1,1)
+f1->Draw();
+
+In python it becomes as following
+
+"""
+"""
+
+import math
+#this did not work
+import ROOT
+f1 = ROOT.TF1("f2","[0]*sin([1]*x)/x",0.,10.)
+f1.SetParameter(0,1)
+f1.SetParameter(1,1)
+f1.Draw();
+
+"""
+
+
+#Factorial of a number
+def factorial(n):
+    return 1 if (n==1 or n ==0) else n * factorial(n-1)
+n = 13
+print("Factorial of", n, "is",factorial(n))
+
+print (factorial(10))
+
