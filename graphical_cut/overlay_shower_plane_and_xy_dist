@@ -1,0 +1,319 @@
+
+#include "TH1F.h"
+#include <TH2.h>
+#include <TCanvas.h>
+#include <TObject.h>
+#define NRUNS 2
+using namespace std;
+
+void ab_hb(){
+  Double_t pcal_arr_gain_cor_7672[224] ={
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00, 25.72, 52.35, 63.62, 35.64,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00, 26.81, 41.62, 29.00, 24.32, 73.66, 48.15,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00, 25.91, 23.41, 50.41, 43.76, 36.76, 28.27, 28.35,103.30,-43.00,-16.31, 35.14, 67.28,-30.30,  0.00,
+    0.00,  0.00, 25.48, 57.63, 15.23, 36.56, 33.93, 41.42, 58.17, 28.11, 23.63, 48.98, 68.95, 11.04, 75.28,  0.00,
+    0.00,  0.00, 42.62, 37.12, 20.67, 42.95, 48.55, 37.51, 29.97, 30.55, 26.14, 21.49, 31.48, 29.24, 77.74,  0.00,
+    0.00, 27.76, 12.95, 10.10, 12.51,  8.06, 13.10, 17.55, 11.92, 14.14, 21.90, 18.24, 26.72, 15.46,  3.21, 49.44,
+    0.00,  0.00, 26.17, 26.23, 40.40, 32.62, 17.91, 39.73, 52.50, 62.42, 17.69, 55.01, 25.71, 23.23,  0.00,  0.00,
+    0.00,  0.00, 17.12, 35.47, 18.91, 42.79, 31.12, 53.84, 28.56,  0.00, 31.40, 35.29, 50.92, 30.19, 21.98,  0.00,
+    0.00,  0.00, 53.86, 31.23, 25.45, 33.39, 19.98,  0.00,  0.00,  0.00,-10.43,  0.00, 37.10, 20.90, -4.35,  0.00,
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00};
+
+
+  Double_t pcal_arr_gain_cor_6545[224] ={
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00, 32.76, 39.45,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00, 30.07, 24.73, 48.82, 55.14, 32.96,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00, 35.42, 29.00, 40.76, 29.29, 24.01, 72.63, 48.72,  0.00,  0.00,  0.00, 25.90,  0.00,  0.00,  0.00,  0.00,
+    0.00, 25.65, 26.91, 23.49, 50.49, 44.13, 37.04, 28.63, 28.90,  0.00, 30.21, 31.84, 37.95, 67.48,  0.00,  0.00,
+    0.00, 36.61, 25.24, 57.68, 15.53, 36.58, 33.96, 41.29, 60.89, 29.59, 43.57, 48.53, 67.56, 11.23, 50.77,  0.00,
+    0.00,  0.00, 41.65, 37.57, 20.90, 42.10, 49.13, 37.24, 30.24, 30.86, 26.29, 21.08, 31.37, 29.58, 15.85,  0.00,
+    0.00, 49.25, 12.15,  9.72, 13.20,  9.20, 13.24, 17.35, 11.99, 15.69, 22.41, 18.30, 27.13, 15.36,  9.94,  0.00,
+    0.00,  0.00, 26.55, 27.43, 40.57, 34.13, 18.66, 40.27, 52.79, 67.43, 16.85, 54.38, 25.35, 22.78, 56.98,  0.00,
+    0.00, 63.03, 17.05, 37.32, 20.28, 45.94, 33.78, 51.73, 31.52,  0.00,106.71, 35.04, 50.50, 30.02, 14.66,  0.00,
+    0.00, 64.33, 55.92, 32.28, 26.57, 35.26, 17.83, 16.75,  0.00,  0.00,  0.00,  0.00, 29.35, 23.99,-24.37,  0.00,
+    0.00,  0.00, 31.16, 35.20, 33.66, 48.60,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+    0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00};
+
+
+
+  TFile *f1 = new TFile("root/cal_structure_6545.root", "RECREATE");
+  Int_t runs[NRUNS] = {6545, 7672};
+
+  TH2F *h1;
+  TH2F *h2;
+  TH2F *h3;
+  TH2F *h4;
+
+  TTree   *t;
+  TCanvas *c1;
+
+  for(Int_t i=0; i<NRUNS; i++){
+    // h2cal[0]=new TH2F("","",14,-63,63,16,-72,72);
+
+    h1 = new TH2F(Form("h1[%d]", i), Form(""),100, 0.0001,1.5, 100, 0.0001, 1.5);
+    h1->SetLineWidth(2);
+    h1->SetLineColor(kBlue);
+    h1->SetTitle(Form("shower vs preshower all events,  Run_%d",runs[i]));
+    h1->GetYaxis()->SetTitle("shms_shower");
+    h1->GetYaxis()->CenterTitle();
+    h1->GetXaxis()->SetTitle("shms_preshower");
+    h1->GetXaxis()->CenterTitle();
+    h1->GetXaxis()->SetTitleOffset(1.2);
+
+
+    h2 = new TH2F(Form("h2[%d]", i), Form(""),100, 0.0001,1.5, 100, 0.0001, 1.5);
+    h2->SetLineWidth(2);
+    h2->SetLineColor(kBlue);
+    h2->SetTitle(Form(" right band of shower vs preshower,  Run_%d",runs[i]));
+    h2->GetYaxis()->SetTitle("shms_shower");
+    h2->GetYaxis()->CenterTitle();
+    h2->GetXaxis()->SetTitle("shms_preshower");
+    h2->GetXaxis()->CenterTitle();
+    h2->GetXaxis()->SetTitleOffset(1.2);
+
+
+     h3 = new TH2F(Form("h3[%d]", i), Form(""),14,-63,63,16,-72,72);//--------------------------->make similar to shower count
+    //h3 = new TH2F(Form("h3[%d]", i), Form(""),100,-40,40,100,-40,40);//--------------------------->make similar to actual structure
+    h3->SetLineWidth(2);
+    h3->SetLineColor(kBlue);
+    h3->SetTitle(Form("all events projected at shower Run_%d",runs[i]));
+    h3->GetYaxis()->SetTitle("P.dc.x at shower");
+    h3->GetYaxis()->CenterTitle();
+    h3->GetXaxis()->SetTitle("P.dc.y at shower");
+    h3->GetXaxis()->CenterTitle();
+    h3->GetXaxis()->SetTitleOffset(1.2);
+
+
+      h4 = new TH2F(Form("h4[%d]", i), Form(""),14,-63,63,16,-72,72);//--------------------------->make similar to shower count
+    //h4 = new TH2F(Form("h4[%d]", i), Form(""),100,-40,40,100,-40,40);//--------------------------->make similar to actual
+    h4->SetLineWidth(2);
+    h4->SetLineColor(kBlue);
+    h4->SetTitle(Form("events of right band projected at shower Run_%d",runs[i]));
+    h4->GetYaxis()->SetTitle("P.dc.x at shower");
+    h4->GetYaxis()->CenterTitle();
+    h4->GetXaxis()->SetTitle("P.dc.y at shower");
+    h4->GetXaxis()->CenterTitle();
+    h4->GetXaxis()->SetTitleOffset(1.2);
+
+
+    // TString fname = "/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/spring_hgc25/";//for spring runs
+    // TFile *f = new TFile(Form(fname + "hgc_25_spring_7671_%d_-1.root", runs[i]),"read");
+
+    TString fname = "/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/cal_calib_oct22/";// for fall runs
+    TFile *f = new TFile(Form(fname + "coin_replay_production_copy_%d_-1.root", runs[i]),"read");
+  
+
+    t=(TTree *)f->Get("T");
+    Double_t nentries = t->GetEntries();
+    cout << "All Entries for Run Num:  "<<runs[i]<< " = "<<nentries<< endl;
+    Double_t hgc,aero,caletot,calepr,delta,track_x_fp,track_y_fp,track_xp_fp,track_yp_fp,beta, dipoleExit,xatcal, yatcal;
+
+    Int_t cntsepi=0;
+
+    t->SetBranchAddress("P.hgcer.npeSum", &hgc);
+    t->SetBranchAddress("P.aero.npeSum", &aero);
+    t->SetBranchAddress("P.cal.etottracknorm", &caletot);
+    t->SetBranchAddress("P.cal.eprtracknorm", &calepr);
+    t->SetBranchAddress("P.gtr.dp", &delta);
+    t->SetBranchAddress("P.gtr.beta", &beta);
+    t->SetBranchAddress("P.dc.x_fp", &track_x_fp);
+    t->SetBranchAddress("P.dc.y_fp", &track_y_fp);
+    t->SetBranchAddress("P.dc.xp_fp", &track_xp_fp);
+    t->SetBranchAddress("P.dc.yp_fp", &track_yp_fp);
+    t->SetBranchAddress("P.dc.InsideDipoleExit", &dipoleExit);
+
+
+    Double_t dist_shower = 306.44; 
+    Bool_t eventcut;
+   
+
+    TCutG *cutg = new TCutG("cutg",8);
+
+    cutg->SetVarX("");
+    cutg->SetVarY("");
+ 
+    if( runs[i]<7000){
+    //6545 only
+    cutg->SetPoint(0, 0.554284, 0.658111);   // only 8 points
+    cutg->SetPoint(1, 0.543098, 0.599682);
+    cutg->SetPoint(2, 0.585607, 0.534379);
+    cutg->SetPoint(3, 0.962595, 0.207866);
+    cutg->SetPoint(4, 1.10578,  0.309257);
+    cutg->SetPoint(5, 0.572183, 0.706228);
+    cutg->SetPoint(6, 0.558759, 0.663266);
+    cutg->SetPoint(7, 0.554284, 0.658111);
+    }
+    else
+      {
+	//below are for 7671+72->9 points
+    cutg->SetPoint(0,  0.518428, 0.625407);
+    cutg->SetPoint(1,  0.506122, 0.579005);
+    cutg->SetPoint(2,  0.614639, 0.496512);
+    cutg->SetPoint(3,  0.917814, 0.262783);
+    cutg->SetPoint(4,  1.005070, 0.32809);
+    cutg->SetPoint(5,  0.579958, 0.606502);
+    cutg->SetPoint(6,  0.520666, 0.623688);
+    cutg->SetPoint(7,  0.520666, 0.623688);
+    cutg->SetPoint(8,  0.518428, 0.625407);
+
+      }
+    Double_t xval, yval, run;
+    for (int k = 0; k< nentries; k++)//---------------------------->/100
+      { t->GetEntry(k);
+	eventcut = delta>-10 && delta<20 && beta>0.5 && beta<1.5 && aero>2. && hgc>2 && dipoleExit==1.0;
+
+	xatcal = track_x_fp + 306.44 * (track_xp_fp);
+	yatcal = track_y_fp + 306.44 * (track_yp_fp);
+       
+	if (eventcut)
+	  {
+	    cntsepi++;
+	    h1->Fill(calepr,caletot-calepr);// always : h1->Fill(x variable, y variable)->just 2d plot
+	    h3->Fill(track_y_fp,track_x_fp);// for all events y_xp vs x_fp
+
+	    if (cutg->IsInside(calepr, caletot-calepr ))
+	      {  h2->Fill(calepr,caletot-calepr);
+		h4->Fill(track_y_fp,track_x_fp);
+	      }
+
+
+	  }
+      }
+    cout <<"events passed all data cuts for Run Num:  " <<runs[i]<< " = "<<cntsepi<< endl;
+    gStyle->SetOptStat(01);
+	 
+    c1 = new TCanvas("","", 1200, 700);    
+    c1->Divide(2,2);
+
+    c1->cd(1);/*gPad->SetGridx();gPad->SetGridy()*/;gPad->SetLogz();//all evts
+    h1->Draw("colz");
+
+
+    c1->cd(2);/*gPad->SetGridx();gPad->SetGridy()*/;gPad->SetLogz();//with fraphical_cut only
+    h2->Draw("colz");
+
+
+    c1->cd(3);/*gPad->SetGridx();gPad->SetGridy()*/;gPad->SetLogz();//with fraphical_cut only
+    h3->Draw("colz");
+
+
+    c1->cd(4);/*gPad->SetGridx();gPad->SetGridy()*/;gPad->SetLogz();//with fraphical_cut only
+    h4->Draw("colz");
+
+    c1->SaveAs(Form("pdf/ab_hb_shpsh_%d.pdf",runs[i]));
+
+    // //all good upto here. now the task is to overlay h4 with shower
+    // //**********************************
+   
+    TCanvas *c2=new TCanvas("c2","c2",1200,700);
+    c2->Divide(1,1);
+    c2->cd(1);gPad->SetLogz();
+    TLine *lv[15];
+    for(Int_t i=0;i<15;i++)
+      {
+    	Int_t val=-63+9*i;
+    	lv[i]=new TLine(val,-72,val,72);
+	//	h4->Draw("colz");//right band only-----------------------------------------> which one??
+    	h3->Draw("colz");//all events
+
+    	lv[i]->Draw("same");
+      }
+    TLine *lh[17];
+    for(Int_t i=0;i<17;i++)
+      {
+    	Int_t val=-72+9*i;
+    	lh[i]=new TLine(-63,val,63,val);
+    	//h4->Draw("colz");//right band only-------------------------------------------------> which one?
+    	h3->Draw("colz");//all events
+
+    	lh[i]->Draw("same");
+      }
+
+    Double_t fStep=9;
+    Int_t cnt=0;
+    TText *tt[224];
+    for (Int_t j=0; j<14; j++)
+      {
+    	for (Int_t i=0; i<16; i++)
+    	  {
+    	    Double_t xpos = - (16-1)*fStep/2 + fStep*i - 2;
+    	    Double_t ypos =   (14-1)*fStep/2 - fStep*j - 2;
+    	    tt[cnt]=new TText(ypos,xpos,Form("%.2f",pcal_arr_gain_cor_6545[cnt]));
+
+    	    tt[cnt]->SetTextSize(0.02);
+    	    tt[cnt]->SetTextColor(kRed);
+    	    tt[cnt]->Draw("");
+    	    cnt++;
+    	  }
+      }
+    
+     c2->SaveAs(Form("pdf/ab_hb_allevts_%d.pdf",runs[i]));
+    
+
+
+
+ //******************* one more canvas for right band only
+
+
+
+ TCanvas *c3=new TCanvas("c3","c3",1200,700);
+    c3->Divide(1,1);
+    c3->cd(1);gPad->SetLogz();
+    TLine *lv1[15];
+    for(Int_t i=0;i<15;i++)
+      {
+    	Int_t val=-63+9*i;
+    	lv1[i]=new TLine(val,-72,val,72);
+		h4->Draw("colz");//right band only-----------------------------------------> which one??
+	//	h3->Draw("colz");//all events
+
+    	lv1[i]->Draw("same");
+      }
+    TLine *lh1[17];
+    for(Int_t i=0;i<17;i++)
+      {
+    	Int_t val=-72+9*i;
+    	lh1[i]=new TLine(-63,val,63,val);
+    	h4->Draw("colz");//right band only-------------------------------------------------> which one?
+	//	h3->Draw("colz");//all events
+
+    	lh1[i]->Draw("same");
+      }
+
+    Double_t fstep1=9;
+    Int_t cnts=0;
+    TText *ttt[224];
+    for (Int_t j=0; j<14; j++)
+      {
+    	for (Int_t i=0; i<16; i++)
+    	  {
+    	    Double_t xpos = - (16-1)*fstep1/2 + fstep1*i - 2;
+    	    Double_t ypos =   (14-1)*fstep1/2 - fstep1*j - 2;
+    	    ttt[cnts]=new TText(ypos,xpos,Form("%.2f",pcal_arr_gain_cor_6545[cnts]));
+
+    	    ttt[cnts]->SetTextSize(0.02);
+    	    ttt[cnts]->SetTextColor(kRed);
+    	    ttt[cnts]->Draw("");
+    	    cnts++;
+    	  }
+      }
+    
+     c3->SaveAs(Form("pdf/ab_hb_rightband_%d.pdf",runs[i]));
+
+     //********************
+
+     f1->Write();
+
+    //***************************************
+
+
+
+
+  }
+}
