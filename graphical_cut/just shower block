@@ -1,0 +1,36 @@
+
+#include "TH1F.h"
+#include <TH2.h>
+#include <TCanvas.h>
+#include <TObject.h>
+#define NRUNS 2
+using namespace std;
+
+void shower_xy(){
+  TH2F *h1 = new TH2F ("h1","" , 14,-63,63,16,-72,72);
+  h1->Fill(2,4);
+  TCanvas *c2=new TCanvas("c2","c2",1200,700);
+  c2->Divide(1,1);
+  c2->cd(1);
+  h1->Draw("colz");
+  
+  TLine *lv[15];
+
+  for(Int_t i=0;i<15;i++)
+    {
+      Int_t val=-63+9*i;
+      
+      lv[i]=new TLine(val,-72,val,72);
+      
+      lv[i]->Draw("same");     
+    }
+  
+  TLine *lh[17];
+  for(Int_t i=0;i<17;i++)
+    {
+      Int_t val=-72+9*i;
+      lh[i]=new TLine(-63,val,63,val);
+      lh[i]->Draw();
+    }
+}
+
