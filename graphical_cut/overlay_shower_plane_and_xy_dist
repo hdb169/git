@@ -214,14 +214,13 @@ void ab_hb(){
     TCanvas *c2=new TCanvas("c2","c2",1200,700);
     c2->Divide(1,1);
     c2->cd(1);gPad->SetLogz();
+    //	h4->Draw("colz");//right band only-----------------------------------------> which one??
+    	h3->Draw("colz");//all events
     TLine *lv[15];
     for(Int_t i=0;i<15;i++)
       {
     	Int_t val=-63+9*i;
     	lv[i]=new TLine(val,-72,val,72);
-	//	h4->Draw("colz");//right band only-----------------------------------------> which one??
-    	h3->Draw("colz");//all events
-
     	lv[i]->Draw("same");
       }
     TLine *lh[17];
@@ -229,9 +228,6 @@ void ab_hb(){
       {
     	Int_t val=-72+9*i;
     	lh[i]=new TLine(-63,val,63,val);
-    	//h4->Draw("colz");//right band only-------------------------------------------------> which one?
-    	h3->Draw("colz");//all events
-
     	lh[i]->Draw("same");
       }
 
@@ -265,14 +261,14 @@ void ab_hb(){
  TCanvas *c3=new TCanvas("c3","c3",1200,700);
     c3->Divide(1,1);
     c3->cd(1);gPad->SetLogz();
+  h4->Draw("colz");//right band only-----------------------------------------> which one??
+  //h3->Draw("colz");//all events
+    
     TLine *lv1[15];
     for(Int_t i=0;i<15;i++)
       {
     	Int_t val=-63+9*i;
     	lv1[i]=new TLine(val,-72,val,72);
-		h4->Draw("colz");//right band only-----------------------------------------> which one??
-	//	h3->Draw("colz");//all events
-
     	lv1[i]->Draw("same");
       }
     TLine *lh1[17];
@@ -280,9 +276,6 @@ void ab_hb(){
       {
     	Int_t val=-72+9*i;
     	lh1[i]=new TLine(-63,val,63,val);
-    	h4->Draw("colz");//right band only-------------------------------------------------> which one?
-	//	h3->Draw("colz");//all events
-
     	lh1[i]->Draw("same");
       }
 
