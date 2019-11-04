@@ -155,7 +155,8 @@ void shower_overlay_7672(){
 
 		if (cutg->IsInside(calepr, caletot-calepr ))
 		  {  h2->Fill(calepr,caletot-calepr);
-		    h4->Fill(track_y_fp,track_x_fp);
+		    //////h4->Fill(track_y_fp,track_x_fp);
+		    h4->Fill(yatcal, xatcal);
 		  }
 
 
