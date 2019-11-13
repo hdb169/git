@@ -1,0 +1,150 @@
+
+block P.dc.x_fp
+block P.dc.y_fp
+block P.dc.xp_fp
+block P.dc.yp_fp
+block P.dc.InsideDipoleExit
+
+block H.dc.x_fp
+block H.dc.y_fp
+block H.dc.xp_fp
+block H.dc.yp_fp
+block H.dc.InsideDipoleExit
+
+
+
+
+block CTime.ePiCoinTime_ROC2
+
+block P.cal.pr.goodPosAdcPulseInt
+block P.cal.pr.goodNegAdcPulseInt
+block P.cal.fly.goodAdcPulseInt
+block P.tr.n
+block P.tr.x
+block P.tr.y
+block P.tr.th
+block P.tr.ph
+block P.tr.p
+block P.tr.tg_dp
+block P.tr.tg_ph
+block P.tr.tg_th
+block P.tr.tg_y
+block P.hgcer.npeSum
+block P.ngcer.npe
+block P.tr.beta
+block P.cal.nclust
+block P.cal.ntracks
+block P.cal.fly.nclust
+block P.cal.fly.ntracks
+
+block P.ngcer.npeSum
+block P.hod.beta
+block P.hod.goodstarttime
+block P.hgcer.npeSum
+block P.aero.npeSum
+block P.cal.etottracknorm
+block P.cal.eprtracknorm
+block P.cal.etotnorm
+block P.gtr.beta
+block P.gtr.dp
+block P.cal.etot
+block P.hgcer.npe
+
+block P.gtr.x
+block P.gtr.y
+
+block H.cal.1pr.goodNegAdcPulseInt
+block H.cal.1pr.goodPosAdcPulseInt
+block H.cal.2ta.goodNegAdcPulseInt
+block H.cal.2ta.goodPosAdcPulseInt
+block H.cal.3ta.goodNegAdcPulseInt
+block H.cal.3ta.goodPosAdcPulseInt
+block H.cal.4ta.goodNegAdcPulseInt
+block H.cal.4ta.goodPosAdcPulseInt
+block H.tr.n
+block H.tr.x
+block H.tr.y
+block H.tr.th
+block H.tr.ph
+block H.tr.p
+block H.tr.tg_dp
+block H.cer.npe
+block H.tr.beta
+block H.cal.nclust
+
+block H.cer.npeSum
+block H.hod.beta
+block H.hod.goodstarttime
+block H.cal.etottracknorm
+block H.gtr.beta
+block H.gtr.dp
+block H.cal.etotnorm
+block H.cal.eprtracknorm
+
+
+
+block P.gtr.p
+block H.gtr.p
+
+block P.gtr.ph
+block P.gtr.th
+
+block H.gtr.ph
+block H.gtr.th
+
+
+
+block P.cal.etottracknorm
+block P.cal.eprtracknorm
+block P.cal.eprtrack
+block P.cal.etot
+block P.cal.etotnorm
+block P.cal.etrack
+block P.cal.etracknorm
+
+block H.cal.etottracknorm
+block H.cal.eprtracknorm
+block H.cal.eprtrack
+block H.cal.etot
+block H.cal.etotnorm
+block H.cal.etrack
+block H.cal.etracknorm
+
+block H.hod.betanotrack
+block H.dc.ntrack
+block H.hod.goodscinhit
+
+block P.hod.betanotrack
+block P.dc.ntrack
+block P.hod.goodscinhit
+
+
+
+
+block P.dc.ntrack
+block H.dc.ntrack
+
+
+block H.gtr.dp
+
+
+block H.dc.residualExclPlane
+block H.dc.residual
+
+
+
+
+#block P.dc.*
+#block H.dc.*
+#block P.gtr.*
+#block H.gtr.*
+
+#block P.gtr.x_fp
+#block P.gtr.y_fp
+#block P.gtr.xp_fp
+#block P.gtr.yp_fp
+
+#block H.gtr.x_fp
+#block H.gtr.y_fp
+#block H.gtr.xp_fp
+#block H.gtr.yp_fp
