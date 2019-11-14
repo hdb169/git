@@ -1,0 +1,205 @@
+//plot two same variables from 6545 calibrated with 7671 vs from same run 7671.
+
+#include "header.h"
+ void check_calib(){
+
+  gStyle->SetOptStat();
+  gROOT->SetBatch(kTRUE);
+  gROOT->ForceStyle(); 
+  gStyle->SetTitleFontSize(0.05);
+  gStyle->SetNdivisions(505);
+  gStyle->SetCanvasColor(10);
+  gStyle->SetPadTopMargin(0.10);
+  gStyle->SetPadLeftMargin(0.08);
+  gStyle->SetPadRightMargin(0.08);
+  gStyle->SetPadBottomMargin(.14);
+  gStyle->SetTitleYOffset(1.09);
+  gStyle->SetTitleXOffset(0.855);
+  gStyle->SetTitleYSize(0.03);
+  gStyle->SetTitleXSize(0.03);
+  gStyle->SetLabelFont(62,"X");
+  gStyle->SetLabelFont(62,"Y");
+  gStyle->SetTitleFont(62,"X");
+  gStyle->SetTitleFont(62,"Y");
+  gStyle->SetLabelSize(0.025,"X");
+  gStyle->SetLabelSize(0.025,"Y");
+  gStyle->SetPaperSize(23,24);
+  TChain *tt = new TChain("T");
+ 
+  tt->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/spring_final/7671_checked_to_7593_-1.root");
+
+  //TFile *ff = new TFile("root/7672_with_7671.root", "RECREATE");      
+
+  Double_t pionMass = 0.1395701835;   
+
+  Double_t pcaletot,pcaletotnorm,pbeta,hbeta,pdelta,hdelta,pcaletottracknorm,hcaletot,pcalepr,hcalepr,paeronpe,hcernpe,phg,W,Q2,xbj,ctime,E_pi,z_had,z_had_all,pkinomega,PgtrP,HgtrP,hhodstarttime,phodstarttime,hdipole, pdipole;
+ 
+
+  TH1D *h_ctime = new TH1D("h_ctime", "ctime (ns)", 400,25,75);
+  TH1D *h_z = new TH1D("h_z","z_had_all", binz, loz, hiz);                                      
+
+  TH1D *h_Q2d = new TH1D("h_Q2d","Q2 (GeV2)",binq, loq, hiq);  
+  TH1D *h_xd = new TH1D("h_xd","X_bj", binx, lox, hix);   
+  TH1D *h_ctimed = new TH1D("h_ctimed", "ctimed (ns)", 400,25,75);
+  TH1D *h_zd = new TH1D("h_zd","z_had", binz, loz, hiz);                                      
+  TH1D *h_caletot = new TH1D("h_caletot","h_caletot", 100, 0.0001, 7);                                      
+  TH1D *h_caletotnorm = new TH1D("h_caletotnorm","h_caletotnorm", 100, 0.0001, 2);                                      
+  TH1D *h_EoverP = new TH1D("h_EoverP","h_EoverP", 100, 0.0001, 2);                                      
+  TH2D *h_shwr_vs_preshwr = new TH2D("h_shwr_vs_preshwr","h_shwr_vs_preshwr",100, 0.001, 1.5, 100, 0.001,1.5);
+
+ TH2D *h_dp_vs_EoverP = new TH2D("h_dp_vs_EoverP","h_dp_vs_EoverP", 100, 0.001, 2, 100, -12, 22);                                      
+  TH2D *h_dp_vs_beta = new TH2D("h_dp_vs_beta","h_dp_vs_beta", 100,0.001, 2, 100, -12, 22);                                       
+
+
+  
+  Int_t cntsepi=0;
+  Int_t evts=0;
+  tt->SetBranchAddress("P.gtr.p", &PgtrP); 
+  tt->SetBranchAddress("H.gtr.p", &HgtrP); 
+  tt->SetBranchAddress("P.gtr.beta", &pbeta);                                                                       
+  tt->SetBranchAddress("H.gtr.beta", &hbeta); 
+  tt->SetBranchAddress("H.gtr.dp", &hdelta);                                                                            
+  tt->SetBranchAddress("P.gtr.dp", &pdelta);                                                                                
+  tt->SetBranchAddress("P.cal.eprtracknorm", &pcalepr);                                                                    
+  tt->SetBranchAddress("P.cal.etottracknorm", &pcaletottracknorm);                                                                  
+  tt->SetBranchAddress("P.hgcer.npeSum", &phg);
+  tt->SetBranchAddress("P.aero.npeSum", &paeronpe);                                          
+  tt->SetBranchAddress("H.cal.eprtracknorm", &hcalepr);                                  
+  tt->SetBranchAddress("H.cal.etottracknorm", &hcaletot);                                          
+  tt->SetBranchAddress("H.cer.npeSum", &hcernpe); 
+  // tt->SetBranchAddress("H.kin.primary.W", &W);
+  // tt->SetBranchAddress("H.kin.primary.Q2", &Q2);
+  // tt->SetBranchAddress("H.kin.primary.x_bj", &xbj); 
+  tt->SetBranchAddress("CTime.ePiCoinTime_ROC2", &ctime);
+  //tt->SetBranchAddress("H.kin.primary.omega", &pkinomega);
+  tt->SetBranchAddress("H.hod.goodstarttime", &hhodstarttime);
+  tt->SetBranchAddress("P.hod.goodstarttime",&phodstarttime);
+  tt->SetBranchAddress("P.dc.InsideDipoleExit",&pdipole);
+  tt->SetBranchAddress("H.dc.InsideDipoleExit",&hdipole);
+  tt->SetBranchAddress("P.cal.etot",&pcaletot);
+  tt->SetBranchAddress("P.cal.etotnorm",&pcaletotnorm);
+
+
+  Bool_t ctime_cut, acc_cut, accR_cut, accL_cut,data_cut,pid_cut;
+ 
+  Long64_t nentriesD = tt->GetEntries();
+
+  cout<<"Total Entries = "<<nentriesD<<endl;
+
+  for (int kk=0; kk<nentriesD;  kk++)
+    {
+
+      tt->GetEntry(kk);
+
+      if (kk % 700000 == 0) cout << kk*100/nentriesD << "   % of data done" << endl;
+
+      data_cut = paeronpe>2.0 &&  pdelta >-10 && pdelta < 20  &&  pbeta > 0.5 && pbeta < 1.5 && hhodstarttime ==1 &&phodstarttime == 1 && hdipole==1 && pdipole ==1;
+  
+      if(data_cut)
+	{    cntsepi++;
+
+	  h_ctime->Fill(ctime);
+	  E_pi = sqrt(pow(pionMass,2) + pow(PgtrP,2));
+	  z_had_all = E_pi/pkinomega;
+	  h_z->Fill(z_had_all);
+	  h_caletot->Fill(pcaletot);
+	  h_caletotnorm->Fill(pcaletotnorm);
+	  h_EoverP->Fill(pcaletottracknorm);
+	  h_shwr_vs_preshwr->Fill(pcalepr,pcaletottracknorm-pcalepr);
+          h_dp_vs_EoverP->Fill(pcaletottracknorm,pdelta);
+	  h_dp_vs_beta->Fill(pbeta,pdelta);
+
+	}
+    }
+
+  
+  cout << "final good events = "<<  cntsepi << endl;
+
+  gROOT->SetBatch(kFALSE);
+
+  //#include "plot.h"
+
+    TCanvas *c1 = new TCanvas("c1","7593", 1000,800);			
+    c1->Divide(3,2);
+    c1->cd(1);
+    h_caletot->Draw();
+    h_caletot->SetLineWidth(2);
+    h_caletot->SetLineColor(kBlue);
+    h_caletot->SetTitle("P.cal.etot");
+    h_caletot->GetXaxis()->SetTitle("P.cal.etot");
+    h_caletot->GetXaxis()->CenterTitle();
+    h_caletot->GetXaxis()->SetTitleOffset(1.2);
+
+
+    c1->cd(2);
+    h_caletotnorm->Draw();
+    h_caletotnorm->SetLineWidth(2);
+    h_caletotnorm->SetLineColor(kBlue);
+    h_caletotnorm->SetTitle("P.cal.etotnorm");
+    h_caletotnorm->GetXaxis()->SetTitle("P.cal.etotnorm");
+    h_caletotnorm->GetXaxis()->CenterTitle();
+    h_caletotnorm->GetXaxis()->SetTitleOffset(1.2);
+
+
+    c1->cd(3);gPad->SetGridx();
+    h_EoverP->Draw();
+    h_EoverP->SetLineWidth(2);
+    h_EoverP->SetLineColor(kBlue);
+    h_EoverP->SetTitle("P.cal.etottracknorm");
+    h_EoverP->GetXaxis()->SetTitle("P.cal.etottracknorm");
+    h_EoverP->GetXaxis()->CenterTitle();
+    h_EoverP->GetXaxis()->SetTitleOffset(1.2);
+
+		
+    c1->cd(4);gPad->SetLogz();
+    h_shwr_vs_preshwr->Draw("colz");
+    h_shwr_vs_preshwr->SetLineWidth(2);
+    h_shwr_vs_preshwr->SetLineColor(kBlue);
+    h_shwr_vs_preshwr->SetTitle("shower vs preshower");
+    h_shwr_vs_preshwr->GetYaxis()->SetTitle("shms_shower");
+    h_shwr_vs_preshwr->GetYaxis()->CenterTitle();
+    h_shwr_vs_preshwr->GetXaxis()->SetTitle("shms_preshower");
+    h_shwr_vs_preshwr->GetXaxis()->CenterTitle();
+    h_shwr_vs_preshwr->GetXaxis()->SetTitleOffset(1.2);
+
+
+    c1->cd(5);gPad->SetLogz();
+    h_dp_vs_EoverP->Draw("colz");
+    h_dp_vs_EoverP->SetLineWidth(2);
+    h_dp_vs_EoverP->SetLineColor(kBlue);
+    h_dp_vs_EoverP->SetTitle("dp vs E/P");
+    h_dp_vs_EoverP->GetYaxis()->SetTitle("dp");
+    h_dp_vs_EoverP->GetYaxis()->CenterTitle();
+    h_dp_vs_EoverP->GetXaxis()->SetTitle("E/P");
+    h_dp_vs_EoverP->GetXaxis()->CenterTitle();
+    h_dp_vs_EoverP->GetXaxis()->SetTitleOffset(1.2);
+
+
+    c1->cd(6);gPad->SetLogz();
+    h_dp_vs_beta->Draw("colz");
+    h_dp_vs_beta->SetLineWidth(2);
+    h_dp_vs_beta->SetLineColor(kBlue);
+    h_dp_vs_beta->SetTitle("dp vs pbeta");
+    h_dp_vs_beta->GetYaxis()->SetTitle("dp");
+    h_dp_vs_beta->GetYaxis()->CenterTitle();
+    h_dp_vs_beta->GetXaxis()->SetTitle("P.gtr.beta");
+    h_dp_vs_beta->GetXaxis()->CenterTitle();
+    h_dp_vs_beta->GetXaxis()->SetTitleOffset(1.2);
+
+
+    // ff->cd();
+    //ff->Write();
+		
+
+   c1->SaveAs("pdf/7593.pdf");
+
+			
+
+}
+
+
+
+
+
+
+
