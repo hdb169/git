@@ -5,7 +5,8 @@
 ;whatever we had earlier is alos included in the git as ptracking.param_beforesep12_2019
 ;CHANGES ARE: ORIGINAL_VS_MARK'S_CHANGES
 ;1) psel_using_prune = 0 vs  psel_using_prune = 1, around line num = 61
-
+;========================================================================================================
+;/u/group/c-csv/hdbhatt/sep15/hallc_replay_sidis_fall18/PARAM/SHMS/GEN
 ;=================================sept 20 2019=============================================================
 
 ; shms pattern recognition and tracking code parameters
