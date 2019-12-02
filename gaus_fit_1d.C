@@ -1,3 +1,4 @@
+//hist->Fit("gaus","O","",0.5,1.5);
 
 #include "TH1F.h"
 #include <TH2.h>
