@@ -1,0 +1,56 @@
+/////////nov20,2019////////////////////
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void read_counts()
+{
+  //std::ifstream infile("singles.txt"); //reads first txtfile
+  std::ifstream infile("counts.txt"); //reads first txtfile
+
+  std::string line;// read line by line
+  vector <int> run; //To set points along X axis
+  vector <double> runNo; //==========================================================================>run No is double along X axis
+  vector <double> elreal;
+  vector <double> charge;
+  vector <double> yield;
+  
+  while (std::getline(infile, line))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line);// to read the whole strings in a line
+      double a, b, c,d;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a >> b >> c>>d))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run.push_back(a);//now run is stored in a
+      elreal.push_back(b);//did is stored in b
+      charge.push_back(c);
+      yield.push_back(d);
+      runNo.push_back(a);//==========================================>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
+    }
+
+
+  Double_t er1=0,er2=0;
+  
+  for(int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+    {
+      // cout <<  elclean_div_q_err[i]<<endl;//you have to cout each elements , so need i
+      cout<<  run[i]<<endl;
+    }
+
+  TGraph *gr1 = new TGraph(run.size(), &runNo[0], &yield[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error), if anything is not there, keep zero 
+  gr1->Draw("AP*");
+  gr1->GetXaxis()->SetTitle("Run Num Fall D2 Pi-");
+  gr1->GetYaxis()->SetTitle("Yield (counts/mC)");
+  gr1->SetTitle("counts/mC");
+  gr1->GetXaxis()->CenterTitle();
+  gr1->GetYaxis()->CenterTitle();
+  gr->GetYaxis()->SetRangeUser(0.85,1.0)
+  gr1->GetYaxis()->SetRangeUser(0.85,1.0);
+
+}
