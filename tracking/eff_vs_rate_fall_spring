@@ -1,0 +1,207 @@
+/////////dec3,2019////////////////////
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void good_rate()
+{
+  //==============fall track eff==================
+
+  std::ifstream infile1("shms_track_eff_fall.txt"); //reads first txtfile===========================NO PURN
+
+  std::string line1;// read line by line
+  vector <int> run1; //To set points along X axis
+  vector <double> runNo1; //==========================================================================>run No is double along X axis
+  vector <double> did1;
+  vector <double> should1;
+  vector <double> eff1;
+  vector <double> eff_err1;
+
+  while (std::getline(infile1, line1))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line1);// to read the whole strings in a line
+      double a1, b1, c1, d1, e1;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a1 >> b1 >> c1 >> d1 >> e1))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run1.push_back(a1);//now run is stored in a
+      did1.push_back(b1);//did is stored in b
+      should1.push_back(c1);
+      eff1.push_back(d1);
+      eff_err1.push_back(e1);
+      runNo1.push_back(a1);//==========================================>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
+    }
+  //=================spring track eff===================
+
+std::ifstream infile2("shms_track_eff_spring.txt"); //reads first txtfile===========================NO PURN
+
+  std::string line2;// read line by line
+  vector <int> run2; //To set points along X axis
+  vector <double> runNo2; //==========================================================================>run No is double along X axis
+  vector <double> did2;
+  vector <double> should2;
+  vector <double> eff2;
+  vector <double> eff_err2;
+
+  while (std::getline(infile2, line2))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line2);// to read the whole strings in a line
+      double a2, b2, c2, d2, e2;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a2 >> b2 >> c2 >> d2 >> e2))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run2.push_back(a2);//now run is stored in a
+      did2.push_back(b2);//did is stored in b
+      should2.push_back(c2);
+      eff2.push_back(d2);
+      eff_err2.push_back(e2);
+      runNo2.push_back(a2);//====>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
+    }
+ 
+  //================fall rate============
+
+  std::ifstream infile3("shms_rate_fall.txt"); //reads first txtfile
+
+  std::string line3;// read line by line
+  vector <int> run3; //To set points along X axis
+  vector <double> runNo3; //==========================================================================>run No is double along X axis
+  vector <double> shms_rate3;
+ 
+
+  while (std::getline(infile3, line3))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line3);// to read the whole strings in a line
+      double a3, b3;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a3 >> b3 ))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run3.push_back(a3);//now run is stored in a
+      shms_rate3.push_back(b3);//did is stored in b
+      runNo3.push_back(a3);//==========================================>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
+    }
+  //==================spring rate==================
+
+std::ifstream infile4("shms_rate_spring.txt"); //reads first txtfile
+
+  std::string line4;// read line by line
+  vector <int> run4; //To set points along X axis
+  vector <double> runNo4; //==========================================================================>run No is double along X axis
+  vector <double> shms_rate4;
+ 
+
+  while (std::getline(infile4, line4))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line4);// to read the whole strings in a line
+      double a4, b4;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a4 >> b4 ))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+        {
+            
+	  break; 
+            
+        } // error
+        
+      run4.push_back(a4);//now run is stored in a
+      shms_rate4.push_back(b4);//did is stored in b
+      runNo4.push_back(a4);//==========================================>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
+    }
+
+
+  //======================check if code is working=================================
+  //Double_t er1=0,er2=0;
+  /*for(int i =0; i< run1.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+     {
+     // cout <<  elclean_div_q_err[i]<<endl;//you have to cout each elements , so need i
+     //cout<<  shms_rate3[i]<<endl;
+     cout<<  runNo1[i]<<endl;
+     cout<<  did1[i]<<endl;
+
+     }
+  
+  */
+
+
+  // TGraph *gr1 = new TGraph(run.size(), &runNo[0], &eff[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error), if anything is not there, keep zero 
+  TCanvas *c1 = new TCanvas("c1","c1", 1200, 800);
+  c1->Divide(1,1);
+  c1->cd(1);
+  //eff vs run num fall
+  TGraphErrors *gr1 = new TGraphErrors(run1.size(), &runNo1[0], &eff1[0],0, &eff_err1[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error), 
+  TGraphErrors *gr2 = new TGraphErrors(run2.size(), &runNo2[0], &eff2[0],0, &eff_err2[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error), 
+  TMultiGraph *mg1 = new TMultiGraph("mg1", "mg1");
+   mg1->SetTitle("Shms Tracking Efficiency; Run Num All Target; Efficiency");
+
+  
+  mg1->Add(gr1,"AP");
+  mg1->Add(gr2,"AP");
+  mg1->Draw("AP");
+  // mg1->GetHistogram()->GetXaxis()->SetRangeUser(5500, 8000);
+  // mg1->GetHistogram()->GetYaxis()->SetRangeUser(0.92,1.0);
+  gr1->SetTitle("fall18");
+  gr2->SetTitle("spring19");
+  gr1->SetMarkerColor(4);
+  gr1->SetLineColor(4);
+  gr1->SetMarkerStyle(22);
+  // gr1->GetYaxis()->SetRangeUser(0.95,1.0);
+  // gr1->GetXaxis()->SetRangeUser(6000, 7500);
+  gr2->SetMarkerColor(2);
+  gr2->SetLineColor(2);
+  gr2->SetMarkerStyle(23);
+  gPad->Modified();
+  gPad->Update();
+  c1->SaveAs("pdf/shms_tr_eff_vs_run.pdf");
+  c1->Update();
+  c1->BuildLegend();
+
+    
+  //==============================EFF vs Rate==================
+  TCanvas *c2 = new TCanvas("c2","c2", 1200, 800);
+  c2->Divide(1,1);
+  c2->cd(1);
+  TGraphErrors *gr3 = new TGraphErrors(run3.size(), &shms_rate3[0], &eff1[0],0, &eff_err1[0]);//fall//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error),
+  TGraphErrors *gr4 = new TGraphErrors(run4.size(), &shms_rate4[0], &eff2[0],0, &eff_err2[0]); // spring//if anything is not there, keep zero 
+  TMultiGraph *mg2 = new TMultiGraph("mg2", "mg2");
+  mg2->SetTitle("Shms Tracking Efficiency; SHMS 3/4 Rate (kHz); Efficiency");
+
+  mg2->Add(gr3,"AP");
+  mg2->Add(gr4,"AP");
+  mg2->Draw("AP");
+  //mg2->GetHistogram()->GetXaxis()->SetRangeUser(5500, 8000);
+  //mg2->GetHistogram()->GetYaxis()->SetRangeUser(0.92,1.0);
+  gr3->SetTitle("fall18");
+  gr4->SetTitle("spring19");
+  gr3->SetMarkerColor(4);
+  gr3->SetLineColor(4);
+  gr3->SetMarkerStyle(22);
+  // gr3->GetYaxis()->SetRangeUser(0.95,1.0);
+  // gr3->GetXaxis()->SetRangeUser(-50, 650);
+  gr4->SetMarkerColor(2);
+  gr4->SetLineColor(2);
+  gr4->SetMarkerStyle(23);
+  gPad->Modified();
+  gPad->Update();
+  c2->SaveAs("pdf/shms_tr_eff_vs_rate.pdf");
+  c2->Update();
+  c2->BuildLegend();
+  //============
+
+  
+
+
+
+}
