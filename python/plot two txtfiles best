@@ -1,24 +1,27 @@
+/////////dec3,2019////////////////////
 #include <sstream>
 #include <string>
 #include <fstream>
 
-void plot_shms()
+void good_rate()
 {
-  std::ifstream infile("shms_tr_purne.txt.txt"); //reads first txtfile
-    
+  //std::ifstream infile("singles.txt"); //reads first txtfile
+  std::ifstream infile("shms_tr_NO_purne.txt"); //reads first txtfile===========================NO PURN
+  //std::ifstream infile("/u/group/c-csv/hdbhatt/my_analysis/efficiency/shms_tracking/dec2/purn/txtfile/ptrack_eff_purning.txt"); //reads first txtfile=============================================================PURN
+
   std::string line;// read line by line
-  vector <int> run; // define the following quantities which are actually the columns in the shms_eff.txt file, specify which is of int or float or double type
+  vector <int> run; //To set points along X axis
+  vector <double> runNo; //==========================================================================>run No is double along X axis
   vector <double> did;
   vector <double> should;
   vector <double> eff;
-  vector <double> error;
+  vector <double> eff_err;
 
-    
   while (std::getline(infile, line))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
     {
       std::istringstream iss(line);// to read the whole strings in a line
-      double a, b, c, d, e;// define eun by a, did by b, herror by c, eff by d and eff_err by e
-      if (!(iss >> a >> b >> c >> d >> e)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+      double a, b, c,d,e;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a >> b >> c>>d>>e))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
         {
             
 	  break; 
@@ -26,65 +29,87 @@ void plot_shms()
         } // error
         
       run.push_back(a);//now run is stored in a
-      did.push_back(b);//hangle is stored in b
-      should.push_back(c);//herror is stored as c
+      did.push_back(b);//did is stored in b
+      should.push_back(c);
       eff.push_back(d);
-      error.push_back(e);
+      eff_err.push_back(e);
+      runNo.push_back(a);//==========================================>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
     }
 
 
-  std::ifstream infile1("hms_shms_rate_good.txt");//reads the second txt file
-    
-  std::string line1;//read all lines, there are just two columns
-  vector <int> run1;//first column
-  vector <double> hms_rate;//second column
-  vector <double> shms_rate;//second column 
-   vector <double> run_no;//second column 
+  //============================
 
-  while (std::getline(infile1, line1))
+  std::ifstream infile1("shms_rate.txt"); //reads first txtfile
+
+  std::string line1;// read line by line
+  vector <int> run1; //To set points along X axis
+  vector <double> runNo1; //==========================================================================>run No is double along X axis
+  vector <double> shms_rate1;
+ 
+
+  while (std::getline(infile1, line1))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
     {
-      std::istringstream iss(line1);//pass each column of line1 tp a1, b1
-      double a1, b1, c1, d1;   
-        
-      if (!(iss >> a1>> b1>> c1 >>d1 )) 
+      std::istringstream iss(line1);// to read the whole strings in a line
+      double a1, b1;    // d, e, f, g, h, i;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a1 >> b1 ))//d >> e >> f >> g >> h >> i)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
         {
             
 	  break; 
             
         } // error
-      run1.push_back(a1);//first column
-      hms_rate.push_back(b1);//second column
-      shms_rate.push_back(c1);//third column
-      run1.push_back(d1);//first column
-
+        
+      run1.push_back(a1);//now run is stored in a
+      shms_rate1.push_back(b1);//did is stored in b
+      runNo1.push_back(a1);//==========================================>>>>>>>>>run[0] is the size of the data points, so is integer, but along X-axis we plot Run numbers, so, we runNo. as a dobile
+      
     }
-  //=========================================================//
-  cout<<"hello"<<endl;
-
-  for (int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
-    {
-  	cout << run[i]<<endl;//you have to cout each elements , so need i
-    cout<<"hello[i]"<<endl;
-
-
-  	//	cout<< eff[i]<<endl;
-    }
-    cout<<"hello"<<endl;
-
-
+  //======================check if code is working=================================
+  //Double_t er1=0,er2=0;
   
-    auto gr = new TGraphErrors(run1.size(), &shms_rate[0], &eff[0], 0, &error[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
-    gr->Draw("ap");
-    gr->SetMarkerStyle(kFullTriangleUp);
-    gr->GetXaxis()->SetTitle("SHMS 3/4 Rate (KHz)");
-    gr->GetYaxis()->SetTitle("SHMS Tracking Eff");
-    // gr->SaveAs("shms_eff_vs_rate.pdf");
-    //r->GetYaxis()->SetRangeUser(0.98,1);
-    gr->SetTitle("SHMS Tracking Eff vs 3/4  Rate (Purning) ");
-    gr->SaveAs("pdf/shms_tracking_eff_purne.pdf");  
-    gr->GetXaxis()->CenterTitle();
-    gr->GetYaxis()->CenterTitle();
-    // gr->SetGridx();
-    //gr->SetGridy();
-    
+  /* for(int i =0; i< run1.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+     {
+     // cout <<  elclean_div_q_err[i]<<endl;//you have to cout each elements , so need i
+     cout<<  shms_rate1[i]<<endl;
+     cout<<  run1[i]<<endl;
+
+     }
+  */
+
+
+
+  // TGraph *gr1 = new TGraph(run.size(), &runNo[0], &eff[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error), if anything is not there, keep zero 
+  TCanvas *c1 = new TCanvas("c1","c1", 1200, 800);
+  c1->Divide(1,1);
+  c1->cd(1);
+  TGraphErrors *gr1 = new TGraphErrors(run.size(), &runNo[0], &eff[0],0, &eff_err[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error), 
+  //if anything is not there, keep zero 
+  gr1->Draw("AP*");
+  gr1->GetXaxis()->SetTitle("Run Num All Target ");
+  gr1->GetYaxis()->SetTitle("Efficiency");
+  gr1->SetTitle("SHMS Tracking_Eff without Purning ");
+  gr1->GetXaxis()->CenterTitle();
+  gr1->GetYaxis()->CenterTitle();
+  gr1->GetYaxis()->SetRangeUser(0.95,1.0);
+ 
+
+  c1->SaveAs("pdf/shms_tr_eff_vs_run.pdf");
+  c1->Update();
+  //==============================EFF vs Rate==================
+  TCanvas *c2 = new TCanvas("c2","c2", 1200, 800);
+  c2->Divide(1,1);
+  c2->cd(1);
+  TGraphErrors *gr2 = new TGraphErrors(run.size(), &shms_rate1[0], &eff[0],0, &eff_err[0]);//But TGraphErrors will have 5 arguments(points, x quantity, y quantity, x error, y-error),
+                                                                                           // if anything is not there, keep zero 
+  gr2->Draw("AP*");
+  gr2->GetXaxis()->SetTitle("SHMS 3/4 Rate (kHz) ");
+  gr2->GetYaxis()->SetTitle("Efficiency");
+  gr2->SetTitle("SHMS Tracking_Eff without Purning");
+  gr2->GetXaxis()->CenterTitle();
+  gr2->GetYaxis()->CenterTitle();
+  gr2->GetXaxis()->SetRangeUser(-100, 600);
+  gr2->GetYaxis()->SetRangeUser(0.9,1.05);
+  c2->SaveAs("pdf/shms_tr_eff_vs_rate.pdf");
+  c2->Update();
+
 }
