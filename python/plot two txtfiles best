@@ -2,21 +2,23 @@
 #include <string>
 #include <fstream>
 
-void plot_cal_vs_angle()
+void plot_shms()
 {
-  std::ifstream infile("hcal_all_oct5.txt"); //reads first txtfile
+  std::ifstream infile("shms_tr_purne.txt.txt"); //reads first txtfile
     
   std::string line;// read line by line
   vector <int> run; // define the following quantities which are actually the columns in the shms_eff.txt file, specify which is of int or float or double type
-  vector <double> hcal_mean;
-  vector <double> hcal_mean_error;
- 
+  vector <double> did;
+  vector <double> should;
+  vector <double> eff;
+  vector <double> error;
+
     
   while (std::getline(infile, line))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
     {
       std::istringstream iss(line);// to read the whole strings in a line
-      double a, b, c;//, d, e;// define eun by a, did by b, herror by c, eff by d and eff_err by e
-      if (!(iss >> a >> b >> c)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+      double a, b, c, d, e;// define eun by a, did by b, herror by c, eff by d and eff_err by e
+      if (!(iss >> a >> b >> c >> d >> e)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
         {
             
 	  break; 
@@ -24,61 +26,65 @@ void plot_cal_vs_angle()
         } // error
         
       run.push_back(a);//now run is stored in a
-      hcal_mean.push_back(b);//hangle is stored in b
-      hcal_mean_error.push_back(c);//herror is stored as c
-    
+      did.push_back(b);//hangle is stored in b
+      should.push_back(c);//herror is stored as c
+      eff.push_back(d);
+      error.push_back(e);
     }
 
 
-  std::ifstream infile1("hms_shms_angle_rate_mom.txt");//reads the second txt file
+  std::ifstream infile1("hms_shms_rate_good.txt");//reads the second txt file
     
   std::string line1;//read all lines, there are just two columns
   vector <int> run1;//first column
-  vector <double> hms_angle;//second column
-  vector <double> shms_angle;//second column 
-  vector <double> hms_rate;//second column 
-  vector <double> hms_momentum;//second column 
-  vector <double> shms_momentum;//second column 
-
+  vector <double> hms_rate;//second column
+  vector <double> shms_rate;//second column 
+   vector <double> run_no;//second column 
 
   while (std::getline(infile1, line1))
     {
       std::istringstream iss(line1);//pass each column of line1 tp a1, b1
-      double a1, b1, c1, d1, e1, f1;   
+      double a1, b1, c1, d1;   
         
-      if (!(iss >> a1>> b1>> c1 >>d1 >>e1 >>f1)) 
+      if (!(iss >> a1>> b1>> c1 >>d1 )) 
         {
             
 	  break; 
             
         } // error
       run1.push_back(a1);//first column
-      hms_angle.push_back(b1);//second column
-      shms_angle.push_back(c1);//second column
-      hms_rate.push_back(d1);//second column
-      hms_momentum.push_back(e1);
-      shms_momentum.push_back(f1);
+      hms_rate.push_back(b1);//second column
+      shms_rate.push_back(c1);//third column
+      run1.push_back(d1);//first column
+
     }
   //=========================================================//
+  cout<<"hello"<<endl;
+
+  for (int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+    {
+  	cout << run[i]<<endl;//you have to cout each elements , so need i
+    cout<<"hello[i]"<<endl;
 
 
-  // for (int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
-  //   {
-  // 	cout << hms_angle[i]<<endl;//you have to cout each elements , so need i
-  // 	cout<< hcal_mean[i]<<endl;
-  //   }
+  	//	cout<< eff[i]<<endl;
+    }
+    cout<<"hello"<<endl;
 
-  auto gr = new TGraphErrors(run.size(), &hms_momentum[0], &hcal_mean[0], 0, &hcal_mean_error[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
-  gr->Draw("ap");
-  gr->SetMarkerStyle(kFullTriangleUp);
-  gr->GetXaxis()->SetTitle("HMS Momentum(GeV)");
-  gr->GetYaxis()->SetTitle("HMS E/P Mean");
-  // gr->SaveAs("shms_eff_vs_rate.pdf");
-  //r->GetYaxis()->SetRangeUser(0.98,1);
-  gr->SetTitle("HMS E/P vs Momentum for All Runs ");
-  gr->SaveAs("pdf/hms_All_cal_vs_momentum.pdf");  
-  gr->GetXaxis()->CenterTitle();
-  gr->GetYaxis()->CenterTitle();
-  // gr->SetGridx();
-  //gr->SetGridy();
+
+  
+    auto gr = new TGraphErrors(run1.size(), &shms_rate[0], &eff[0], 0, &error[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+    gr->Draw("ap");
+    gr->SetMarkerStyle(kFullTriangleUp);
+    gr->GetXaxis()->SetTitle("SHMS 3/4 Rate (KHz)");
+    gr->GetYaxis()->SetTitle("SHMS Tracking Eff");
+    // gr->SaveAs("shms_eff_vs_rate.pdf");
+    //r->GetYaxis()->SetRangeUser(0.98,1);
+    gr->SetTitle("SHMS Tracking Eff vs 3/4  Rate (Purning) ");
+    gr->SaveAs("pdf/shms_tracking_eff_purne.pdf");  
+    gr->GetXaxis()->CenterTitle();
+    gr->GetYaxis()->CenterTitle();
+    // gr->SetGridx();
+    //gr->SetGridy();
+    
 }
