@@ -3,7 +3,7 @@
 //corrected efficiency = good counts/ [Q(mc)* tr eff * 3/4 shms eff * cpu LT * elec_LT (all< = 1)].
 //3) But for singles, Y =  Counts *ps1_factor / [Q(mc)* tr eff * 3/4 shms eff * cpu LT * elec_LT (all< = 1)].
 //4) The tracking efficiency is printed in the txtfile.
-
+//Dec 04, 2019
 #include "TH1F.h"
 #include <TH2.h>
 #include <TCanvas.h>
