@@ -1,4 +1,5 @@
-//1) This macro will calculate the tracking efficiency of one or more shms coincidence runs as well as singles.
+//1) This macro will calculate the tracking efficiency of one or more shms coincidence runs as well as singles. But the cuts for electron selection has to be changed.
+// For pion selcetion  pcaletotnorm>0.05 && pcaletotnorm<0.5 where as for electron selection (singles), pcaletotnorm>0.7 && pcaletotnorm<1.4
 //2) For, Coin Runs, yield Y = Counts/ (Q* corrected_efficiency), where
 //corrected efficiency = good counts/ [Q(mc)* tr eff * 3/4 shms eff * cpu LT * elec_LT (all< = 1)].
 //3) But for singles, Y =  Counts *ps1_factor / [Q(mc)* tr eff * 3/4 shms eff * cpu LT * elec_LT (all< = 1)].
@@ -82,9 +83,14 @@ void singles_eff(){
 
 	//cout<<"total entries = "<<tt->GetEntries()<<endl;
 	//	if (kk % 700000 == 0) cout << kk*100/nentriesD << "   % of data done" << endl;
-
+//to select electrons,
 	did_cut    = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.7 && pcaletotnorm<1.4 &&pdcntrack>0.0;
 	should_cut = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.7 && pcaletotnorm<1.4;
+//to select pions,
+
+//       did_cut    = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.5 && pcaletotnorm<0.5 &&pdcntrack>0.0;
+ //       should_cut = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.5 && pcaletotnorm<0.5;
+
 
   
 	if(did_cut)
