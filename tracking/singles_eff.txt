@@ -1,0 +1,21 @@
+  did_cut    = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.7 && pcaletotnorm<1.4 &&pdcntrack>0.0;
+	should_cut = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.7 && pcaletotnorm<1.4;
+
+
+run   rate     did     should  eff       eff_err
+6482  775.72  219004  226017  0.968971  0.000364726 
+6483  540.12  262925  269425  0.975875  0.000295608
+6484  391.50  244589  249947  0.978563  0.0002897
+6485  265.06  231498  235563  0.982743  0.000268314
+
+ tight electron cut
+ 
+did_cut    = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.9 && pcaletotnorm<1.1 &&pdcntrack>0.0;
+should_cut = goodscinhit==1 && betanotrack > 0.7 && betanotrack < 1.4   && pcaletotnorm>0.9 && pcaletotnorm<1.1;
+
+run   rate     did     should  eff        eff_err
+6482  775.72   127370  131323  0.969899   0.000471504
+6483  540.12   153121  156838  0.9763  	  0.000384093
+6484  391.50   142961  145982  0.979306   0.000372593
+6485  265.06   135887  138192  0.98332    0.000344509
+
