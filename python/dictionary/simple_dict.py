@@ -43,7 +43,8 @@ print(type(post))   #<class 'dict'> so dict is the class,  and we can make any d
 
 
 #Example 3
-post1=dict(message="hellow world, I am learning python.", language="English", time=1030)#here you do not need to keep "" in keys, but requires in values if it is a string.
+post1=dict(message="hellow world, I am learning python.", language="English", time=1030)
+#here you do not need to keep "" in keys, but requires in values if it is a string.
 print(post1)
 print(type(post1))#{'message': 'hellow world', 'language': 'English', 'time': 1030},
 # "" are being used when u print it.
