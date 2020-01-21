@@ -73,18 +73,21 @@ Int_t binq = 20;
 Double_t loq = 0.0001;
 Double_t hiq = 10;
 ///////////////////////////////////////////////code/////////////////////////
-
 //this macro reads a few variables from the rootfile and just takes the counts by doing the accidental subtraction which is calculated by using the cointime plot. we will have cut 1 i.e all the cuts execept the accidental subtraction cut and the other is cut 2 with all the cuts plus the accidental cut.
 #include "header.h"
-void data_acc(Int_t runNum){//6263 data, 6261 dummy for trial
-  gStyle->SetOptStat(0);
+//void data_acc(Int_t runNum){//6263 data, 6261 dummy for trial
+void data_acc(){
+  Int_t runNum = 6263;//first run num here
+  gStyle->SetOptStat(1111111);
 #include "gStyle.h" 
 #include "bin.h"
-  TFile *f= new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_%d_-1.root",runNum));
-   
+  TChain *tt = new TChain("T");
+  // TFile *f= new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_%d_-1.root",runNum));
+     tt->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_replay_production_6263_-1.root");
+
   TFile *ff = new TFile(Form("root/data_acc_%d.root", runNum),"RECREATE");   
 
-  TTree *tt = (TTree*)f->Get("T");
+  //TTree *tt = (TTree*)f->Get("T");
 
   Long64_t nentriesD = tt->GetEntries();
 
@@ -137,11 +140,8 @@ void data_acc(Int_t runNum){//6263 data, 6261 dummy for trial
 	{    cntsepi++;
 
 	  h_datactime->Fill(ctime);
-	  Epi = sqrt(pow(pionMass,2) + pow(PgtrP,2));
-	  z = Epi/pkinomega;
-	  h_dataz->Fill(z);
-          h_datax->Fill(xbj);
-
+	 
+	 
 	}
     }
 
@@ -188,8 +188,8 @@ void data_acc(Int_t runNum){//6263 data, 6261 dummy for trial
 
       pid_cut_acc =   paeronpe>2.0 && pcalepr< 0.1 && pcalepr > 0.00001 && pcaletottrack < 0.4 && pcaletottrack> 0.1 && hcaletot > 0.8 && hcaletot < 1.2 && hdelta> -10 && hdelta < 10 && pdelta >-10 && pdelta < 20  && hcernpe > 1.5 &&  pbeta > 0.7 && pbeta < 1.3 &&hbeta > 0.7 &&hbeta < 1.3  && hhodstarttime ==1 &&phodstarttime == 1 && hdipole==1 && pdipole ==1;
 
-      accR_cut        =   ctime > (max_value-18) && ctime < (max_value-6);
-      accL_cut        =   ctime > (max_value+6) && ctime < (max_value+18);
+      accR_cut        =   ctime > (max_value-22) && ctime < (max_value-6);
+      accL_cut        =   ctime > (max_value+6) && ctime < (max_value+22);
      
       acc_cut    = (accL_cut || accR_cut) && pid_cut_acc;
       if(acc_cut){
@@ -201,132 +201,102 @@ void data_acc(Int_t runNum){//6263 data, 6261 dummy for trial
 	h_datax_acc->Fill(xbj);
 
 
-
       }
     }    
 
   gROOT->SetBatch(kFALSE);
   cout<<"plotting the histograms"<<endl;
 
-  
-  // ofstream printout("txtfile/acc_sub.txt",ios::app);
-  //printout<<"counts with other than ctime cut="<< h_datactime->Integral()<< " counts should ="<< h_datactime_should->Integral()<<" eff = "<<h_datactime_did->Integral()/h_datactime_should->Integral()<<endl;
-  cout<<"total counts = "<<nentriesD<<"  "<<endl;
-  cout<<"counts other than ctime cut = "<<h_datactime->Integral()<<endl;
-  cout<<"counts with ctime cut = "<<h_datactime_d->Integral()<<endl;
-  cout<<"counts in accidentals with = "<<h_datactime_acc->Integral()/4.0<<endl;
-
-
   TCanvas *c1 = new TCanvas("c1","c1",1600,1200);
  
   c1->Divide(3,3);
   c1->cd(1);
  
-  h_datactime->SetLineColor(kRed);
+  h_datactime->SetLineColor(kBlue);
   h_datactime->Draw("");
   h_datactime->SetTitle(" ctime with pid cut");
   h_datactime->SetLineWidth(2);
-  c1->cd(2);
- 
-  h_dataz->SetLineColor(kBlack);
-  h_dataz->Draw("e,p1");
-  h_dataz->SetTitle("zhadron with pid cut");
-  h_dataz->SetLineWidth(2);   
-
-  c1->cd(3);
-  h_datactime_d->SetLineColor(kBlue);
-  h_datactime_d->Draw("");
-  h_datactime_d->SetTitle("ctime with pid within -2<ctime<2 (ns)");
-  h_datactime_d->SetLineWidth(2);	
   
-
-  c1->cd(4);
-  h_dataz_d->SetLineColor(kBlack);
+  c1->cd(2);
+  h_dataz_d->SetLineColor(kBlue);
   h_dataz_d->Draw("e,p1");
-  h_dataz_d->SetTitle("zhadron with ctime cut");
-  h_dataz_d->SetLineWidth(2);   
-
-  c1->cd(5);
-  h_dataz_acc->SetLineColor(kBlack);
+  h_dataz_d->SetTitle("zhadron with pid & ctime cut");
+  h_dataz_d->SetLineWidth(2); 
+  
+  c1->cd(3);
+  h_dataz_acc->SetLineColor(kRed);
   h_dataz_acc->Draw("e,p1");
-  h_dataz_acc->SetTitle("zhadron with accidental (6 times less counts will be the actual)");
+  h_dataz_acc->SetTitle("zhadron with accidental in 8. peaks");
   h_dataz_acc->SetLineWidth(2);   
 
-  c1->cd(6);
+  c1->cd(4);
   h_datactime->Draw();
-  h_datactime->SetLineColor(kBlue);
   h_datactime_acc->SetLineColor(kRed);
+  h_datactime_d->Draw("same");
+  h_datactime_d->SetFillColor(kPink);
   h_datactime_acc->Draw("same");
-  h_datactime_acc->SetTitle("ctime with acc within 8 ns on either side of peak (ns)");
+  h_datactime_acc->SetFillColor(kYellow);
+  h_datactime_acc->SetTitle("ctime with acc within 8. peaks");
   h_datactime_acc->SetLineWidth(2);	
   
 
-  c1->cd(7);
+
+  c1->cd(5);
   TH1D *h_dataz_d_copy = new TH1D("h_dataz_d_copy","h_dataz_d_copy",binz,loz,hiz);
   TH1D *h_dataz_acc_copy = new TH1D("h_dataz_acc_copy","h_dataz_acc_copy",binz,loz,hiz);
+  h_dataz_d_copy= (TH1D*)h_dataz_d->Clone();//copy of h_dataz_d
+  h_dataz_acc_copy= (TH1D*)h_dataz_acc->Clone();//copy of h_dataz_acc
+  h_dataz_acc_copy->Scale(1.0/8.0);// scale the accidental plot by 1/8.
+  TH1D *h_dataz_acc_scaled= (TH1D*)h_dataz_acc_copy->Clone();
+  h_dataz_acc_scaled->Draw();
+  h_dataz_acc_scaled->SetLineColor(kRed);
+  h_dataz_acc_scaled->SetLineWidth(2);
+  h_dataz_acc_scaled->SetTitle("zhadron in scaled hist");
 
-  h_dataz_d_copy= (TH1D*)h_dataz_d->Clone("h_dataz_d_copy");//copy of h_dataz_d
-  h_dataz_acc_copy= (TH1D*)h_dataz_acc->Clone("h_dataz_acc_copy");//copy of h_dataz_acc
 
-  h_dataz_d_copy->Scale(1.0/6.0);
-  h_dataz_d->Draw("e,p1");
-  h_dataz_d_copy->Draw("same");
-  h_dataz_d_copy->SetLineColor(kRed);
+  c1->cd(6);
+
+  h_dataz_d_copy->Draw("e,p1");
+  h_dataz_acc_copy->Draw("same");
+  h_dataz_d_copy->SetLineColor(kBlue);
+  h_dataz_acc_copy->SetLineColor(kRed);
 
 
-  c1->cd(8);
-  TH1D *h_datactime_d_copy = new TH1D("h_datactime_d_copy","h_datactime_d_copy",binct,loct,hict);
-  TH1D *h_datactime_acc_copy = new TH1D("h_datactime_acc_copy","h_datactime_acc_copy",binct,loct,hict);
 
-  h_datactime_d_copy= (TH1D*)h_datactime_d->Clone("h_datactime_d_copy");//copy of h_datactime_d
-  h_datactime_acc_copy= (TH1D*)h_datactime_acc->Clone("h_datactime_acc_copy");//copy of h_datactime_acc
-
-  h_datactime_d_copy->Scale(1.0/4.0);
-  h_datactime_d->Draw("");
-  h_datactime_d_copy->Draw("same");
-  h_datactime_d_copy->SetLineColor(kRed);
-
-  c1->cd(9);
+  c1->cd(7);
   
   ////======================do the accidental subtraction: corrected hist-accidental hist=========================================
 
-  TH1D *h_dataz_final = new TH1D("h_dataz_final","h_dataz_final",binz,loz,hiz);
-  h_dataz_final->Add( h_dataz_d,  h_dataz_d_copy, 1.0, -1.0);
-  h_dataz_final->Draw();
-  h_dataz_final->SetLineColor(3);
+  TH1D *h_dataz_final = new TH1D("h_dataz_final","h_dataz_final",binz,loz,hiz);// data-accidental
+  h_dataz_final->Add( h_dataz_d_copy,  h_dataz_acc_copy, 1.0, -1.0);
+  h_dataz_final->Draw("e,p1");
+  h_dataz_final->SetLineColor(kBlack);
   h_dataz_final->SetLineWidth(3);
 
-  cout<<"final counts = "<<h_dataz_final->Integral()<<endl;
 
-  //ofstream printout(Form("txtfile/acc_sub_%d.txt",ios::app,runNum));
-  //printout<<"counts with other than ctime cut="<< h_datactime->Integral()<< " counts should ="<< h_datactime_should->Integral()<<" eff = "<<h_datactime_did->Integral()/h_datactime_should->Integral()<<endl;
-
+ 
   ofstream printout(Form("txtfile/data_acc_%d.txt",runNum));// ios::app will keep on adding lines in the txt file.
-  printout<<runNum<< " " <<nentriesD<<" "<<  h_dataz->Integral() << " "<< h_dataz_d->Integral()<<"  "<< h_dataz_acc->Integral()<< " "<< h_dataz_d->Integral() - h_dataz_acc->Integral()/6.0<<" "<<h_dataz_final->Integral()<<endl;
-  h_dataz->Write();
-  h_dataz_d->Write();
-  h_dataz_acc->Write();
-  h_dataz_final->Write();
-  //ff->cd();
-  //ff->Write();
-	       
+  printout<<runNum<<"  "<<nentriesD<<"  "<<h_datactime->Integral()<< "  "<<h_dataz_d->Integral()<<"  "<<h_dataz_acc->Integral()<< "  "<<h_dataz_acc_scaled->Integral()<<"   "<<h_dataz_final->Integral()<<endl;
+ 
   c1->SaveAs(Form("pdf/data_acc_%d.pdf",runNum));
 
-  		
+  cout<<"all entries = "<<nentriesD <<endl;
+  cout<<"all without ctime cut = "<< h_datactime->GetEntries()<<endl;	
+  cout<<"all with ctime cut = "<<h_dataz_d->GetEntries()<<endl; 	
+  cout<<"accidental cuts in 8. peaks = "<<h_dataz_acc->GetEntries()<<endl;;
+  cout<<"scaled accidental = "<<h_dataz_acc_scaled->GetEntries()<<endl;;
+  cout<<"final good = "<<h_dataz_final->GetEntries()<<endl;
 
+  cout<<" :::::::::::::::::"<<endl;
+
+  cout<<"all entries = "<< nentriesD <<endl;
+  cout<<"all without ctime cut = "<< h_datactime->Integral()<<endl;	
+  cout<<"all with ctime cut = "<<h_dataz_d->Integral()<<endl; 	
+  cout<<"accidental cuts in 8. peaks = "<<h_dataz_acc->Integral()<<endl;
+  cout<<"scaled accidental ="<<h_dataz_acc_scaled->Integral()<<endl;
+  cout<<"final good = "<<h_dataz_final->Integral()<<endl;
 }
 ///////////////////////////////////////////////done///////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
 
 
 
