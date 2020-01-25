@@ -1,0 +1,420 @@
+//This will take the ratio of pi+ yield over pi- yield for 4 different z settings individually.
+//I will add these 4 histograms to get the final one.
+
+
+#include "header.h"
+#include "bin.h"
+double WeightedMean(TH1D *h, int key)
+{
+  // This calculation is based on
+  // https://ned.ipac.caltech.edu/level5/Leo/Stats4_5.html
+  double muSigma = -5.0;
+
+  int nBins = h->GetSize()-2;
+
+  double ww = 0.0;
+  double ws = 0.0;
+  // cout << "Here" << nBins << endl;
+  for(int i=1; i<=nBins; i++)
+    {
+      if(h->GetBinContent(i) > 0.0)
+        {
+	  ws += h->GetBinCenter(i)/(h->GetBinError(i)*h->GetBinError(i));
+	  ww += 1.0/(h->GetBinError(i)*h->GetBinError(i));
+        }
+      else
+        {
+	  ws += 0.0;
+	  ww += 0.0;
+        }
+    }
+  if(key == 0)//return weighted mean
+    muSigma = ws/ww;
+  else if (key == 1)// weighted error
+    muSigma = sqrt(1.0/ww);
+  return muSigma;
+}
+
+
+void overlap_kinematics() {
+  gStyle->SetOptStat(0);
+  //gStyle->SetOptStat(111111);
+
+  gStyle->SetErrorX(0);
+  gStyle->SetEndErrorSize(1);
+
+  TFile * f2 = new TFile("root/pip_x35_z_70_60_50_40.root");//pip---------------->f2  -----pi+
+  TFile * f1 = new TFile("root/pim_x35_z_70_60_50_40.root");//pim---------------> f1  -----pi -
+  TFile * f3 = new TFile("root/ratio_hist_x35.root","RECREATE");
+
+
+  TH1D *h_pip_x35_z70 = (TH1D*)f2->Get("pip_x35_z70");
+  TH1D *h_pip_x35_z60 = (TH1D*)f2->Get("pip_x35_z60");
+  TH1D *h_pip_x35_z50 = (TH1D*)f2->Get("pip_x35_z50");
+  TH1D *h_pip_x35_z40 = (TH1D*)f2->Get("pip_x35_z40");
+
+  TH1D *h_pim_x35_z70 = (TH1D*)f1->Get("pim_x35_z70");
+  TH1D *h_pim_x35_z60 = (TH1D*)f1->Get("pim_x35_z60");
+  TH1D *h_pim_x35_z50 = (TH1D*)f1->Get("pim_x35_z50");
+  TH1D *h_pim_x35_z40 = (TH1D*)f1->Get("pim_x35_z40");
+
+
+  TH1D *ratio_x35_z70 = new TH1D("ratio_x35_z70","ratio_x35_z70",binz,loz,hiz);
+  TH1D *ratio_x35_z60 = new TH1D("ratio_x35_z60","ratio_x35_z60",binz,loz,hiz);
+  TH1D *ratio_x35_z50 = new TH1D("ratio_x35_z50","ratio_x35_z50",binz,loz,hiz);
+  TH1D *ratio_x35_z40 = new TH1D("ratio_x35_z40","ratio_x35_z40",binz,loz,hiz);
+  ////////////////////////////plotted the separate yield ratio for pi+ and pi-/////////////////
+
+ TCanvas *c1 = new TCanvas ("c1", "Yield of pi + / Yield  of pi - ",1600,1200);
+
+    c1->Divide(2,2);
+    c1->cd(1);
+    ratio_x35_z70->Divide(h_pip_x35_z70,h_pim_x35_z70);
+    if (!( ratio_x35_z70->GetSumw2N() > 0))  ratio_x35_z70->Sumw2(kTRUE);
+    ratio_x35_z70->SetMarkerStyle(22);
+    ratio_x35_z70->Draw();
+
+
+
+    c1->cd(2);
+    ratio_x35_z60->Divide(h_pip_x35_z60,h_pim_x35_z60);
+    if (!( ratio_x35_z60->GetSumw2N() > 0))  ratio_x35_z60->Sumw2(kTRUE);
+    ratio_x35_z60->Draw();
+    ratio_x35_z60->SetMarkerStyle(22);
+
+
+
+    c1->cd(3);
+    ratio_x35_z50->Divide(h_pip_x35_z50,h_pim_x35_z50);
+    if (!( ratio_x35_z50->GetSumw2N() > 0))  ratio_x35_z50->Sumw2(kTRUE);
+    ratio_x35_z50->Draw();
+    ratio_x35_z50->SetMarkerStyle(22);
+
+
+
+    c1->cd(4);
+    ratio_x35_z40->Divide(h_pip_x35_z40,h_pim_x35_z40);
+    if (!( ratio_x35_z40->GetSumw2N() > 0))  ratio_x35_z40->Sumw2(kTRUE);
+    ratio_x35_z40->Draw();
+    ratio_x35_z40->SetMarkerStyle(22);
+
+    c1->SaveAs("pdf/individulal_yield_rations.pdf");
+
+
+
+
+
+
+
+
+  ////////////////////////////plotted the separate yield ratio for pi+ and pi-/////////////////
+  cout<<binz<< "  "<< loz<<" "<<hiz<<endl;
+
+  //////////////////////////////////Ratio of Pi+/Pi Yield for different z settings////////////
+ double z[100];
+  double Rd;
+  double R_D[100];
+  double ratio[100];
+  double rd_ratio[100];
+
+
+ 
+
+
+  for (int i = 0; i < 100; i++)//taking all int numbers from 0 t0 1
+    {
+      z[i] = i/100.0;//made each number 0.1, 0.2, 0.3, ..
+    
+      R_D[i] = pow((1.0-z[i]),0.083583)/pow((1.0+z[i]),1.9838);//Rd
+
+      ratio[i]= (R_D[i]+4)/ (4*R_D[i]+1);//pi+/pi-
+      // cout << z[i]<< endl;
+
+      rd_ratio[i] = (4 - ratio [i]) / (ratio[i] - 1);//Rd_measured (4-R)/(R-1)
+
+
+    }
+
+ TGraph *gr1 = new TGraph(100, z, ratio);//to plot Yield ratio
+  gr1->SetLineWidth(2);
+  gr1->SetLineColor(kRed); 
+  // gr1->Draw("same");
+ 
+  TCanvas *cc = new TCanvas("cc","cc",1600,1200);
+  cc->cd();
+  gr1->Draw();
+  /////////////////////////////////////////////////////////FIT FUNCTION///////////////////////
+
+  TCanvas *c10 = new TCanvas ("c10", "weighted ",1600,1200);
+
+  c10->Divide(4,2);
+  c10->cd(1);
+  ratio_x35_z70->Divide(h_pip_x35_z70,h_pim_x35_z70);
+
+  if (!( ratio_x35_z70->GetSumw2N() > 0))  ratio_x35_z70->Sumw2(kTRUE);
+  TH1D * h1 = new TH1D("h1","h1",binz,loz,hiz);
+  h1= (TH1D*)ratio_x35_z70->Clone();
+
+  Double_t hem1= WeightedMean(h1,0);// weighted mean
+  Double_t hem1_err= WeightedMean(h1,1);// weighted error
+
+  cout<<hem1<<endl;
+  cout<<hem1_err<<endl;
+
+  ratio_x35_z70->Draw();
+  ratio_x35_z70->SetMarkerStyle(22);
+
+  c10->cd(2);
+  h1->Scale(1/hem1);
+  h1->Draw();
+  h1->SetTitle("weighted hist x= 0.35");
+  h1->SetMarkerStyle(21);
+
+
+  c10->cd(3);
+  ratio_x35_z60->Divide(h_pip_x35_z60,h_pim_x35_z60);
+
+  if (!( ratio_x35_z60->GetSumw2N() > 0))  ratio_x35_z60->Sumw2(kTRUE);
+  TH1D * h2 = new TH1D("h2","h2",binz,loz,hiz);
+  h2= (TH1D*)ratio_x35_z60->Clone();
+  ratio_x35_z60->Draw();
+  ratio_x35_z60->SetMarkerStyle(22);
+
+  Double_t hem2= WeightedMean(h2,0);// weighted mean
+  Double_t hem2_err= WeightedMean(h2,1);// weighted error
+
+  cout<<hem2<<endl;
+  cout<<hem2_err<<endl;
+
+  c10->cd(4);
+  h2->Scale(1/hem2);
+  h2->Draw();
+  h2->SetTitle("weighted hist x35, z=0.6");
+  h2->SetMarkerStyle(21);
+
+
+
+  c10->cd(5);
+  ratio_x35_z50->Divide(h_pip_x35_z50,h_pim_x35_z50);
+
+    if (!( ratio_x35_z50->GetSumw2N() > 0)) ratio_x35_z50->Sumw2(kTRUE);
+  TH1D * h3 = new TH1D("h3","h3",binz,loz,hiz);
+  h3=(TH1D*)ratio_x35_z50->Clone();
+  ratio_x35_z50->Draw();
+  ratio_x35_z50->SetMarkerStyle(22);
+
+  Double_t hem3= WeightedMean(h3,0);// weighted mean
+  Double_t hem3_err= WeightedMean(h3,1);// weighted error
+
+  cout<<hem3<<endl;
+  cout<<hem3_err<<endl;
+
+  c10->cd(6);
+
+  h3->Scale(1/hem3);
+  h3->Draw();
+  h3->SetTitle("weighted hist x35, z=0.5");
+  h3->SetMarkerStyle(21);
+
+
+  c10->cd(7);
+  ratio_x35_z40->Divide(h_pip_x35_z40,h_pim_x35_z40);
+   if (!( ratio_x35_z40->GetSumw2N() > 0)) ratio_x35_z40->Sumw2(kTRUE);
+  TH1D * h4 = new TH1D("h4","h4",binz,loz,hiz);
+  h4=(TH1D*)ratio_x35_z40->Clone();
+  ratio_x35_z40->Draw();
+  ratio_x35_z40->SetMarkerStyle(22);
+
+  Double_t hem4= WeightedMean(h4,0);// weighted mean
+  Double_t hem4_err= WeightedMean(h4,1);// weighted error
+
+  cout<<hem4<<endl;
+  cout<<hem4_err<<endl;
+
+  c10->cd(8);
+
+  h4->Scale(1/hem4);
+  h4->Draw();
+  h4->SetTitle("weighted hist x35, z=0.4");
+  h4->SetMarkerStyle(21);
+
+
+  ///ploting overly all 4 and then weighted average of all 4 
+
+  TCanvas *c11= new TCanvas("c11","c11",1600,1200);
+  c11->Divide(2,1);
+
+  c11->cd(1);
+  ratio_x35_z70->GetYaxis()->SetRangeUser(-5,5);
+   ratio_x35_z70->GetXaxis()->SetRangeUser(0.3,0.8);
+
+  ratio_x35_z70->Draw();
+  ratio_x35_z70->SetLineColor(kRed);
+  
+  ratio_x35_z60->Draw("same");
+  ratio_x35_z60->SetLineColor(kBlue);
+
+  ratio_x35_z50->Draw("same");
+  ratio_x35_z50->SetLineColor(kBlack);
+
+  ratio_x35_z40->Draw("same");
+  ratio_x35_z40->SetLineColor(kGreen);
+  //ratio_x35_z40->SetTitle("unweighted_x35");
+  gr1->Draw("same");
+
+
+  c11->cd(2);
+
+  h1->GetYaxis()->SetRangeUser(0,10);
+h1->GetXaxis()->SetRangeUser(0.3,0.8);
+
+  h1->Draw();
+  h2->Draw("same");
+  h3->Draw("same");
+  h4->Draw("same");
+  //gr1->Draw("same");
+
+  c11->SaveAs("pdf/weighted.pdf");
+
+
+  /////////////////////////////////fit function//////////////////pi+/pi- yield
+
+ ///for fit function for pi+/Pi- yield ratio and Rd_measured////////////////////////
+
+
+ 
+
+  //use fit function:
+
+
+
+
+////////////////////////old/////////
+
+    /*
+TCanvas *c2 = new TCanvas("c2","overlay 4 settings", 1600,1200);
+    c2->cd();
+    ratio_x35_z70->Draw();
+    ratio_x35_z70->SetLineColor(kRed);
+  
+    ratio_x35_z60->Draw("same");
+    ratio_x35_z60->SetLineColor(kBlue);
+
+    ratio_x35_z50->Draw("same");
+    ratio_x35_z50->SetLineColor(kBlack);
+
+    ratio_x35_z40->Draw("same");
+    ratio_x35_z40->SetLineColor(kGreen);
+
+    c2->SaveAs("pdf/trial2.pdf");
+
+    c10->SaveAs("pdf/trial0.pdf");
+
+
+    */
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+ 
+    //////////////////////////////////combining these 4 individual ratios into one/////////////////////////////
+ 
+    TCanvas *c2 = new TCanvas ("c2", "Yield of pi + / Yield  of pi - ",1600,1200);
+    c2->cd();
+    TH1D * final_ratio_x35 = new TH1D("final_ratio_x35","final_ratio_x35",binz,loz,hiz);
+    final_ratio_x35->Add(ratio_x35_z70);
+    final_ratio_x35->Add(ratio_x35_z60);
+    final_ratio_x35->Add(ratio_x35_z50);
+    final_ratio_x35->Add(ratio_x35_z40);
+    if (!( final_ratio_x35->GetSumw2N() > 0))  final_ratio_x35->Sumw2(kTRUE);
+    final_ratio_x35->Draw();
+    final_ratio_x35->GetXaxis()->CenterTitle();
+    final_ratio_x35->GetYaxis()->SetTitleFont(62);
+    final_ratio_x35->GetYaxis()->SetTitleOffset(0.5);
+    final_ratio_x35->GetYaxis()->SetTitleSize(0.042);
+    final_ratio_x35->GetYaxis()->SetTitleOffset(1.2);
+    final_ratio_x35->GetYaxis()->SetLabelSize(0.03);
+    final_ratio_x35->GetYaxis()->SetLabelFont(62);
+    final_ratio_x35->GetYaxis()->SetTitleFont(62);
+    final_ratio_x35->GetXaxis()->SetTitleSize(0.05);
+    final_ratio_x35->GetXaxis()->SetTitleFont(62);
+    final_ratio_x35->GetXaxis()->SetTitleOffset(1.0);
+    final_ratio_x35->GetXaxis()->SetLabelFont(62);
+    final_ratio_x35->GetYaxis()->CenterTitle();
+    final_ratio_x35->SetMarkerStyle(22);
+    final_ratio_x35->SetMarkerSize(0.75);
+    final_ratio_x35->SetMarkerColor(4);
+    gPad->Update();
+
+
+
+    c1->cd(5);
+    final_ratio_x35->Add(ratio_x35_z70);
+    final_ratio_x35->Add(ratio_x35_z60);
+    final_ratio_x35->Add(ratio_x35_z50);
+    final_ratio_x35->Add(ratio_x35_z40);
+    final_ratio_x35->Draw();
+    if (!( final_ratio_x35->GetSumw2N() > 0))  final_ratio_x35->Sumw2(kTRUE);
+    final_ratio_x35->GetXaxis()->CenterTitle();
+    final_ratio_x35->GetYaxis()->SetTitleFont(62);
+    final_ratio_x35->GetYaxis()->SetTitleOffset(0.5);
+    final_ratio_x35->GetYaxis()->SetTitleSize(0.042);
+    final_ratio_x35->GetYaxis()->SetTitleOffset(1.2);
+    final_ratio_x35->GetYaxis()->SetLabelSize(0.03);
+    final_ratio_x35->GetYaxis()->SetLabelFont(62);
+    final_ratio_x35->GetYaxis()->SetTitleFont(62);
+    final_ratio_x35->GetXaxis()->SetTitleSize(0.05);
+    final_ratio_x35->GetXaxis()->SetTitleFont(62);
+    final_ratio_x35->GetXaxis()->SetTitleOffset(1.0);
+    final_ratio_x35->GetXaxis()->SetLabelFont(62);
+    final_ratio_x35->GetYaxis()->CenterTitle();
+    final_ratio_x35->SetMarkerStyle(22);
+    final_ratio_x35->SetMarkerSize(0.75);
+    final_ratio_x35->SetMarkerColor(4);
+    final_ratio_x35->Draw();
+    gPad->Update();
+
+  
+    }
+
+*/
