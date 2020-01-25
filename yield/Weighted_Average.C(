@@ -1,0 +1,54 @@
+//this script calculates the weighted average of the histogram 
+//wikipedia https://en.wikipedia.org/wiki/Weighted_arithmetic_mean
+
+double WeightedMean(TH1D *h, int key)//B.Karki, 2020 Jan 25
+{
+  // This calculation is based on
+  // https://ned.ipac.caltech.edu/level5/Leo/Stats4_5.html
+  double muSigma = -5.0;
+
+  int nBins = h->GetSize()-2;
+
+  double ww = 0.0;
+  double ws = 0.0;
+  double wi=0;
+  // cout << "Here" << nBins << endl;
+  for(int i=1; i<=nBins; i++)
+    {
+      if(h->GetBinContent(i) > 0.0)
+        {
+	  wi= 1.0/(h->GetBinError(i)*h->GetBinError(i));
+	  ws += h->GetBinContent(i)*wi;
+	  // ws += h->GetBinCenter(i)/(h->GetBinError(i)*h->GetBinError(i));
+	  //ww += 1.0/(h->GetBinError(i)*h->GetBinError(i));
+	  ww += 1.0/(h->GetBinError(i)*h->GetBinError(i));
+	  // ws += h->GetBinContent(i)*ww;///(h->GetBinError(i)*h->GetBinError(i));
+
+        
+        }
+      else
+        {
+	  ws += 0.0;
+	  ww += 0.0;
+        }
+    }
+  if(key == 0)//return weighted mean
+    muSigma = ws/ww;
+  else if (key == 1)// weighted error
+    muSigma = sqrt(1.0/ww);
+  return muSigma;
+
+}
+
+//when you draw histogram h1, do 
+  Double_t weighted_mean1= WeightedMean(h1,0);// weighted mean 
+  Double_t weighted_mean_err = WeightedMean(h1,1);// weighted error
+  h1->Draw();
+  //if you would like to scale the histogram with weighted mean,
+  TH1D *h2 = new TH1D("h1","h1",binz,loz,hiz);
+  h2=(TH1D*)h1->Clone();//h2 is the copy of h1
+  h2->Scale(1/weighted_mean);
+  h2->Draw();
+  
+  
+
