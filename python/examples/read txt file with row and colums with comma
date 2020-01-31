@@ -1,0 +1,38 @@
+#the txt file was:
+#12,14,15,16
+#12,23,12,13
+#34,23,34,56
+#12,16,12,14
+#(clo1,phy,col2,che.col3,math, col4,comp
+#this will plot the plot of individual subjects and also the another graph for sum of physics matks, of all the students, 
+#also, chem marks, also math marks   and so on and make a plot
+
+import numpy as np
+import matplotlib.pyplot as plt1#for graph1
+import matplotlib.pyplot as plt2#for graph2
+data=np.genfromtxt('marks.txt',delimiter=',')#converting marks.txt into list
+print(data)
+sum=0#as we will add the marks of 4 subjects and initial value needs to be 0
+subj=["phy","chem","math","comp"]
+l_sum=[]#first item as a sum of physics marks, second will be the sum of chem marks of all students and so on.
+
+for i in data:
+    print(i)#will display all elements of the data
+
+
+for i in range(len(data[0])):#number of columns (say 4)
+    sum=0
+    for j in range(len(data)):
+        sum=sum+data[j][i]
+    l_sum.append(sum)
+print(l_sum)
+plt1.plot(data,marker= 'o')
+plt1.xlabel("subjects")
+plt1.ylabel("marks")
+
+plt1.legend(subj)
+plt2.plot(l_sum)
+plt1.show()
+plt2.show()
+print(data[0],data[1])
+print(data[1],data[0])
