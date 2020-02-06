@@ -1,0 +1,15 @@
+ ////////////txt
+
+
+   TText *t = new TText(.5,.5,"evts_tot_no *100./evts_tot_all");
+   t->SetTextAlign(22);
+   t->SetTextColor(kRed+2);
+   t->SetTextFont(43);
+   t->SetTextSize(40);
+   t->SetTextAngle(45);
+   t->Draw();
+
+
+
+
+    ///////////////////
