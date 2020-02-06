@@ -1,0 +1,10 @@
+do this: hdbhatt@hdbhatt:~$ xrandr | grep " connected" | cut -f1 -d " "
+gives this
+DisplayPort-0 (one screen)
+DisplayPort-1 other screen)
+
+
+
+hdbhatt@hdbhatt:~$ xrandr --output DisplayPort-0 --brightness 1
+
+hdbhatt@hdbhatt:~$ xrandr --output DisplayPort-1 --brightness 1. change this number mostly between .6 to 1 to get suitable light
