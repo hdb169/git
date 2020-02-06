@@ -1,4 +1,4 @@
- /////////////////statxbox all evts: blue, zero amp evts: red
+ /////////////////statxbox all evts: blue, zero amp evts: red////////
     gPad->Update();
     TPaveStats *p1 = (TPaveStats*) preshower_pos_allpmt_allamp->FindObject("stats");
     p1->SetY1NDC(.68);
@@ -18,6 +18,8 @@
     p2->SetLineWidth(2);
     p2->SetTextColor(kRed);
     gPad->Update();
+ /////////////////statbox done/////////////////////////////////////////
+
 
 ////////////////////////////////////////////////////////code//////////////////////////////
 
