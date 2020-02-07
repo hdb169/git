@@ -1,3 +1,7 @@
+//To run this code:
+root -l
+.x make_hist_shms_dc.C("coin_replay_prodution_6482_-1")
+
 #include <TSystem.h>
 #include <TString.h>
 #include "TFile.h"
