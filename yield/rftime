@@ -1,0 +1,272 @@
+// Filename: Bean_counter.C
+// Description: delta, xptar,yptar, ytar distributions for SHMS and HMS and W, Em, Pm and Cointime distributions 
+// are plotted and the number of good counts are printed out to add to the count of good events.
+// Needs runnumber, and if target is "h" or "d"
+//#include "TVirtualFFT.h"
+
+void Bean_counter(Int_t runNumber, Int_t targ=1,Int_t ev=-1){
+
+  //read the input file from data
+  TString fileNameD = "/net/cdaq/cdaql3data/cdaq/sidis-fall-18/ROOTfiles/";
+  fileNameD += "coin_replay_production_"; //read the root file from data
+  fileNameD += runNumber; //read the root file from data
+  fileNameD += Form("_%d.root",ev); //read the root file from data
+  TFile *f1 = new TFile(fileNameD);
+  TTree *tt = (TTree*)f1->Get("T");
+  //get the relevant branch
+  int nentriesD = tt->GetEntries();
+  cout<<"Entries:\t"<<nentriesD<<endl;
+
+  gROOT->SetBatch(kTRUE);
+
+  
+  //make histograms
+
+  TH1D *h1_epi_ctime = new TH1D("epi cointime",";cointime[ns]",240, 0, 30); 
+  TH2D *h1_pbeta_vs_ctime    = new TH2D("pbeta vs cointime",";cointime;pbeta",100, 0, 30, 100, 0.75, 1.25); 
+  TH1D *h1_pRF    = new TH1D("pRF",";pRF",50, -5, 5); 
+
+
+  Double_t HgtrX, HgtrTh, HgtrY, HgtrPh, hdelta, PgtrX, PgtrTh, PgtrY, PgtrPh, pdelta;
+  Double_t HgtrBetaCalc, PgtrBetaCalc, evtType, PgtrP, HgtrP, PhodStatus, PhodStartTime, PhodfpHitsTime;
+  Double_t cointime, HhodStatus, HhodStartTime, HhodfpHitsTime, paeronpe;
+  Double_t pkinW, pEm, pPm, modPm, pbeta, hbeta, hcalepr, hcaletot, hcernpe, pcaletot, pcalepr, pcernpe;
+  Double_t TcoinpTRIG1_ROC1_tdcTimeRaw, TcoinpTRIG4_ROC1_tdcTimeRaw, TcoinpTRIG1_ROC2_tdcTimeRaw;
+  Double_t TcoinhTRIG1_ROC1_tdcTimeRaw, TcoinhTRIG1_ROC2_tdcTimeRaw, TcoinhTRIG4_ROC1_tdcTimeRaw;
+  Double_t TcoinhTRIG4_ROC2_tdcTimeRaw, TcoinpTRIG4_ROC2_tdcTimeRaw;
+  Double_t Preactz,Hreactz,pRFtime,rawRFtime,hRFtime;
+  Double_t Pfpx,Pfpy,Pfpxp,Pfpyp,Hfpx,Hfpy,Hfpxp,Hfpyp;
+
+  Int_t cntsepi=0;
+  Int_t cntsep=0;
+  Int_t cntsek=0;
+  Int_t cntpos=0;
+
+  tt->SetBranchAddress("T.coin.hRF_tdcTime", &hRFtime); 
+  tt->SetBranchAddress("T.coin.pRF_tdcTime", &pRFtime); 
+  tt->SetBranchAddress("T.coin.pRF_tdcTimeRaw", &rawRFtime); 
+  tt->SetBranchAddress("P.react.z", &Preactz); 
+  tt->SetBranchAddress("H.react.z", &Hreactz); 
+  tt->SetBranchAddress("P.gtr.y", &PgtrY); 
+  tt->SetBranchAddress("H.gtr.y", &HgtrY); 
+  tt->SetBranchAddress("P.gtr.x", &PgtrX); 
+  tt->SetBranchAddress("H.gtr.x", &HgtrX); 
+  tt->SetBranchAddress("P.gtr.p", &PgtrP); 
+  tt->SetBranchAddress("H.gtr.p", &HgtrP); 
+  tt->SetBranchAddress("P.gtr.beta", &pbeta);   
+  tt->SetBranchAddress("H.gtr.beta", &hbeta); 
+  tt->SetBranchAddress("H.gtr.dp", &hdelta);   
+  tt->SetBranchAddress("P.gtr.dp", &pdelta);  
+  tt->SetBranchAddress("H.gtr.th", &HgtrTh);   
+  tt->SetBranchAddress("P.gtr.th", &PgtrTh);  
+  tt->SetBranchAddress("H.gtr.ph", &HgtrPh);   
+  tt->SetBranchAddress("P.gtr.ph", &PgtrPh);  
+  tt->SetBranchAddress("P.dc.x_fp", &Pfpx);
+  tt->SetBranchAddress("P.dc.y_fp", &Pfpy);
+  tt->SetBranchAddress("P.dc.xp_fp", &Pfpxp);
+  tt->SetBranchAddress("P.dc.yp_fp", &Pfpyp);
+  tt->SetBranchAddress("H.dc.x_fp", &Hfpx);
+  tt->SetBranchAddress("H.dc.y_fp", &Hfpy);
+  tt->SetBranchAddress("H.dc.xp_fp", &Hfpxp);
+  tt->SetBranchAddress("H.dc.yp_fp", &Hfpyp);
+  
+
+  tt->SetBranchAddress("P.cal.eprtracknorm", &pcalepr);
+  tt->SetBranchAddress("P.cal.etottracknorm", &pcaletot); 
+  tt->SetBranchAddress("P.hgcer.npeSum", &pcernpe);                                                 
+  tt->SetBranchAddress("P.aero.npeSum", &paeronpe);                                                 
+  tt->SetBranchAddress("H.cal.eprtracknorm", &hcalepr);                                            
+  tt->SetBranchAddress("H.cal.etottracknorm", &hcaletot);                                          
+  tt->SetBranchAddress("H.cer.npeSum", &hcernpe); 
+
+                                                                                                            
+  tt->SetBranchAddress("P.hod.starttime", &PhodStartTime);                      
+                         
+  tt->SetBranchAddress("P.hod.fpHitsTime", &PhodfpHitsTime);                    
+  //  tt->SetBranchAddress("P.hod.1x.fptime", &PhodfpHitsTime);                    
+                         
+  tt->SetBranchAddress("H.hod.starttime", &HhodStartTime);                                               
+  tt->SetBranchAddress("H.hod.fpHitsTime", &HhodfpHitsTime); 
+  tt->SetBranchAddress("T.coin.pTRIG1_ROC1_tdcTimeRaw", &TcoinpTRIG1_ROC1_tdcTimeRaw);                   
+  tt->SetBranchAddress("T.coin.pTRIG4_ROC1_tdcTimeRaw", &TcoinpTRIG4_ROC1_tdcTimeRaw);
+  tt->SetBranchAddress("T.coin.pTRIG1_ROC2_tdcTimeRaw", &TcoinpTRIG1_ROC2_tdcTimeRaw);                   
+  tt->SetBranchAddress("T.coin.pTRIG4_ROC2_tdcTimeRaw", &TcoinpTRIG4_ROC2_tdcTimeRaw);                   
+                                                                                                           
+  TCut hpdelta;
+  TCut epiCut, epcut;                                                                   
+
+
+
+  hpdelta = "P.gtr.dp > -10 && P.gtr.dp < 20 && H.gtr.dp > -10 && H.gtr.dp < 10";
+  epiCut = "P.aero.npeSum > 1.0 && P.cal.eprtracknorm < 0.2 && P.hgcer.npeSum >1.0 && H.cer.npeSum > 1.0 && H.cal.etottracknorm > 0.6 && H.cal.etottracknorm < 2.0 && H.cal.eprtracknorm  > 0.2"; 
+
+  
+  TCanvas *canvas1 = new TCanvas("canvas1","canvas1");                           
+  //  tt->Draw("P.hod.starttime >> SHMShodoStartTime", epiCut && hpdelta );  
+  tt->Draw("P.hod.starttime >> SHMShodoStartTime", epiCut && hpdelta );  
+  TH1D *h1PhodoStartTime = (TH1D*)gDirectory->Get("SHMShodoStartTime");
+  h1PhodoStartTime->GetXaxis()->SetTitle("SHMS hodo start time [ns]");           
+  Double_t PhodoStartTimeMean = h1PhodoStartTime->GetMean();  
+
+
+
+                   
+  TCanvas *canvas2 = new TCanvas("canvas2","canvas2");                           
+  tt->Draw("H.hod.starttime >> HMShodoStartTime", epiCut && hpdelta );  
+  TH1D *h1HhodoStartTime = (TH1D*)gDirectory->Get("HMShodoStartTime");           
+  h1HhodoStartTime->GetXaxis()->SetTitle("HMS hodo start time [ns]");            
+  Double_t HhodoStartTimeMean = h1HhodoStartTime->GetMean();                     
+
+ 
+  Double_t HMSpartMass = 0.000510998; // electron mass in GeV/c^2
+  Double_t SHMSpartMass = 0.139 ;                  
+  //  Double_t pOffset = 1.5 + 17. + 6.  ; //9.5 + 10;  // in ns                  
+  Double_t pOffset = 0.; //9.5 + 10;  // in ns                                    
+  Double_t hOffset = 335;                                                        
+  Double_t speedOfLight = 29.9792; // in cm/ns                                   
+  Double_t SHMScentralPathLen = 18.1*100;  // SHMS Target to focal plane path length converted to cm  
+  Double_t SHMSpathLength = 18.1*100;      // For now assume that it's same as SHMScentralPathLen  
+  Double_t HMScentralPathLen = 22*100;     // HMS Target to focal plane path length converted to cm
+  Double_t DeltaHMSpathLength;             // For now assume that it's same as HMScentralPathLen 
+  Double_t SHMScoinCorr = 0.0;                                                   
+  Double_t HMScoinCorr = 0.0;
+
+  Double_t SHMStime1 = 0.0;                                                   
+  Double_t HMStime1 = 0.0;
+  Double_t epitime1 = 0.0;
+  Double_t SHMStime2 = 0.0;                                                   
+  Double_t HMStime2 = 0.0;
+  Double_t epitime2 = 0.0;
+  Double_t SHMStime3 = 0.0;                                                   
+  Double_t HMStime3 = 0.0;
+  Double_t epitime3 = 0.0;
+  Double_t SHMStime4 = 0.0;                                                   
+  Double_t HMStime4 = 0.0;
+  Double_t epitime4 = 0.0;
+  Double_t epitime5 = 0.0;
+                                                    
+  Double_t SHMSrawCoinTimeROC1;                                                  
+  Double_t SHMSrawCoinTimeROC2;                                                  
+  Double_t HMSrawCoinTimeROC1;                                                   
+  Double_t HMSrawCoinTimeROC2;                                                   
+                                                                                   
+  Double_t SHMScorrCoinTimeROC1;                                                 
+  Double_t SHMScorrCoinTimeROC2;                                                 
+  Double_t HMScorrCoinTimeROC1;                                                  
+  Double_t HMScorrCoinTimeROC2, ctimepi, pRFtimeMod4;   
+     
+  Bool_t epievent_cut, positron_cut, event_cut, hpdelta_cut; //epevent_cut, ekevent_cut, 
+  //
+  Double_t p_cent=0;
+  for (int kk=0; kk<nentriesD;  kk++){
+    tt->GetEntry(kk);
+    if (kk % 50000 == 0) cout << kk*100/nentriesD << "   % of data done" << endl;
+    evtType = tt->GetLeaf("fEvtHdr.fEvtType")->GetValue(); 
+    hpdelta_cut = hdelta > -10 && hdelta < 10 && pdelta > -10 && pdelta < 20 ;
+    //    epievent_cut = paeronpe > 0. && pcernpe > 0. && hcaletot > 0.6 && hcaletot < 2.0 && hpdelta_cut ;
+    epievent_cut = paeronpe > 1. && pcalepr < 0.2 && hcaletot > 0.6 && hcaletot < 2.0 && hpdelta_cut  && hcernpe > 1.;
+
+
+    event_cut = epievent_cut;// || epevent_cut || ekevent_cut ;
+
+    p_cent = 0. ;
+    if (epievent_cut) {
+        if (p_cent ==0) p_cent=PgtrP/(1+pdelta/100.);
+     SHMSpartMass = 0.1395704; // pion mass in GeV/c^2 
+        cntsepi++;
+        
+
+
+	DeltaHMSpathLength = 12.462*HgtrTh + 0.1138*HgtrTh*HgtrX - 0.0154*HgtrX - 72.292*HgtrTh*HgtrTh - 0.0000544*HgtrX*HgtrX - 116.52*HgtrPh*HgtrPh;               
+	PgtrBetaCalc = PgtrP/sqrt(PgtrP*PgtrP + SHMSpartMass*SHMSpartMass);        
+	HgtrBetaCalc = HgtrP/sqrt(HgtrP*HgtrP + HMSpartMass*HMSpartMass);          
+
+	SHMScoinCorr = 
+	SHMScentralPathLen / (speedOfLight*PgtrBetaCalc) + (SHMSpathLength - SHMScentralPathLen) / (speedOfLight*PgtrBetaCalc) + 
+       (
+        PhodoStartTimeMean 
+	- 
+        PhodfpHitsTime
+       );                                                                   
+	HMScoinCorr = 
+	HMScentralPathLen / (speedOfLight*HgtrBetaCalc) + DeltaHMSpathLength / (speedOfLight*HgtrBetaCalc) + 
+        (
+         HhodoStartTimeMean 
+	 - 
+         HhodfpHitsTime
+         );      
+
+
+
+       SHMScorrCoinTimeROC2 = 
+	          (
+	          TcoinpTRIG1_ROC2_tdcTimeRaw*0.09766 - 
+	 SHMScoinCorr
+         ) 
+         - 
+         (
+          TcoinpTRIG4_ROC2_tdcTimeRaw*0.09766 - 
+	 HMScoinCorr
+         ) 
+         - 
+       pOffset; 
+
+       //       SHMStime1 = PhodoStartTimeMean ;
+       SHMStime1 = PhodoStartTimeMean ;
+       HMStime1 = HhodoStartTimeMean ;
+       epitime1 =  SHMStime1 - HMStime1 ;       
+       SHMStime2 = PhodfpHitsTime ;
+       HMStime2 = HhodfpHitsTime ;
+       epitime2 = (SHMStime2 - HMStime2) ;       
+       SHMStime3 = TcoinpTRIG1_ROC2_tdcTimeRaw*0.09766 ;
+       HMStime3 = TcoinpTRIG4_ROC2_tdcTimeRaw*0.09766 ;
+       epitime3 = (SHMStime3 - HMStime3) ;       
+       SHMStime4 = SHMScentralPathLen / (speedOfLight*PgtrBetaCalc) + (SHMSpathLength - SHMScentralPathLen) / (speedOfLight*PgtrBetaCalc) ;
+       HMStime4 = HMScentralPathLen / (speedOfLight*HgtrBetaCalc) + DeltaHMSpathLength / (speedOfLight*HgtrBetaCalc);
+       epitime4 = SHMStime4 - HMStime4 ;       
+       epitime5 = epitime4 + (epitime1 - epitime2);  
+       ctimepi =  epitime3-epitime5; //SHMScorrCoinTimeROC2 ;
+       pRFtimeMod4 = fmod((pRFtime-PhodfpHitsTime+0.73),2.004);
+       //        h_reactz_diff_cointtime->Fill(Preactz+Hreactz,SHMScorrCoinTimeROC2);  
+       //       if ((pRFtimeMod4 > -1.4 && pRFtimeMod4 < 1)) {
+        h1_epi_ctime->Fill(ctimepi);
+       //if(ctimepi>10 && ctimepi<30)
+       //      h1_pRF->Fill(pRFtime-PhodfpHitsTime);
+        h1_pRF->Fill(pRFtimeMod4);
+        h1_pbeta_vs_ctime->Fill(ctimepi,pbeta);
+	// }
+     }
+	
+  }
+
+  gROOT->SetBatch(kFALSE);
+
+  TCanvas *can2 = new TCanvas ("can2",Form("can2 Run: %d",runNumber));
+  can2->Divide(2, 2);
+  can2->cd(1);
+  h1_pbeta_vs_ctime->Draw("COLZ");
+
+  can2->cd(2);
+  h1_pRF->Draw();
+ 
+  can2->cd(3);
+  h1_epi_ctime->Draw();
+  // 
+
+  //can2->cd(1); 
+  //  can2->Print(Form("/net/cdaqfs/home/cdaq/hallc-online/hallc_replay/UTIL_SIDIS/PLOTS/%d_epi_cointime.pdf",runNumber));
+  //  can2->cd(2);
+  //TH1 *hm = 0;
+  //TVirtualFFT::SetTransform(0);   
+  //hm = h1_epi_ctime->FFT(hm, "MAG");
+  //hm->SetTitle("Magnitude of the 1st transform");
+  //hm->Draw();
+
+  //can2->cd(3);
+  //TH1 *hp = 0;
+  //hp = h1_epi_ctime->FFT(hp, "PH");
+  //hp->SetTitle("Phase of the 1st transform");
+  //hp->Draw();
+  //h1_hRF_vs_pRF->Draw("COLZ"); 
+
+}
