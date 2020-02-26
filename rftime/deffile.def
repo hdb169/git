@@ -1,0 +1,111 @@
+block P.dc.ntrack
+block P.dc.ntrack
+block P.dc.Ch1.nhit
+block P.dc.Ch1.nhit
+block P.dc.ntrack
+block P.dc.x_fp
+block P.dc.y_fp
+block P.dc.xp_fp
+block P.dc.yp_fp
+block P.dc.InsideDipoleExit
+
+block P.hod.goodscinhit
+block P.hod.betanotrack
+block T.coin.hHODO*
+block T.coin.hRF*
+block T.coin.pHODO*
+block T.coin.pRF*
+block P.hod.fp*
+block H.hod.fp*
+block *fptime*
+
+block P.gtr.x
+block P.gtr.y
+block P.gtr.th
+block P.gtr.ph
+block P.gtr.beta
+block P.gtr.dp
+block P.gtr.p
+
+#block P.cal.pr.goodPosAdcPulseInt
+#block P.cal.pr.goodNegAdcPulseInt
+#block P.cal.fly.goodAdcPulseInt
+block P.cal.nclust
+block P.cal.ntracks
+#block P.cal.fly.nclust
+#block P.cal.fly.ntracks
+
+block g.evtyp
+
+block CTime.ePiCoinTime_ROC2
+block P.ngcer.npe
+block P.ngcer.npeSum
+
+block P.hod.beta
+block P.hod.goodstarttime
+block P.hgcer.npeSum
+block P.hgcer.npe
+block P.aero.npeSum
+
+
+block P.cal.etottracknorm
+block P.cal.eprtracknorm
+block P.cal.eprtrack
+block P.cal.etot
+block P.cal.etotnorm
+block P.cal.etrack
+block P.cal.etracknorm
+block P.hod.starttime
+
+
+
+block H.cal.etottracknorm
+block H.cal.eprtracknorm
+block H.cal.eprtrack
+block H.cal.etot
+block H.cal.etotnorm
+block H.cal.etrack
+block H.cal.etracknorm
+block H.dc.ntrack
+block H.dc.ntrack
+block H.dc.residualExclPlane
+block H.dc.residual
+
+block H.dc.Ch1.nhit
+block H.dc.Ch1.nhit
+block H.kin.primary.W
+block H.kin.primary.Q2
+block H.kin.primary.x_bj
+block H.kin.primary.omega
+
+
+block H.hod.beta
+block H.hod.goodstarttime
+block H.dc.ntrack
+block H.hod.goodscinhit
+block H.hod.betanotrack
+block H.cer.npe
+block H.cer.npeSum
+block H.dc.x_fp
+block H.dc.y_fp
+block H.dc.xp_fp
+block H.dc.yp_fp
+block H.gtr.x
+block H.gtr.y
+block H.gtr.th
+block H.gtr.ph
+block H.gtr.beta
+block H.gtr.dp
+block H.gtr.p
+
+
+block H.cal.nclust
+block H.dc.InsideDipoleExit
+block H.hod.starttime
+
+
+
+#include "DEF-files/COIN/EPICS/epics_short.def"
+#include "DEF-files/COIN/PRODUCTION/GTR/coin_gtr_histos.def"
+#include "DEF-files/COIN/PRODUCTION/KIN/coin_hElec_pProt_kin_histos.def"
+#include "DEF-files/COIN/PRODUCTION/TRIG/coin_trig_histos.def"
