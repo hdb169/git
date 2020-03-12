@@ -1,0 +1,428 @@
+#define ROOT_header
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TVectorD.h"
+#include "TMatrixD.h"
+#include "TDecompLU.h"
+#include "TMath.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include <time.h>
+#include <vector>
+#include <string>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TSpectrum.h>
+#include <TPolyMarker.h>
+#include <TMath.h>
+#include <TSystem.h>
+
+ 
+void pos_3p9_6195(){
+  gStyle->SetOptStat(1);
+  // gStyle->SetOptStat(0);
+
+  // gROOT->SetBatch(kTRUE);//kTRUE will not display the plot
+  gROOT->ForceStyle(); 
+  gStyle->SetTitleFontSize(0.05);
+  gStyle->SetNdivisions(505);
+  gStyle->SetCanvasColor(10);
+  gStyle->SetPadTopMargin(0.10);
+  gStyle->SetPadLeftMargin(0.08);
+  gStyle->SetPadRightMargin(0.08);
+  gStyle->SetPadBottomMargin(.14);
+  gStyle->SetTitleYOffset(0.855);
+  gStyle->SetTitleXOffset(0.855);
+  gStyle->SetTitleYSize(0.03);
+  gStyle->SetTitleXSize(0.03);
+  gStyle->SetLabelFont(62,"X");
+  gStyle->SetLabelFont(62,"Y");
+  gStyle->SetTitleFont(62,"X");
+  gStyle->SetTitleFont(62,"Y");
+  gStyle->SetLabelSize(0.02,"X");
+  gStyle->SetLabelSize(0.02,"Y");
+  gStyle->SetPaperSize(23,24);
+  gStyle->SetLineWidth(2);
+  TChain *tt = new TChain("T");
+
+  //pi+ 6194,95
+ 
+  tt->Add("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/coin_3p9pos_6195.root");
+
+
+  TFile *ff = new TFile("root/pos_3p9.root","RECREATE");   
+
+
+  Long64_t nentriesD = tt->GetEntries();
+
+  cout<<"data entries = "<<nentriesD<<"  "<<endl;
+
+  Int_t binct =100;
+  Int_t loct =30;
+  Int_t hict=60;
+
+
+  Int_t binmult =100;
+  Int_t lomult =-2;
+  Int_t himult=10;
+
+  Int_t bintdctime =100;
+  Int_t lotdctime =-1000;
+  Int_t hitdctime=1000;
+
+  Int_t binhitstime =100;
+  Int_t lohitstime = -1000;
+  Int_t hihitstime=1000;
+
+  Int_t bincal=100;
+  Int_t local = 0;
+  Int_t hical = 1.2;
+Int_t bincalepr=100;
+  Double_t localepr = 0;
+  Double_t hicalepr = 0.5;
+
+  Double_t pionMass = 0.1395701835;   
+  Double_t pbeta,hbeta,pdelta,hdelta,hcaletottrack,pcaletottrack,pcalepr,hcalepr,paero,hcernpe,hgcer,W,Q2,xbj,ctime,Epi,Epi_d,Epi_acc,z,z_d,z_acc,pkinomega,PgtrP,HgtrP,hhodstarttime,phodstarttime,hdipole, pdipole,pcaletotnorm,goodscinhit,betanotrack,pdcntrack,pdcch1nhit,pdcch2nhit;
+  Double_t phodrftdcmult,phodrftdctime,prftdcmult,prftdctime , hhodrftdcmult,hhodrftdctime,hrftdcmult,hrftdctime,phodfphitstime,hhodfphitstime,rfminusfp,eventtype,rf_pion ;
+
+  TH1D *cointime = new TH1D("cointime", "cointime (ns)", binct, loct, hict);
+  TH1D *cointime_pi = new TH1D("cointime_pi", "cointime_pi (ns)", binct, loct, hict);
+  TH1D *cointime_notpi = new TH1D("cointime_nopi", "cointime_nopi (ns)", binct, loct, hict);
+
+
+  TH1D *prf_tdctime = new TH1D("prf_tdctime", "prf_tdctime", bintdctime, lotdctime, hitdctime);//T.coin.pRF_tdcTime 
+  TH1D *phodfp_hitstime = new TH1D("phodfp_hitstime", "phodfp_hitstime", binhitstime, lohitstime, hihitstime);//P.hod.fpHitsTime
+
+  TH1D *rf_minus_fp = new TH1D("rf_minus_fp ", "rf_minus_fp ",binhitstime, lohitstime, hihitstime);
+
+  TH1D *rf_minus_phodfp_mod4 = new TH1D("rf_minus_phodfp_mod4 ", "rf_minus_phodfp_mod4 ", 100, -0.5, 4.5);//T.coin.pRF_tdcTime-P.hod.fpHitsTime
+  TH2D *beta_vs_rf = new TH2D("beta_vs_rf","beta_vs_rf",100, -0.5, 4.5, 100, 0.8, 1.2);
+  TH2D *beta_vs_rf_notpion = new TH2D("beta_vs_rf_notpion","beta_vs_rf_notpion",100, -0.5, 4.5, 100, 0.8, 1.2);
+
+  TH2D *aero_vs_rf = new TH2D("aero_vs_rf","aero_vs_rf",100, -0.5, 4.5, 100, 0.00001, 30);
+  TH1D *pcalnocut = new TH1D("pcalnocut", "pcalnocut", bincal, local, hical);
+  TH1D *pcaleprnocut = new TH1D("pcaleprnocut", "pcaleprnocut", bincal, local, hical);
+
+
+  TH2D *beta_vs_rf_calct = new TH2D("beta_vs_rf_calct","beta_vs_rf_calct",100, -0.5, 4.5, 100, 0.8, 1.2);
+  TH1D *pcal_etot = new TH1D("pcal_etot", "pcal_etot", bincal, local, hical);
+  TH1D *pcal_etot_rf = new TH1D("pcal_etot_rf", "pcal_etot_rf", bincal, local, hical);
+  TH1D *pcal_etot_notpion = new TH1D("pcal_etot_notpion", "pcal_etot_notpion", bincal, local, hical);
+  TH1F *hTotal = new TH1F("hTotal", " ", 30, -10, 20); //delta                        
+  TH1F *hPass = new TH1F("hpass", " ", 30, -10, 20); //delta                       
+  TH2F *h = new TH2F("h","RF Efficiency (pion) vs SHMS Delta",100,-10, 20 ,100, 0, 1); 
+
+  tt->SetBranchAddress("P.gtr.p", &PgtrP); 
+  tt->SetBranchAddress("H.gtr.p", &HgtrP); 
+  tt->SetBranchAddress("P.gtr.beta", &pbeta);                                                                       
+  tt->SetBranchAddress("H.gtr.beta", &hbeta); 
+  tt->SetBranchAddress("H.gtr.dp", &hdelta);                                                                            
+  tt->SetBranchAddress("P.gtr.dp", &pdelta);                                                                                
+  tt->SetBranchAddress("P.cal.eprtracknorm", &pcalepr);                                                                    
+  tt->SetBranchAddress("P.cal.etottracknorm", &pcaletottrack);                                                                  
+  tt->SetBranchAddress("P.hgcer.npeSum", &hgcer);
+  tt->SetBranchAddress("P.aero.npeSum", &paero);                                          
+  tt->SetBranchAddress("H.cal.eprtracknorm", &hcalepr);                                  
+  tt->SetBranchAddress("H.cal.etottracknorm", &hcaletottrack);       
+  tt->SetBranchAddress("P.cal.etotnorm", &pcaletotnorm);                                          
+  tt->SetBranchAddress("H.cer.npeSum", &hcernpe); 
+  tt->SetBranchAddress("CTime.ePiCoinTime_ROC2", &ctime);
+  tt->SetBranchAddress("H.kin.primary.omega", &pkinomega);
+  tt->SetBranchAddress("H.hod.goodstarttime", &hhodstarttime);
+  tt->SetBranchAddress("P.hod.goodstarttime",&phodstarttime);
+  tt->SetBranchAddress("P.dc.InsideDipoleExit",&pdipole);
+  tt->SetBranchAddress("H.dc.InsideDipoleExit",&hdipole);
+  tt->SetBranchAddress("P.hod.goodscinhit", &goodscinhit); 
+  tt->SetBranchAddress("P.hod.betanotrack", &betanotrack); 
+  tt->SetBranchAddress("P.dc.ntrack", &pdcntrack); 
+
+  tt->SetBranchAddress("T.coin.pHODO_RF_tdcMultiplicity", &phodrftdcmult); 
+  tt->SetBranchAddress("T.coin.pHODO_RF_tdcTime", &phodrftdctime); 
+  tt->SetBranchAddress("T.coin.pRF_tdcMultiplicity", &prftdcmult); 
+  tt->SetBranchAddress("T.coin.pRF_tdcTime", &prftdctime); 
+
+
+  tt->SetBranchAddress("T.coin.hHODO_RF_tdcMultiplicity", &hhodrftdcmult); 
+  tt->SetBranchAddress("T.coin.hHODO_RF_tdcTime", &hhodrftdctime); 
+  tt->SetBranchAddress("T.coin.hRF_tdcMultiplicity", &hrftdcmult); 
+  tt->SetBranchAddress("T.coin.hRF_tdcTime", &hrftdctime); 
+
+  tt->SetBranchAddress("P.hod.fpHitsTime", &phodfphitstime);                    
+  tt->SetBranchAddress("H.hod.fpHitsTime", &hhodfphitstime);                    
+  tt->SetBranchAddress("g.evtyp", &eventtype);
+
+
+  Bool_t  acc_cut, accR_cut, accL_cut,data_cut,pid_cut,tracking_cut,did_cut,should_cut,acc_cut_should,acc_cut_did,pid_cut_acc,hgcer_cut, paero_cut, mod4_pioncut, mod4_notpioncut, cal_cut, ctime_cut, hms_cut;
+ 
+
+  /////////////////////////////////////////////////////////PART 1 find Coincidence time peak/////////////////////////////////
+  for (int kk=0; kk<nentriesD;  kk++)//original
+    //for (int kk=0; kk<100000;  kk++)
+   
+    {
+
+      tt->GetEntry(kk);
+
+      // if (kk % 700000 == 0) cout << kk*100/nentriesD << "   % of data done" << endl;
+      hms_cut =  hdelta> -10 && hdelta < 10 && hbeta >0.8 && hbeta <1.2 && hhodstarttime ==1 && hdipole==1  && hcaletottrack > 0.8 && hcaletottrack <1.2 ;
+      data_cut =  pdelta >-10 && pdelta < 20   && pbeta >0.8 && pbeta<1.2 && phodstarttime == 1 && pdipole ==1 && eventtype==4;
+      hgcer_cut = hgcer>2.0;
+      paero_cut = paero>4.0;
+      rf_pion = (fmod(prftdctime-phodfphitstime+1000,4.008));
+      mod4_pioncut = rf_pion >0.4 && rf_pion<2.0;
+
+      //mod4_pioncut = (fmod(prftdctime-phodfphitstime+1000,4.008)) > 0.4 &&  (fmod(prftdctime-phodfphitstime+1000,4.008))<2;//pion selection
+      mod4_notpioncut =!mod4_pioncut;
+
+
+
+      cal_cut = pcaletottrack> 0.0 && pcaletottrack < 0.8 && pcalepr > 0 && pcalepr<0.25 ;
+      ctime_cut = ctime>42.5 && ctime<46.0;
+      if(data_cut)
+	{ 
+	  cointime->Fill(ctime);
+	  prf_tdctime->Fill(prftdctime);
+	  phodfp_hitstime->Fill(phodfphitstime);
+	  rf_minus_fp->Fill(prftdctime-phodfphitstime);
+	  rf_minus_phodfp_mod4->Fill(rf_pion);
+	  beta_vs_rf->Fill(rf_pion,pbeta);
+	  aero_vs_rf->Fill(rf_pion,paero);
+	  pcalnocut->Fill(pcaletottrack);
+	  pcaleprnocut->Fill(pcalepr);
+	  if(mod4_pioncut && cal_cut && paero_cut){
+	    cointime_pi->Fill(ctime);//green
+
+	  }
+	  if(mod4_notpioncut && cal_cut){
+	    cointime_notpi->Fill(ctime);//red
+	  }
+
+
+	  if(cal_cut && ctime_cut && paero_cut){
+	    beta_vs_rf_calct->Fill(rf_pion,pbeta);
+	    pcal_etot->Fill(pcaletottrack);
+	    hTotal->Fill(pdelta);
+	    if( mod4_pioncut ){
+	      pcal_etot_rf->Fill(pcaletottrack);
+	      hPass->Fill(pdelta);
+	    }//rf cut for efficiency
+	  }//pid cut
+	  if(cal_cut && ctime_cut && paero_cut && mod4_notpioncut){//not pion
+	    pcal_etot_notpion->Fill(pcaletottrack);
+	    beta_vs_rf_notpion->Fill(rf_pion,pbeta);
+	  }
+	}// basic beta delta cut
+
+    }
+  TEfficiency *pEff = new TEfficiency();
+  pEff = new TEfficiency(*hPass, *hTotal);
+  TCanvas *ceff = new  TCanvas("ceff","",1600,1200);ceff->SetGrid();
+  h->Draw();
+  h->GetXaxis()->SetTitle("shms delta (%)");
+  h->GetYaxis()->SetTitle("Efficiency");
+  h->GetYaxis()->SetRangeUser(0.7,1);
+  pEff->Draw("same");
+
+  cout<< "Eff = "<<"\t"<< hPass->Integral() *100 /hTotal->Integral()<< " %"<<endl;
+  ceff->SaveAs("pdf/pos_3p9_eff.pdf");
+
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1600,1200);
+  c1->Divide(4,2);
+  c1->cd(1);
+  cointime->Draw("");
+  cointime->SetLineWidth(2);
+  cointime->GetXaxis()->SetTitle("Cointime [ns]");
+  cointime->GetYaxis()->SetTitle("Counts");
+  cointime->GetXaxis()->CenterTitle();
+  cointime->GetYaxis()->CenterTitle();
+  cointime_pi->Draw("same");
+  cointime_pi->SetLineWidth(2);
+  cointime_pi->SetLineColor(kGreen);
+  cointime_notpi->Draw("Same");
+  cointime_notpi->SetLineWidth(2);
+  cointime_notpi->SetLineColor(kRed);
+
+  c1->cd(2);
+  prf_tdctime->Draw();
+  prf_tdctime->SetLineWidth(2);
+  prf_tdctime->GetXaxis()->SetTitle("T.coin.pRF_tdcTime");
+  prf_tdctime->GetYaxis()->SetTitle("Counts");
+  prf_tdctime->GetXaxis()->CenterTitle();
+  prf_tdctime->GetYaxis()->CenterTitle();
+
+  c1->cd(3);
+  phodfp_hitstime->Draw();
+  phodfp_hitstime->SetLineWidth(2);
+  phodfp_hitstime->GetXaxis()->SetTitle("P.hod.fpHitsTime");
+  phodfp_hitstime->GetYaxis()->SetTitle("Counts");
+  phodfp_hitstime->GetXaxis()->CenterTitle();
+  phodfp_hitstime->GetYaxis()->CenterTitle();
+
+
+  c1->cd(4);
+  rf_minus_phodfp_mod4->Draw();
+  rf_minus_phodfp_mod4->SetLineWidth(2);
+  rf_minus_phodfp_mod4->GetXaxis()->SetTitle("fmod(pRF - fpHitsTime + 0.8137, 4.008)");
+  rf_minus_phodfp_mod4->GetYaxis()->SetTitle("Counts");
+  rf_minus_phodfp_mod4->GetXaxis()->CenterTitle();
+  rf_minus_phodfp_mod4->GetYaxis()->CenterTitle();
+
+ 
+
+  c1->cd(5);
+  beta_vs_rf->Draw();
+  beta_vs_rf->SetLineWidth(2);
+  beta_vs_rf->GetXaxis()->SetTitle("Pbeta vs mod4 rf");
+  beta_vs_rf->GetYaxis()->SetTitle("Counts");
+  beta_vs_rf->GetXaxis()->CenterTitle();
+  beta_vs_rf->GetYaxis()->CenterTitle();
+
+  c1->cd(6);
+  beta_vs_rf_calct->Draw();
+  beta_vs_rf_calct->SetLineWidth(2);
+  beta_vs_rf_calct->GetXaxis()->SetTitle("Pbeta vs mod4 rf with ct and calcut, aero");
+  beta_vs_rf_calct->GetYaxis()->SetTitle("Counts");
+  beta_vs_rf_calct->GetXaxis()->CenterTitle();
+  beta_vs_rf_calct->GetYaxis()->CenterTitle();
+ 
+
+ c1->cd(7);
+  beta_vs_rf_notpion->Draw();
+  beta_vs_rf_notpion->SetLineWidth(2);
+  beta_vs_rf_notpion->GetXaxis()->SetTitle("Pbeta vs mod4 rf with !ct, !rf");
+  beta_vs_rf_notpion->GetYaxis()->SetTitle("Counts");
+  beta_vs_rf_notpion->GetXaxis()->CenterTitle();
+  beta_vs_rf_notpion->GetYaxis()->CenterTitle();
+
+
+
+
+  c1->cd(8);
+  pcal_etot->Draw("");
+  pcal_etot->SetLineWidth(2);
+  pcal_etot->GetXaxis()->SetTitle("Pcal. with ct, calcut, aero, (Gr=rf,Red= antirf)");
+  pcal_etot->GetYaxis()->SetTitle("Counts");
+  pcal_etot->GetXaxis()->CenterTitle();
+  pcal_etot->GetYaxis()->CenterTitle();
+  pcal_etot_rf->Draw("same");
+  pcal_etot_rf->SetLineWidth(2);
+  pcal_etot_rf->SetLineColor(kGreen);
+  pcal_etot_notpion->Draw("same");
+  pcal_etot_notpion->SetLineWidth(2);
+  pcal_etot_notpion->SetLineColor(kRed);
+
+  TLegend* leg = new TLegend(0.4,0.3,0.9,0.6);
+  leg->AddEntry(pcal_etot,"beta,delta,ct cuts","L");
+  leg->AddEntry(pcal_etot_rf," beta, delta, ct + RF cuts for pion","L");
+  leg->AddEntry(pcal_etot_notpion,"beta, delta, ct + RF cut for not pion","L");
+  leg->Draw("Same");
+  gPad->Update();
+
+
+
+  TCanvas *c2 = new TCanvas ("c2", "SHMS beta vs RF time" , 1600,1200);gPad->SetLogz();
+  beta_vs_rf->Draw("colz");
+  beta_vs_rf->SetLineWidth(2);
+  beta_vs_rf->GetXaxis()->SetTitle("Pbeta vs  mod4 rf");
+  beta_vs_rf->GetYaxis()->SetTitle("Counts");
+  beta_vs_rf->GetXaxis()->CenterTitle();
+  beta_vs_rf->GetYaxis()->CenterTitle();
+
+
+  TCanvas *c3 = new TCanvas ("c3", "AERO  vs RF time" , 1600,1200);gPad->SetLogz();
+  aero_vs_rf->Draw("colz");
+  aero_vs_rf->SetLineWidth(2);
+  aero_vs_rf->GetXaxis()->SetTitle("Paero vs  mod4 rf");
+  aero_vs_rf->GetYaxis()->SetTitle("Counts");
+  aero_vs_rf->GetXaxis()->CenterTitle();
+  aero_vs_rf->GetYaxis()->CenterTitle();
+
+
+  TCanvas *c4 = new TCanvas ("c4", "Coin Time" , 1600,1200);
+  cointime->Draw("");
+  cointime->SetLineWidth(2);
+  cointime->GetXaxis()->SetTitle("Cointime [ns]");
+  cointime->GetYaxis()->SetTitle("Counts");
+  cointime->GetXaxis()->CenterTitle();
+  cointime->GetYaxis()->CenterTitle();
+  cointime_pi->Draw("same");
+  cointime_pi->SetLineWidth(2);
+  cointime_pi->SetLineColor(kGreen);
+  cointime_notpi->Draw("Same");
+  cointime_notpi->SetLineWidth(2);
+  cointime_notpi->SetLineColor(kRed);
+
+  TLegend* leg1 = new TLegend(0.7,0.6,0.9,0.9);
+  leg1->AddEntry(cointime,"beta delta cuts","L");
+  leg1->AddEntry(cointime_pi," beta delta + RF cuts for pion","L");
+  leg1->AddEntry(cointime_notpi,"RF cut for not pion","L");
+  leg1->Draw("Same");
+  gPad->Update();
+
+  TCanvas *c5 = new TCanvas ("c5", "Pcaletot and Pcalepr" , 1600,1200);
+  c5->Divide(2,1);
+  c5->cd(1);
+  pcalnocut->Draw("");
+  pcalnocut->SetLineWidth(2);
+  pcalnocut->GetXaxis()->SetTitle("Pcal. with beta, delta cut");
+  pcalnocut->GetYaxis()->SetTitle("Counts");
+  pcalnocut->GetXaxis()->CenterTitle();
+  pcalnocut->GetYaxis()->CenterTitle();
+
+ c5->cd(2);
+  pcaleprnocut->Draw("");
+  pcaleprnocut->SetLineWidth(2);
+  pcaleprnocut->GetXaxis()->SetTitle("Pcalepr. with beta, delta cut");
+  pcaleprnocut->GetYaxis()->SetTitle("Counts");
+  pcaleprnocut->GetXaxis()->CenterTitle();
+  pcaleprnocut->GetYaxis()->CenterTitle();
+
+
+
+
+
+  cout<< "did =  "<<"\t"<< pcal_etot_rf->Integral() << "\t"<< "should = "<<"\t"<< pcal_etot->Integral() << "\t"<<"eff_of rf = "<<"\t"<< (pcal_etot_rf->Integral() / pcal_etot->Integral())*100 <<" % " <<endl;
+  cout<<"No pion_entries = "<<"\t"<< pcal_etot_notpion->Integral()<<endl;
+ 
+
+  c1->SaveAs("pdf/pos_3p9.pdf");
+  c2->SaveAs("pdf/pos_3p9_beta_vs_rf.pdf");
+  c3->SaveAs("pdf/pos_3p9_aero_vs_rf.pdf");
+  c4->SaveAs("pdf/pos_3p9_ctime.pdf");
+  c5->SaveAs("pdf/pos_3p9_cal.pdf");
+
+
+
+
+  cointime->Write();
+  prf_tdctime->Write();
+  phodfp_hitstime->Write();
+  rf_minus_phodfp_mod4->Write();
+  beta_vs_rf->Write();
+  beta_vs_rf_notpion->Write();
+  aero_vs_rf->Write();
+  cointime_pi->Write();
+  cointime_notpi->Write();
+  pcal_etot->Write(0);
+  pcal_etot_rf->Write();
+  pcal_etot_notpion->Write();
+  hTotal->Write();
+  hPass->Write();
+  pEff->Write();
+
+}
+
+
+
+
+
+
+
+
