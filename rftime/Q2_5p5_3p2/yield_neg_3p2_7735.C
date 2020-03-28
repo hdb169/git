@@ -1,3 +1,7 @@
+/////////////March 27, 2020
+/////This script just plots the counts vs z_hadron for +3p2_Q2=5p5. I am defining rf time cut  to get pions.
+/////The cut for rf time is different in neg polarity than that in pos. polarity. I am defining 5 cuts. This will be 
+//same for pi+as well. 
 #define ROOT_header
 #include "TH1F.h"
 #include "TH2F.h"
