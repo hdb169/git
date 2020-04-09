@@ -144,7 +144,6 @@ void myfile(){
   delta_vs_ngcer_1->GetXaxis()->CenterTitle();
   delta_vs_ngcer_1->GetYaxis()->CenterTitle();
   delta_vs_ngcer_1->SetMarkerColor(kBlue);
-  delta_vs_ngcer_1->SetMarkerStyle(22);
   delta_vs_ngcer_1->SetLineColor(kBlue);
 
   c1->cd(2);gPad->SetLogz();
@@ -156,7 +155,6 @@ void myfile(){
   delta_vs_ngcer_2->GetYaxis()->SetTitle("NGCER NPESUM");
   delta_vs_ngcer_2->GetXaxis()->CenterTitle();
   delta_vs_ngcer_2->GetYaxis()->CenterTitle();
-  delta_vs_ngcer_2->SetMarkerStyle(22);
   delta_vs_ngcer_2->SetLineColor(kGreen);
 
   c1->cd(3);gPad->SetLogz();
@@ -168,7 +166,6 @@ void myfile(){
   delta_vs_beta_1->GetXaxis()->CenterTitle();
   delta_vs_beta_1->GetYaxis()->CenterTitle();
   delta_vs_beta_1->SetMarkerColor(kBlue);
-  delta_vs_beta_1->SetMarkerStyle(22);
   delta_vs_beta_1->SetLineColor(kBlue);
   
   c1->cd(4);gPad->SetLogz();
@@ -180,7 +177,6 @@ void myfile(){
   delta_vs_beta_2->GetXaxis()->CenterTitle();
   delta_vs_beta_2->GetYaxis()->CenterTitle();
   delta_vs_beta_2->SetMarkerColor(kBlue);
-  delta_vs_beta_2->SetMarkerStyle(22);
   delta_vs_beta_2->SetLineColor(kBlue);
 
 
