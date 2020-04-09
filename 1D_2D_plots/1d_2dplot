@@ -1,0 +1,221 @@
+#define ROOT_header
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TVectorD.h"
+#include "TMatrixD.h"
+#include "TDecompLU.h"
+#include "TMath.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include <time.h>
+#include <vector>
+#include <string>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TSpectrum.h>
+#include <TPolyMarker.h>
+#include <TMath.h>
+#include <TSystem.h>
+
+ 
+void deepak(){
+  gStyle->SetOptStat(111);
+  gStyle->SetErrorX(0);
+
+  gROOT->ForceStyle(); 
+  gStyle->SetTitleFontSize(0.05);
+  gStyle->SetNdivisions(505);
+  gStyle->SetCanvasColor(10);
+  gStyle->SetPadTopMargin(0.10);
+  gStyle->SetPadLeftMargin(0.08);
+  gStyle->SetPadRightMargin(0.08);
+  gStyle->SetPadBottomMargin(.14);
+  gStyle->SetTitleYOffset(0.95);
+  gStyle->SetTitleXOffset(0.955);
+  gStyle->SetTitleYSize(0.03);
+  gStyle->SetTitleXSize(0.03);
+  gStyle->SetLabelFont(62,"X");
+  gStyle->SetLabelFont(62,"Y");
+  gStyle->SetTitleFont(62,"X");
+  gStyle->SetTitleFont(62,"Y");
+  gStyle->SetLabelSize(0.03,"X");
+  gStyle->SetLabelSize(0.03,"Y");
+  gStyle->SetPaperSize(23,24);
+  gStyle->SetLineWidth(2);
+  TChain *tt = new TChain("T");
+
+ 
+ 
+  
+  tt->Add("ROOTfiles/neg_3p2_7735.root");
+
+  TFile *ff = new TFile("root/ngcvsdelta.root","RECREATE");   
+
+
+  Long64_t nentriesD = tt->GetEntries();
+
+  cout<<"data entries = "<<nentriesD<<"  "<<endl;
+
+  Int_t bindelta = 100;
+  Int_t bindeltalo = -10;
+  Int_t bindeltahi = 20;
+
+  Int_t binngc = 100;
+  Double_t binngclo = 0.01;
+  Double_t binngchi = 30.0;
+
+  Int_t binbeta = 100;
+  Double_t binbetalo = 0.5;
+  Double_t binbetahi = 1.5;
+  
+
+ 
+
+  Double_t ngc, shmsdelta, shmsbeta, hgc,hmscal, hmsbeta,hmscer,hmsdelta,shmscal,pdipole,hdipole,ctime,hhodstarttime,phodstarttime,goodscinhit,betanotrack,pdcntrack,hcaletottrack;
+
+ 
+  TH2D *delta_vs_ngcer_1 = new TH2D("delta_vs_ngcer_1", "delta_vs_ngcer_1", bindelta, bindeltalo, bindeltahi, binngc, binngclo, binngchi);
+  TH2D *delta_vs_ngcer_2 = new TH2D("delta_vs_ngcer_2", "delta_vs_ngcer_2", bindelta, bindeltalo, bindeltahi, binngc, binngclo, binngchi);
+  TH2D *delta_vs_beta_1 = new TH2D("delta_vs_beta_1", "delta_vs_beta_1", bindelta, bindeltalo, bindeltahi, binbeta, binbetalo, binbetahi);
+  TH2D *delta_vs_beta_2 = new TH2D("delta_vs_beta_2", "delta_vs_beta_2", bindelta, bindeltalo, bindeltahi, binbeta, binbetalo, binbetahi);
+  TH1D *h_ngcer_1 = new TH1D("h_ngcer_1","h_ngcer_1",binngc, binngclo, binngchi);
+  TH1D *h_ngcer_2 = new TH1D("h_ngcer_2","h_ngcer_2",binngc, binngclo, binngchi);
+
+  tt->SetBranchAddress("P.gtr.beta", &shmsbeta);                            
+  tt->SetBranchAddress("H.gtr.beta", &hmsbeta); 
+  tt->SetBranchAddress("H.gtr.dp", &hmsdelta);                                                                            
+  tt->SetBranchAddress("P.gtr.dp", &shmsdelta);                                                                                
+  tt->SetBranchAddress("P.cal.etottracknorm", &shmscal);                                                                  
+  tt->SetBranchAddress("P.ngcer.npeSum", &ngc);
+  tt->SetBranchAddress("P.hgcer.npeSum", &hgc);
+  tt->SetBranchAddress("H.cal.etottracknorm", &hcaletottrack);       
+  tt->SetBranchAddress("H.cer.npeSum", &hmscer); 
+  tt->SetBranchAddress("CTime.ePiCoinTime_ROC2", &ctime);
+  tt->SetBranchAddress("H.hod.goodstarttime", &hhodstarttime);
+  tt->SetBranchAddress("P.hod.goodstarttime",&phodstarttime);
+  tt->SetBranchAddress("P.dc.InsideDipoleExit",&pdipole);
+  tt->SetBranchAddress("H.dc.InsideDipoleExit",&hdipole);
+  tt->SetBranchAddress("P.hod.goodscinhit", &goodscinhit); 
+  tt->SetBranchAddress("P.hod.betanotrack", &betanotrack); 
+  tt->SetBranchAddress("P.dc.ntrack", &pdcntrack); 
+
+
+  Bool_t cut1,cut2;
+
+  for (int kk=0; kk<nentriesD;  kk++)//original
+       //for (int kk=0; kk<nentriesD/100000;  kk++)
+    {
+     
+      tt->GetEntry(kk);
+
+      cut1 =  shmsdelta >-10 && shmsdelta < 20 && shmsbeta >0.5 && shmsbeta<1.5 && phodstarttime == 1 && pdipole ==1;//trial cuts not real
+      cut2 =  shmsdelta >-10 && shmsdelta < 20 && shmsbeta >0.5 && shmsbeta<1.5 && phodstarttime == 1 && pdipole ==1 && hcaletottrack> 0.8 && hcaletottrack< 1.2;//trial cuts not real
+ 
+     if (cut1){
+       h_ngcer_1->Fill(ngc);
+       delta_vs_ngcer_1->Fill(shmsdelta,ngc);
+       delta_vs_beta_1->Fill(shmsdelta,shmsbeta);
+
+     }
+     if(cut2){
+       h_ngcer_2->Fill(ngc);
+       delta_vs_ngcer_2->Fill(shmsdelta,ngc);
+       delta_vs_beta_2->Fill(shmsdelta,shmsbeta);
+
+     }
+      
+    }
+
+  
+  TCanvas *c1 = new TCanvas("c1", "c1", 1600, 1200);
+  c1->Divide(3,2);
+  c1->cd(1);gPad->SetLogz();
+  delta_vs_ngcer_1->Draw("colz");
+  delta_vs_ngcer_1->SetLineWidth(2);
+  delta_vs_ngcer_1->SetTitle("ngcer vs pdelta cut1");
+  delta_vs_ngcer_1->GetXaxis()->SetTitle("SHMS DELTA");
+  delta_vs_ngcer_1->GetYaxis()->SetTitle("NGCER NPESUM");
+  delta_vs_ngcer_1->GetXaxis()->CenterTitle();
+  delta_vs_ngcer_1->GetYaxis()->CenterTitle();
+  delta_vs_ngcer_1->SetMarkerColor(kBlue);
+  delta_vs_ngcer_1->SetMarkerStyle(22);
+  delta_vs_ngcer_1->SetLineColor(kBlue);
+
+  c1->cd(2);gPad->SetLogz();
+  delta_vs_ngcer_2->Draw("colz");
+  delta_vs_ngcer_2->SetLineWidth(2);
+  delta_vs_ngcer_2->SetMarkerColor(kGreen);
+  delta_vs_ngcer_2->SetTitle("ngcer vs pdelt cut2 ");
+  delta_vs_ngcer_2->GetXaxis()->SetTitle("SHMS DELTA");
+  delta_vs_ngcer_2->GetYaxis()->SetTitle("NGCER NPESUM");
+  delta_vs_ngcer_2->GetXaxis()->CenterTitle();
+  delta_vs_ngcer_2->GetYaxis()->CenterTitle();
+  delta_vs_ngcer_2->SetMarkerStyle(22);
+  delta_vs_ngcer_2->SetLineColor(kGreen);
+
+  c1->cd(3);gPad->SetLogz();
+  delta_vs_beta_1->Draw("colz");
+  delta_vs_beta_1->SetLineWidth(2);
+  delta_vs_beta_1->SetTitle("pbeta vs pdelta cut1");
+  delta_vs_beta_1->GetXaxis()->SetTitle("SHMS DELTA");
+  delta_vs_beta_1->GetYaxis()->SetTitle("SHMS BETA");
+  delta_vs_beta_1->GetXaxis()->CenterTitle();
+  delta_vs_beta_1->GetYaxis()->CenterTitle();
+  delta_vs_beta_1->SetMarkerColor(kBlue);
+  delta_vs_beta_1->SetMarkerStyle(22);
+  delta_vs_beta_1->SetLineColor(kBlue);
+  
+  c1->cd(4);gPad->SetLogz();
+  delta_vs_beta_2->Draw("colz");
+  delta_vs_beta_2->SetLineWidth(2);
+  delta_vs_beta_2->SetTitle("pbeta vs pdelta cut2");
+  delta_vs_beta_2->GetXaxis()->SetTitle("SHMS DELTA");
+  delta_vs_beta_2->GetYaxis()->SetTitle("SHMS BETA");
+  delta_vs_beta_2->GetXaxis()->CenterTitle();
+  delta_vs_beta_2->GetYaxis()->CenterTitle();
+  delta_vs_beta_2->SetMarkerColor(kBlue);
+  delta_vs_beta_2->SetMarkerStyle(22);
+  delta_vs_beta_2->SetLineColor(kBlue);
+
+
+
+  c1->cd(5);
+  h_ngcer_1->Draw();
+  h_ngcer_1->SetLineWidth(2);
+  h_ngcer_1->SetTitle("Ngcer Npe Sum");
+  h_ngcer_1->GetXaxis()->SetTitle("P.ngcer.npeSum");
+  h_ngcer_1->GetYaxis()->SetTitle("Entries");
+  h_ngcer_1->GetXaxis()->CenterTitle();
+  h_ngcer_1->GetYaxis()->CenterTitle();
+  h_ngcer_1->SetMarkerColor(kBlue);
+  h_ngcer_1->SetMarkerStyle(22);
+  h_ngcer_1->SetLineColor(kBlue);
+  
+  c1->cd(6);
+  h_ngcer_2->Draw();
+  h_ngcer_2->SetLineWidth(2);
+  h_ngcer_2->SetTitle("Ngcer Npe Sum");
+  h_ngcer_2->GetXaxis()->SetTitle("P.ngcer.npeSum");
+  h_ngcer_2->GetYaxis()->SetTitle("Entries");
+  h_ngcer_2->GetXaxis()->CenterTitle();
+  h_ngcer_2->GetYaxis()->CenterTitle();
+  h_ngcer_2->SetMarkerColor(kBlue);
+  h_ngcer_2->SetMarkerStyle(22);
+  h_ngcer_2->SetLineColor(kBlue);
+  
+  delta_vs_ngcer_1->Write();
+  delta_vs_ngcer_2->Write();
+  delta_vs_beta_1->Write();
+  delta_vs_beta_2->Write();
+  h_ngcer_1->Write();
+  h_ngcer_2->Write();
+
+  c1->SaveAs("pdf/2dplot.pdf");
+ 
+}
