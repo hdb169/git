@@ -24,7 +24,7 @@
 #include <TSystem.h>
 
  
-void deepak(){
+void myfile(){
   gStyle->SetOptStat(111);
   gStyle->SetErrorX(0);
 
