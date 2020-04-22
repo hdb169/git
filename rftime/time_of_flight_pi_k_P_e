@@ -1,0 +1,98 @@
+//This will print the time of flight of pion, kaon, proton and electron as compared to electron in HMS.
+//root -l time_diff.C , then give the momentum value you want.
+#include <iostream>
+#include <string>
+#include "TCanvas.h"
+#include "TGraphErrors.h"
+#include "TF1.h"
+#include "TPaveText.h"
+//convert unit GeV to kg
+//double GeV = 1.78266192e-27;
+double c = 299792458;//speed of light
+double shms_length = 20.1; //distance for SHMS arm from fp to target
+double t_e(double p){
+  double m = 0.00051;//GeV
+  //1e9 is for unit convert, s to ns
+  return (shms_length*std::sqrt(p*p+m*m)*1e9)/(c*p);
+}
+double t_pi(double p){
+  double m = 0.139;//GeV
+  return (shms_length*std::sqrt(p*p+m*m)*1e9)/(c*p);
+}
+double t_K(double p){
+  double m = 0.493;//GeV
+  return (shms_length*std::sqrt(p*p+m*m)*1e9)/(c*p);
+}
+double t_proton(double p){
+  double m = 0.938;//GeV
+  return (shms_length*std::sqrt(p*p+m*m)*1e9)/(c*p);
+}
+void time_diff(){
+  double momentum;
+  std::cout<<"Enter your momentum :";
+  std::cin>>momentum;
+  double tpi = t_pi(momentum)-t_e(momentum);
+  double tk = t_K(momentum)-t_e(momentum);
+  double tproton = t_proton(momentum)-t_e(momentum);
+  std::cout<<" time of flight compared to electrons,(pi,K,proton)" <<std::endl;
+  std::cout<<tpi<<" "<<tk<<" "<<tproton<<std::endl;
+  std::cout<<"time: Electrons  "<<t_e(momentum)<<std::endl;
+  std::cout<<"time: Pions  "<<t_pi(momentum)<<std::endl;
+  std::cout<<"time: Kaons  "<<t_K(momentum)<<std::endl;
+
+
+  
+  double momentum_low = 0.9*momentum;//-10 to 20% of P = delta
+  double momentum_high = 1.20*momentum;
+  double tpi_low = t_pi(momentum_low)-t_e(momentum_low);
+  double tpi_high = t_pi(momentum_high)-t_e(momentum_high);
+  double tk_low = t_K(momentum_low)-t_e(momentum_low);
+  double tk_high = t_K(momentum_high)-t_e(momentum_high);
+  double tproton_low = t_proton(momentum_low)-t_e(momentum_low);
+  double tproton_high = t_proton(momentum_high)-t_e(momentum_high);
+  std::cout<<"time of flight range for pion = "<<tpi_low<<" to " <<tpi_high<<std::endl;
+  std::cout<<"time of flight range for kaon = "<<tk_low<<" to " <<tk_high<<std::endl;
+  std::cout<<"time of flight range for proton = "<<tproton_low<<" to " <<tproton_high<<std::endl;
+  std::cout<<"proton is "<<tproton_low - tpi_low<<" slower than pi for -10 % of Mom. And "<<tproton_high-tpi_high<<" slower than pi for +20 % of Mom "<<std::endl;
+  std::cout<<"kaon is "<<tk_low - tpi_low<<" slower than pi for -10 % of Mom. And "<<tk_high-tpi_high<<" slower than pi for +20 % of Mom "<<std::endl;
+
+  TLine *L_momentum_low = new TLine(momentum_low,0,momentum_low,10);
+  TLine *L_momentum_high = new TLine(momentum_high,0,momentum_high,10);
+  
+  TF1 *fte = new TF1("te","t_e(x)-t_e(x)",1.5,8);
+  TF1 *ftpi = new TF1("tpi","t_pi(x)-t_e(x)",1.5,8);
+  TF1 *ftk = new TF1("tk","t_K(x)-t_e(x)",1.5,8);
+  TF1 *ftproton = new TF1("tproton","t_proton(x)-t_e(x)",1.5,8);
+  
+  
+  TCanvas *c = new TCanvas();
+  gStyle->SetOptTitle(0);
+  ftpi->GetYaxis()->SetRangeUser(0,10);
+  ftpi->Draw();
+  ftpi->GetXaxis()->SetTitle("shms_p");
+  ftpi->GetYaxis()->SetTitle("ns");
+  fte->SetLineColor(kBlack);  
+  fte->Draw("same");
+  ftk->SetLineColor(kOrange);
+  ftk->Draw("same");
+  ftproton->SetLineColor(kBlue);
+  ftproton->Draw("same");
+
+  
+  TLegend *leg = c->BuildLegend(0.7,0.7,0.95,0.95);
+  L_momentum_low->Draw("same");
+  L_momentum_low->SetLineWidth(2);;
+
+  L_momentum_high->Draw("same");
+  L_momentum_high->SetLineWidth(2);;
+
+  //c->SetTitle("t_hardron - t_e");
+ //  TPaveText *title = new TPaveText(.11,.95,.35,.99,"brndc");
+ //  title->AddText("t_hardron - t_e");
+ //  c->cd();
+ //  title->Draw();
+  // TLegend *leg = c->BuildLegend(0.7,0.7,0.95,0.95);
+   c->SaveAs("time_flight.pdf");
+  //std::cout<<" if we set pi peak at 1, then position "<<std::endl;
+  //std::cout<<fmod(t)
+}
