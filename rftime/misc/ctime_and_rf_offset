@@ -1,3 +1,4 @@
+//Prints the max bin in ctime and rf
 
 //7815 is 6179,80
 #include "header.h"
@@ -9,7 +10,11 @@ void ifarm(){
   gROOT->SetBatch(kTRUE);
   gROOT->ForceStyle();
 
-  TChain *tt = new TChain("T");
+
+ofstream txtfile ("rf_offset.txt", ios::app);
+ txtfile<< "Run Num"<<  "\t"<<"peak"<<"\t"<<"rf_a1" <<"\t"<<"rf_a2"<<"\t"<<"rf_a3"<<"\t"<<"rf_ah1"<<"\t" << "rf_ah2"<< "\t"<< "rf_ah3"<<endl; 
+
+ //TChain *tt = new TChain("T");
   Int_t runs[NRUNS]=  {6494,6478,6495};/*{6020, 6021, 6022, 6026, 6027, 6028, 6029, 6030, 6031, 6032, 6043, 6044, 6045, 6046, 6049, 6050, 6051, 6052, 6053, 6054, 6055, 6056, 6057, 6058, 6067, 6068, 6070, 6071, 6073, 6080, 6081, 6087, 6088, 6089, 6090, 6091, 6093, 6094, 6095, 6096};//,
 
 {6097, 6098, 6109, 6110, 6111, 6112, 6114, 6115, 6116, 6119, 6120, 6124, 6125, 6127, 6128, 6129, 6130, 6132, 6133, 6135, 6136, 6137, 6138, 6145, 6146, 6154, 6155, 6166, 6168, 6169, 6170, 6171, 6172, 6179, 6180, 6181, 6182, 6183, 6184, 6185, 6186, 6187, 6194, 6195, 6196, 6197, 6198, 6199, 6205, 6208, 6209, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 6219, 6220, 6242, 6243, 6244, 6245, 6246, 6247, 6248, 6249, 6250, 6251, 6252, 6261, 6262, 6263, 6264, 6265, 6266, 6267, 6270, 6271, 6272, 6273, 6274, 6275, 6276, 6277, 6288, 6289, 6290, 6291, 6292, 6293, 6294, 6295, 6296, 6304, 6305, 6306, 6307, 6308, 6309, 6310, 6311, 6312, 6317, 6318, 6322, 6323, 6325, 6326, 6327, 6328, 6329, 6339, 6340, 6341, 6342, 6343, 6344, 6345, 6346, 6347, 6348, 6349, 6350, 6351, 6352, 6353, 6354, 6359, 6360, 6363, 6364, 6365, 6367, 6368, 6370, 6371, 6372, 6373, 6374, 6375, 6376, 6377, 6378, 6379, 6380, 6381, 6382, 6383, 6385, 6386, 6387, 6388, 6389, 6390, 6391, 6393, 6394, 6395, 6396, 6397, 6398, 6399, 6400, 6401, 6402, 6403, 6404, 6405, 6406, 6407, 6408, 6410, 6411, 6412, 6413, 6415, 6416, 6417, 6419, 6421, 6422, 6423, 6425, 6426, 6427, 6428, 6429, 6430, 6431, 6432, 6433, 6434, 6435, 6436, 6439, 6440, 6441, 6442, 6443, 6444, 6445, 6446, 6447, 6448, 6451, 6452, 6453, 6454, 6455, 6456, 6459, 6460, 6461, 6462, 6463, 6464, 6465, 6466, 6467, 6468, 6469, 6470, 6471, 6472, 6473, 6474, 6475, 6476, 6477, 6478, 6479, 6482, 6483, 6484, 6485, 6486, 6487, 6488, 6489, 6490, 6491, 6493, 6494, 6495, 6496, 6497, 6498, 6499, 6500, 6501, 6502, 6503, 6504, 6506, 6507, 6509, 6510, 6512, 6513, 6514, 6515, 6516, 6517, 6518, 6519, 6520, 6521, 6522, 6523, 6524, 6525, 6526, 6527, 6528, 6529, 6531, 6532, 6533, 6534, 6535, 6536, 6537, 6538, 6539, 6541, 6542, 6543, 6544, 6545, 6546, 6547, 6548, 6549, 6550, 6551, 6552, 7593, 7594, 7595, 7596, 7597, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7608, 7609, 7610, 7611, 7612, 7613, 7614, 7615, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7625, 7626, 7627, 7628, 7629, 7630, 7631, 7632, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, 7646, 7647, 7648, 7649, 7650, 7651, 7652, 7654, 7655, 7657, 7658, 7659, 7660, 7661, 7662, 7663, 7666, 7667, 7668, 7669, 7670, 7671, 7672, 7673, 7674, 7675, 7676, 7677, 7678, 7679, 7680, 7681, 7682, 7684, 7685, 7686, 7687, 7688, 7689, 7690, 7692, 7694, 7695, 7697, 7698, 7699, 7702, 7703, 7706, 7707, 7708, 7709, 7710, 7711, 7712, 7713, 7714, 7715, 7716, 7717, 7718, 7719, 7720, 7721, 7722, 7724, 7725, 7727, 7728, 7735, 7736, 7737, 7738, 7739, 7740, 7747, 7748, 7749, 7750, 7751, 7752, 7757, 7758, 7759, 7760, 7762, 7768, 7769, 7770, 7771, 7772, 7773, 7774, 7775, 7776, 7777, 7783, 7784, 7785, 7786, 7787, 7790, 7791, 7792, 7793, 7794, 7796, 7797, 7798, 7799, 7800, 7801, 7802, 7803, 7804, 7805, 7806, 7807, 7808, 7809, 7811, 7812, 7813, 7814, 7815, 7816, 7817, 7819, 7820};
@@ -38,30 +43,9 @@ void ifarm(){
     Double_t pbeta,hbeta,pdelta,hdelta,hcaletottrack,pcaletottrack,pcalepr,hcalepr,paero,hcernpe,hgcer,W,Q2,xbj,ctime,Epi,Epi_d,Epi_acc,z,z_d,z_acc,pkinomega,PgtrP,HgtrP,hhodstarttime,phodstarttime,hdipole, pdipole,pcaletotnorm,goodscinhit,betanotrack,pdcntrack,pdcch1nhit,pdcch2nhit;
     Double_t phodrftdcmult,phodrftdctime,prftdcmult,prftdctime , hhodrftdcmult,hhodrftdctime,hrftdcmult,hrftdctime,phodfphitstime,hhodfphitstime,rfminusfp,eventtype,rf_pion ;
 
-    TH1D *cointime = new TH1D("cointime", "cointime (ns)", binct, loct, hict);
-    TH1D *cointime_pi = new TH1D("cointime_pi", "cointime_pi (ns)", binct, loct, hict);
-    TH1D *cointime_notpi = new TH1D("cointime_nopi", "cointime_nopi (ns)", binct, loct, hict);
+   
     TH1D *ctime_hist = new TH1D("ctime_hist", "ctime_hist (ns)", binaccct, loaccct, hiaccct);
-    TH1D *ctime_acc = new TH1D("ctime_acc", "ctime_acc (ns)", binaccct, loaccct, hiaccct);
-    TH1D *h_dataz_acc= new TH1D("h_dataz_acc", "h_dataz_acc", binz, loz, hiz);//acc
-    TH1D *cointime_narrow = new TH1D("cointime_narrow", "cointime_narrow (ns)", binct, loct, hict);
-
   
-    //added1.2
-    TH1D * cointime_notpi_in = new TH1D("cointime_nopi_in", "cointime_nopi_in (ns)", binct, loct, hict);
-    TH2D * mod4_red_inbeta = new TH2D(" mod4_red_in"," mod4_red_in",binrf, binrflo, binrfhi, 100, 0.8, 1.2);
-    TH2D * mod4_red_inaero = new TH2D(" mod4_red_inaero"," mod4_red_inaero",binrf, binrflo, binrfhi, 100, 0.00001, 30);
-
-    //added in
-
-    TH1D *beta_did_hms_shms_cuts = new TH1D("beta_did_hms_shms_cuts", "beta_did_hms_shms_cuts", 50, 0.7, 1.3);
-    TH1D *beta_should_hms_shms_cuts = new TH1D("beta_should_hms_shms_cuts", "beta_should_hms_shms_cuts", 50, 0.7, 1.3);
-
-
-    TH1D *prf_tdctime = new TH1D("prf_tdctime", "prf_tdctime", bintdctime, lotdctime, hitdctime);//T.coin.pRF_tdcTime 
-    TH1D *phodfp_hitstime = new TH1D("phodfp_hitstime", "phodfp_hitstime", binhitstime, lohitstime, hihitstime);//P.hod.fpHitsTime
-
-    TH1D *rf_minus_fp = new TH1D("rf_minus_fp ", "rf_minus_fp ",bindiff, lodiff, hidiff);
 
     ////////////////////ifarm
     TH1D *rf_a399 = new TH1D("rf_a399 ", "rf_a399 ", binrf, binrflo, binrfhi);//T.coin.pRF_tdcTime-P.hod.fpHitsTime
@@ -71,98 +55,6 @@ void ifarm(){
     TH1D *rf_ah399 = new TH1D("rf_ah399 ", "rf_ah399 ", binrf, binrflo, binrfhi);//T.coin.pRF_tdcTime-P.hod.fpHitsTime
     TH1D *rf_ah400 = new TH1D("rf_ah400 ", "rf_ah400 ", binrf, binrflo, binrfhi);//T.coin.pRF_tdcTime-P.hod.fpHitsTime
     TH1D *rf_ah401 = new TH1D("rf_ah401 ", "rf_ah401 ", binrf, binrflo, binrfhi);//T.coin.pRF_tdcTime-P.hod.fpHitsTime
-
-    //TH1D *ctime_hist = new TH1D("ctime_hist", "ctime_hist (ns)", binaccct, loaccct, hiaccct);
-
-    ///ifarm
-
-
-
-
-
-
-
-
-  
-    TH2D *beta_vs_rf = new TH2D("beta_vs_rf","beta_vs_rf",binrf, binrflo, binrfhi, 100, 0.8, 1.2);
-    TH2D *beta_vs_rf_notpion = new TH2D("beta_vs_rf_notpion","beta_vs_rf_notpion",binrf, binrflo, binrfhi, 100, 0.8, 1.2);
-    TH2D *beta_vs_rf_calctaero = new TH2D("beta_vs_rf_calctaero","beta_vs_rf_calctaero",binrf, binrflo, binrfhi, 100, 0.8, 1.2);
-    TH2D *beta_vs_rf_allpid_rfcut_did = new TH2D("beta_vs_rf_allpid_rfcut_did","beta_vs_rf_allpid_rfcut_did",binrf, binrflo, binrfhi, 100, 0.8, 1.2);
-    TH2D *beta_vs_rf_allpid_should = new TH2D("beta_vs_rf_allpid_should","beta_vs_rf_allpid_should",binrf, binrflo, binrfhi, 100, 0.8, 1.2);
-    TH2D *shower_vs_preshower = new TH2D("shower_vs_preshower","shower_vs_preshower",100, 0.0001,0.8, 100, 0.0001, 1.8);
-    TH2D *shower_vs_preshower_rf = new TH2D("shower_vs_preshower_rf","shower_vs_preshower_rf",100, 0.0001,0.8, 100, 0.0001, 1.8);
-
-    TH2D *aero_vs_rf = new TH2D("aero_vs_rf","aero_vs_rf",binrf, binrflo, binrfhi, 100, 0.00001, 30);
-    TH2D *aero_vs_rf_ctcut = new TH2D("aero_vs_rf_ctcut","aero_vs_rf_ctcut",binrf, binrflo, binrfhi, 100, 0.00001, 30);
-
-    TH1D *pcal = new TH1D("pcal", "pcal", bincal, local, hical);
-
-    TH1D *pcal_epr = new TH1D("pcal_epr", "pcal_epr", bincal, local, hical);
-    TH1D *pcal_epr_rf = new TH1D("pcal_epr_rf", "pcal_epr_rf", bincalepr, localepr, hicalepr);
-
-
-    TH1D *pcal_etot = new TH1D("pcal_etot", "pcal_etot", bincal, local, hical);
-    TH1D *pcal_etot_rf = new TH1D("pcal_etot_rf", "pcal_etot_rf", bincal, local, hical);
-    TH1D *pcal_etot_notpion = new TH1D("pcal_etot_notpion", "pcal_etot_notpion", bincal, local, hical);
-    TH1F *hTotal = new TH1F("hTotal", " ", 30, -10, 20); //delta                        
-    TH1F *hPass = new TH1F("hpass", " ", 30, -10, 20); //delta                       
-    TH2F *h = new TH2F("h","RF Efficiency (pion) vs SHMS Delta",100,-10, 20 ,100, 0, 1); 
-    //hgcer
-    TH1F *hgchist = new TH1F("hgchist", "hgchist",binhgc, binlohgc, binhihgc);
-    TH2F *hgc_vs_rf = new TH2F("hgc_vs_rf","hgc_vs_rf", binrf, binrflo, binrfhi, binhgc, binlohgc, binhihgc );
-
-    TH1F *hgchistcalct = new TH1F("hgchistcalct", "hgchistcalct",binhgc, binlohgc, binhihgc);
-    TH2F *hgc_vs_rfcalct = new TH2F("hgc_vs_rfcalct","hgc_vs_rfcalct", binrf, binrflo, binrfhi, binhgc, binlohgc, binhihgc);
-
-
-    TH1F *hgchistpion = new TH1F("hgchistpion", "hgchistpion",binhgc, binlohgc, binhihgc);
-    TH2F *hgc_vs_rfpion = new TH2F("hgc_vs_rfpion","hgc_vs_rfpion", binrf, binrflo, binrfhi, binhgc, binlohgc, binhihgc);
-    //accidental hists cut0
-    TH1D * h_dataz_cut0copy0 = new TH1D ("h_dataz_cut0copy0", "h_dataz_cut0_copy0", binz, loz, hiz);
-    TH1D * h_dataz_acc_only0 = new TH1D ("h_dataz_acc_copy0", "h_dataz_acc_copy0", binz, loz, hiz);
-    TH1D * h_dataz_cut0 = new TH1D ("h_dataz_cut0", "h_dataz_cut0", binz, loz, hiz);
-    TH1D * h_dataz_acc0= new TH1D("h_dataz_acc0", "h_dataz_acc0", binz, loz, hiz);//acc
-    //////// cut1
-    TH1D * h_dataz_acc1= new TH1D("h_dataz_acc1", "h_dataz_acc1", binz, loz, hiz);//acc
-    TH1D * h_dataz_cut1copy1 = new TH1D ("h_dataz_cut1copy1", "h_dataz_cut1_copy1", binz, loz, hiz);
-    TH1D * h_dataz_acc_only1 = new TH1D ("h_dataz_acc_copy1", "h_dataz_acc_copy1", binz, loz, hiz);
-    TH1D * h_dataz_cut1 = new TH1D ("h_dataz_cut1", "h_dataz_cut1", binz, loz, hiz);
-    //cut2
-    TH1D * h_dataz_acc2= new TH1D("h_dataz_acc2", "h_dataz_acc2", binz, loz, hiz);//acc
-    TH1D * h_dataz_cut2copy2 = new TH1D ("h_dataz_cut2copy2", "h_dataz_cut2_copy2", binz, loz, hiz);
-    TH1D * h_dataz_acc_only2 = new TH1D ("h_dataz_acc_copy2", "h_dataz_acc_copy2", binz, loz, hiz);
-    TH1D * h_dataz_cut2 = new TH1D ("h_dataz_cut2", "h_dataz_cut2", binz, loz, hiz);
-    //cut3
-    TH1D * h_dataz_acc3= new TH1D("h_dataz_acc3", "h_dataz_acc3", binz, loz, hiz);//acc
-    TH1D * h_dataz_cut3copy3 = new TH1D ("h_dataz_cut3copy3", "h_dataz_cut3_copy3", binz, loz, hiz);
-    TH1D * h_dataz_acc_only3 = new TH1D ("h_dataz_acc_copy3", "h_dataz_acc_copy3", binz, loz, hiz);
-    TH1D * h_dataz_cut3 = new TH1D ("h_dataz_cut3", "h_dataz_cut3", binz, loz, hiz);
-  
-    //cut1plus2
-    TH1D * h_dataz_acc1plus2= new TH1D("h_dataz_acc1plus2", "h_dataz_acc1plus2", binz, loz, hiz);//acc
-    TH1D * h_dataz_cut1plus2copy1plus2 = new TH1D ("h_dataz_cut1plus2copy1plus2", "h_dataz_cut1plus2_copy1plus2", binz, loz, hiz);
-    TH1D * h_dataz_acc_only1plus2 = new TH1D ("h_dataz_acc_copy1plus2", "h_dataz_acc_copy1plus2", binz, loz, hiz);
-    TH1D * h_dataz_cut1plus2 = new TH1D ("h_dataz_cut1plus2", "h_dataz_cut1plus2", binz, loz, hiz);
-  
-    //yield
-    TH1D *h_dataz_0 = new TH1D("h_dataz_0","h_dataz_0", binz, loz, hiz);        
-    TH1D *h_dataz_1 = new TH1D("h_dataz_1","h_dataz_1", binz, loz, hiz);        
-    TH1D *h_dataz_2 = new TH1D("h_dataz_2","h_dataz_2", binz, loz, hiz);
-    TH1D *h_dataz_3 = new TH1D("h_dataz_3","h_dataz_3", binz, loz, hiz);        
-    TH1D *h_dataz_1plus2 = new TH1D("h_dataz_1plus2","h_dataz_1plus2", binz, loz, hiz);        
-
-    //added for addition vs rf cut=============================================
-
-    TH2F *h_etot_vs_rf = new TH2F("h_etot_vs_rf"," Etot vs RF ", binrf, binrflo, binrfhi, bincal, local, hical);
-    TH2F *h_epr_vs_rf = new TH2F("h_epr_vs_rf"," Epr vs RF ", binrf, binrflo, binrfhi, bincalepr, localepr, hicalepr);
-    TH2F *h_shwr_vs_rf = new TH2F("h_shwr_vs_rf", "Shower vs RF", binrf, binrflo, binrfhi, binshwr, loshwr, hishwr);
-    TH2F *h_ctime_vs_rf = new TH2F("h_ctime_vs_rf", "Ctime vs RF", binrf, binrflo, binrfhi, binct, loct, hict);
-    //applying aero and ctime to cal plots
-    TH2F *h_etot_vs_rf_ctaero = new TH2F("h_etot_vs_rf_ctaero"," Etot vs RF ", binrf, binrflo, binrfhi, bincal, local, hical);
-    TH2F *h_epr_vs_rf_ctaero = new TH2F("h_epr_vs_rf_ctaero"," Epr vs RF ", binrf, binrflo, binrfhi, bincalepr, localepr, hicalepr);
-    TH2F *h_shwr_vs_rf_ctaero = new TH2F("h_shwr_vs_rf_ctaero", "Shower vs RF", binrf, binrflo, binrfhi, binshwr, loshwr, hishwr);
-
-    //added done====================================================
   
     Double_t Epi_dcut0, z_dcut0, Epi_dcut1, z_dcut1, Epi_dcut2, z_dcut2, Epi_dcut3, z_dcut3, Epi_dcut1plus2, z_dcut1plus2; 
     Double_t Epi_acc0, z_acc0, Epi_acc1, z_acc1, Epi_acc2, z_acc2, Epi_acc3, z_acc3, Epi_acc1plus2, z_acc1plus2;
@@ -285,6 +177,8 @@ void ifarm(){
     rf_a399->SetLineWidth(3);
     rf_a399->SetTitle(" RF TIME, OFFSET = 399, AERO Cut" );
 
+   
+    
 
     c2->cd(2);gPad->SetGrid();
     rf_a400->Draw("");
@@ -342,6 +236,47 @@ void ifarm(){
     rf_ah401->SetLineWidth(3);
     rf_ah401->SetTitle(" RF TIME, OFFSET = 401, AERO, HGC Cut" );
 
+
+ Int_t bin_max_a399 = rf_a399->GetMaximumBin();
+    Double_t max_value_a399 = rf_a399->GetBinCenter(bin_max_a399);
+    cout<<"rf_a399 peak is at = "<< max_value_a399 <<endl;
+
+    Int_t bin_max_a400 = rf_a400->GetMaximumBin();
+    Double_t max_value_a400 = rf_a400->GetBinCenter(bin_max_a400);
+    cout<<"rf_a400 peak is at = "<< max_value_a400 <<endl;
+
+
+    Int_t bin_max_a401 = rf_a401->GetMaximumBin();
+    Double_t max_value_a401 = rf_a401->GetBinCenter(bin_max_a401);
+    cout<<"rf_a401 peak is at = "<< max_value_a401 <<endl;
+
+
+    Int_t bin_max_ah399 = rf_ah399->GetMaximumBin();
+    Double_t max_value_ah399 = rf_ah399->GetBinCenter(bin_max_ah399);
+    cout<<"rf_ah399 peak is at = "<< max_value_ah399 <<endl;
+
+    Int_t bin_max_ah400 = rf_ah400->GetMaximumBin();
+    Double_t max_value_ah400 = rf_ah400->GetBinCenter(bin_max_ah400);
+    cout<<"rf_ah400 peak is at = "<< max_value_ah400 <<endl;
+
+
+    Int_t bin_max_ah401 = rf_ah401->GetMaximumBin();
+    Double_t max_value_ah401 = rf_ah401->GetBinCenter(bin_max_ah401);
+    cout<<"rf_ah401 peak is at = "<< max_value_ah401 <<endl;
+
+
+
+ txtfile<<runs[i] <<"\t"<< max_value << "\t"<< max_value_a399<<"\t" << max_value_a400<<"\t"<< max_value_a401<<"\t"<< max_value_ah399<<"\t"<<max_value_ah400<<"\t"<<max_value_ah401<<"\t"<<endl;
+
+
+
+
+ //txtfile<<runs[i]<< "   "<< "peak_ctime  ="<< "\t"<< max_value<< "\t"<<"rf_a1 = "<< max_value_a399<<"\t" << "rf_a2 = "<< max_value_a400<<"\t"<< "rf_a3 ="<< max_value_a401<<"\t"<<    "rf_ah1 = "<< max_value_ah399<<"\t" << "rf_ah2 = "<< max_value_ah400<<"\t"<< "rf_ah3 ="<< max_value_ah401<<"\t"<<"\t"<<endl;
+
+
+
+
+    
   c1->SaveAs(Form("pdf_all/ctime_%d.pdf",runs[i]));
 
   c2->SaveAs(Form("pdf_all/rf_trial_%d.pdf",runs[i]));
