@@ -26,7 +26,7 @@
 #include <TMath.h>
 #include <TSystem.h>
 #define NRUNS 4
-void peter_method(){
+void simple_method_allruns(){
 
   ofstream txtfile("live_time.txt",ios::app);
   // txtfile <<" Run "<<"\t"<<std::setprecision(5)<<fixed<<"edtm acc. trig"<<"\t"<<"edtm trig"<<"\t"< "rmeas"<<"\t"<< "Live Time"<< "Error"<<endl;
@@ -51,7 +51,7 @@ void peter_method(){
 
   for(Int_t r=0; r<NRUNS; r++){
 
-    TString filename  = Form("bdcode/coin_replay_production_%d_100000.root", runs[r]);//6381
+    TString filename  = Form("coin_replay_production_%d_100000.root", runs[r]);//6381
     TFile *f = new TFile(filename, "READ");
 
     cout<< "Opening Run Num = "<< runs[r] <<endl; 
