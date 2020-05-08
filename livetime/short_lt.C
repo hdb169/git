@@ -2,7 +2,8 @@ using namespace std;
 const Int_t NRUNS = 2;//521;
 
 void total_livetime_2(){
-    gStyle->SetOptStat(1111111);
+  ofstream txtfile("live_time.txt",ios::app);
+  gStyle->SetOptStat(1111111);
 
     TFile *f[NRUNS];
 
@@ -119,6 +120,8 @@ void total_livetime_2(){
 		//cout<<"  "<<runs[i]<<"      "<<pnew_lt[i]<<"      "<<hnew_lt[i]<<endl;
 
 	cout<<"  "<<runs[i]<<"      "<<pcurrent_1[i]<<"      "<<pcurrentCut_1[i]<<"      "<<fac[i]<<"      "<<pedtmtrig[i]<<"      "<<pedtmtrig_accptd[i]<<"      "<<pold_lt[i]<<"      "<<pnew_lt[i]<<"      "<< plt_err[i] <<"      "<<ptrig1_rate[i]<<""<< endl;
+	txtfile<<"  "<<runs[i]<<"      "<<pcurrent_1[i]<<"      "<<pcurrentCut_1[i]<<"      "<<fac[i]<<"      "<<pedtmtrig[i]<<"      "<<pedtmtrig_accptd[i]<<"      "<<pold_lt[i]<<"      "<<pnew_lt[i]<<"      "<< plt_err[i] <<"      "<<ptrig1_rate[i]<<""<< endl;
+
 
     }
 		cout<<" "<<endl;
