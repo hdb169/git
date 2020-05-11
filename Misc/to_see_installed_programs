@@ -1,0 +1,8 @@
+whereis <program>
+hdbhatt@hdbhatt:~$ whereis notepad
+notepad: /usr/bin/notepad /usr/share/man/man1/notepad.1.gz
+
+
+hdbhatt@hdbhatt:~$ whereis emacs
+emacs: /usr/bin/emacs /usr/lib/emacs /etc/emacs /usr/share/emacs /usr/share/man/man1/emacs.1.gz
+
