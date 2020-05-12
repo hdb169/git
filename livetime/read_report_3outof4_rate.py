@@ -57,7 +57,7 @@ file = open("test_1.txt","w")
 for index in range(len(rfd['rn'])):
 #    file.write(str(rfd['rn'][index]) + " " +   str(rfd['hms_rate'][index])  + "   " +  str(rfd['shms_rate'][index]) + "     "        + str(rfd['current_4A'][index])+ " " + str(rfd['current_4B'][index]) + "\n")
 
-   file.write(str(rfd['rn'][index]) + " "  +  str(rfd['shms_rate'][index]) +  "\n")
+   file.write(str(rfd['rn'][index]) + " "  +  str(rfd['shms_rate'][index]) + " " +  str(rfd['hms_rate'][index]) +  "\n")
 
 
 #added to read pkl file
