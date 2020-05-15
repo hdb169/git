@@ -1,0 +1,75 @@
+Here I am not using RF time as a PID, my cuts are ctime 3.2 ns, aero > 3, hgcer > 2 and other cuts as usual. The following
+runs were taken at differnt current but were at the same kinematics.
+Run charge 3/4 Rate   LT    SHMS Tr       HMS Tr      Y/(Q*LT*HMs Tr* SHMS Tr) Err = Y/sqrt(N)???
+6429		40.27	522.29	0.976812  0.985538 0.986734   	188.57	2.07		   		
+6430		40.02	519.10 	0.976387  0.985268 0.986941   	192.87	1.70	
+6431		39.97	518.51	0.976132	0.985877 0.986817   	192.84  2.37	
+6432		30.26	396.23	0.981484 	0.987399 0.987406   	193.41  1.76	
+6433		20.19	267.34	0.988527 	0.989126 0.988586    	188.27	1.73			
+
+6459		62.60	421.00	0.976247	0.984093 0.985156   	115.88	1.02		  		
+6460		63.01	423.70	0.977458 	0.984169 0.986064   	112.97	3.36	
+6461		54.82	370.46	0.979176 	0.984880 0.985773   	115.27  0.98				
+6462		48.37	327.45	0.982916 	0.985861 0.986667   	116.56 	1.04 		
+6463		35.09	238.40	0.985469	0.988316 0.987126   	120.17	3.04		
+6464		35.69	242.54	0.986393  0.986924 0.987413      118.79	1.17
+
+More Columns
+
+#acc_counts *3.2/ 16
+#ctime = 42.35 to 45.55
+
+#run    charge  current 3/4 rate counts_acc  counts_acc_scaled counts_data acc_sub_count count/charge_data=d2 Lt_data Tr_data Y_data/(Q*LT*Tr)  count/charge_dummy =dm  Lt_dummy Tr_dummy Y_dum * 0.245/(Q*LT*Tr) = Ydummy Ydata-Ydummy = final_yield
+
+D2 pos			    	 	     		       Y	   LT		 sh Tr	 h Tr	      Yfinal_d2 Y_clean
+6429	44.47	40.27	522.29	6366	1273	9562	8289	186	0.976812  0.985538 0.986734   195.8	  188.57		   		
+6430	66.95	40.02	519.10  9302	1860	14622	12761	190	0.976387  0.985268 0.986941   200.1	  192.87	
+6431	34.66	39.97	518.51	5115 	1023 	7623	6600	190	0.976132	0.985877 0.986817   200.07	192.84	
+6432	62.74	30.26	396.23	6969	1393	13479	12086	192	0.981484 	0.987399 0.987406   200.64	193.41	
+6433	59.63	20.19	267.34	4539	907	  12747	11840	189	0.988527 	0.989126 0.988586   195.5 	188.27		
+
+Dummy pos combined 27+28
+6427+28	114.60			499	100	3434	3334	29	0.9959		0.991115 0.989558    29.7 = 29.7 * 0.245 = 7.23
+
+
+D2 Neg
+6459	113.58	62.60	421.0	  19779	3956	16872	12916	113.71	0.976247	0.984093 0.985156 120.14	115.88		  		
+6460	10.08	  63.01	423.7	  1794	359	  1480	1124	111.21	0.977458 	0.984169 0.986064 117.23	112.97		
+6461	120.58	54.82	370.46	18354	3670	17373	13702	113.63	0.979176 	0.984880 0.985773 119.53	115.27				
+6462	108.71	48.37	327.45	14908	2982	15546	12564	115.57	0.982916 	0.985861 0.986667 120.82	116.56 	 		
+6463	13.03	  35.09	238.40	1396	279	  1838	1559	119.63	0.985469	0.988316 0.987126 124.43	120.17			
+6464	93.65	  35.69	242.54	9571	1914	12992	11078	118.29  0.986393  0.986924 0.987413 123.05 	118.79
+
+Dummy Neg
+6456  105.82	40.46		339	 68	1861	1793	16.94	0.996558	0.987765  0.989066 17.40 = 17.40 * 0.245 = 4.263	
+
+
+
+Check
+
+acc new
+T->Draw(" CTime.ePiCoinTime_ROC2 >> ct( 100, 20, 70)",   "     P.aero.npeSum > 3 && P.cal.eprtracknorm < 0.2&& P.cal.etottracknorm < 0.8 && H.cal.etottracknorm > 0.8 && H.cal.etottracknorm < 1.2 && H.gtr.dp > -10 && H.gtr.dp < 10 && P.gtr.dp > -10 && P.gtr.dp < 20 && H.cer.npeSum > 1.5 && P.gtr.beta > 0.5 && P.gtr.beta < 1.5 && H.gtr.beta > 0.5 && H.gtr.beta < 1.5  && P.dc.InsideDipoleExit == 1 && H.dc.InsideDipoleExit == 1 && P.hgcer.npeSum > 2  &&g.evtyp>3 &&  ((CTime.ePiCoinTime_ROC2>25.75 && CTime.ePiCoinTime_ROC2 < 33.75) || (CTime.ePiCoinTime_ROC2>57.75 && CTime.ePiCoinTime_ROC2 < 65.75))       ")
+
+
+data new 
+T->Draw(" CTime.ePiCoinTime_ROC2 >> ct( 100, 20, 70)",   "     P.aero.npeSum > 3 && P.cal.eprtracknorm < 0.2&& P.cal.etottracknorm < 0.8 && H.cal.etottracknorm > 0.8 && H.cal.etottracknorm < 1.2 && H.gtr.dp > -10 && H.gtr.dp < 10 && P.gtr.dp > -10 && P.gtr.dp < 20 && H.cer.npeSum > 1.5 && P.gtr.beta > 0.5 && P.gtr.beta < 1.5 && H.gtr.beta > 0.5 && H.gtr.beta < 1.5  && P.dc.InsideDipoleExit == 1 && H.dc.InsideDipoleExit == 1 && P.hgcer.npeSum > 2  &&g.evtyp>3 && CTime.ePiCoinTime_ROC2 > 42.35 && CTime.ePiCoinTime_ROC2 < 45.55     ")
+
+
+
+
+
+
+
+
+//acc old
+T->Draw("CTime.ePiCoinTime_ROC2>>h(100, 20, 70)","     ((CTime.ePiCoinTime_ROC2>25.75 && CTime.ePiCoinTime_ROC2 < 33.75) || (CTime.ePiCoinTime_ROC2>57.75 && CTime.ePiCoinTime_ROC2 < 65.75))  && P.aero.npeSum > 3 && P.cal.eprtracknorm < 0.2&& P.cal.etottracknorm < 0.8 && H.cal.etottracknorm > 0.8 && H.cal.etottracknorm < 1.2 && H.gtr.dp > -10 && H.gtr.dp < 10 && P.gtr.dp > -10 && P.gtr.dp < 20 && H.cer.npeSum > 1.5 && P.gtr.beta > 0.5 && P.gtr.beta < 1.5 && H.gtr.beta > 0.5 && H.gtr.beta < 1.5  && P.dc.InsideDipoleExit == 1 && H.dc.InsideDipoleExit == 1 && P.hgcer.npeSum > 2 &&H.hod.goodstarttime==1 &&g.evtyp>3 && fmod(-T.coin.pRF_tdcTime + P.hod.fpHitsTime + 399.05, 4.004) > 0.4 && fmod(-T.coin.pRF_tdcTime + P.hod.fpHitsTime + 399.05, 4.004) < 1.6           ")
+
+
+//data
+
+
+
+
+
+
+
