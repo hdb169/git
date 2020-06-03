@@ -1,0 +1,225 @@
+#For now I have added only D2 Runs.Add Dummy Runs too.
+#!/bin/bash
+echo
+echo
+home_dir=/home/hdbhatt/Desktop/livetime/ROOTfiles
+rootoutdir="./hadded_ROOTfiles"
+echo "$home_dir"
+echo
+echo
+
+
+
+
+
+cd "$home_dir"
+#=====================================================================================
+#kin2 pip
+hadd run_6020_-1.root coin_replay_production_6020_-1.root coin_replay_production_6021_-1.root
+hadd run_6022_-1.root coin_replay_production_6022_-1.root coin_replay_production_6026_-1.root
+hadd run_6029_-1.root coin_replay_production_6029_-1.root coin_replay_production_6030_-1.root coin_replay_production_6031_-1.root coin_replay_production_6032_-1.root   
+hadd run_6027_-1.root coin_replay_production_6027_-1.root coin_replay_production_6028_-1.root
+hadd run_6043_-1.root coin_replay_production_6043_-1.root coin_replay_production_6044_-1.root coin_replay_production_6045_-1.root 
+hadd run_6046_-1.root coin_replay_production_6046_-1.root 
+hadd run_6049_-1.root coin_replay_production_6049_-1.root coin_replay_production_6050_-1.root coin_replay_production_6051_-1.root coin_replay_production_6052_-1.root coin_replay_production_6053_-1.root coin_replay_production_6054_-1.root  coin_replay_production_6055_-1.root
+hadd run_6056_-1.root coin_replay_production_6056_-1.root coin_replay_production_6057_-1.root coin_replay_production_6058_-1.root 
+#kin1 pim
+hadd run_6068_-1.root coin_replay_production_6068_-1.root coin_replay_production_6070_-1.root coin_replay_production_6071_-1.root 
+hadd run_6067_-1.root coin_replay_production_6067_-1.root 
+hadd run_6073_-1.root coin_replay_production_6073_-1.root coin_replay_production_6081_-1.root
+hadd run_6080_-1.root coin_replay_production_6080_-1.root 
+hadd run_6088_-1.root coin_replay_production_6088_-1.root coin_replay_production_6089_-1.root coin_replay_production_6090_-1.root 
+hadd run_6087_-1.root coin_replay_production_6087_-1.root 
+hadd run_6091_-1.root coin_replay_production_6091_-1.root coin_replay_production_6093_-1.root coin_replay_production_6094_-1.root coin_replay_production_6095_-1.root coin_replay_production_6096_-1.root  
+hadd run_6097_-1.root coin_replay_production_6097_-1.root coin_replay_production_6098_-1.root
+#======================================================================================
+###############################ONLY D@ RUNS NOW+++++++++++++++++++++++++++++++++++++++++
+#kin3 pip
+hadd run_6537_-1.root coin_replay_production_6537_-1.root 
+hadd run_6541_-1.root coin_replay_production_6541_-1.root 
+hadd run_6542_-1.root coin_replay_production_6542_-1.root coin_replay_production_6543_-1.root
+
+#kin4 pim
+hadd run_6545_-1.root coin_replay_production_6545_-1.root 
+hadd run_6548_-1.root coin_replay_production_6548_-1.root coin_replay_production_6549_-1.root
+hadd run_6550_-1.root coin_replay_production_6550_-1.root coin_replay_production_6551_-1.root
+
+#======================================================================================
+#kin6 pip
+hadd run_6145_-1.root coin_replay_production_6145_-1.root coin_replay_production_6146_-1.root ##coin_replay_production_6154_-1.root, low current, not added
+hadd run_6170_-1.root coin_replay_production_6170_-1.root coin_replay_production_6171_-1.root
+hadd run_6179_-1.root coin_replay_production_6179_-1.root coin_replay_production_6180_-1.root
+hadd run_6185_-1.root coin_replay_production_6185_-1.root coin_replay_production_6186_-1.root coin_replay_production_6187_-1.root 
+
+
+
+#kin5 pim
+hadd run_6111_-1.root coin_replay_production_6111_-1.root coin_replay_production_6112_-1.root coin_replay_production_6114_-1.root 
+hadd run_6115_-1.root coin_replay_production_6115_-1.root coin_replay_production_6116_-1.root
+hadd run_6124_-1.root coin_replay_production_6124_-1.root coin_replay_production_6125_-1.root
+hadd run_6136_-1.root coin_replay_production_6136_-1.root coin_replay_production_6137_-1.root coin_replay_production_6138_-1.root 
+
+
+#======================================================================================
+#kin7 pip
+hadd run_6500_-1.root coin_replay_production_6500_-1.root coin_replay_production_6501_-1.root
+hadd run_6506_-1.root coin_replay_production_6506_-1.root coin_replay_production_6507_-1.root
+hadd run_6509_-1.root coin_replay_production_6509_-1.root coin_replay_production_6510_-1.root
+hadd run_6514_-1.root coin_replay_production_6514_-1.root coin_replay_production_6515_-1.root coin_replay_production_6516_-1.root coin_replay_production_6517_-1.root   
+
+
+
+#kin8 pim
+hadd run_6486_-1.root coin_replay_production_6486_-1.root 
+hadd run_6489_-1.root coin_replay_production_6489_-1.root 
+hadd run_6490_-1.root coin_replay_production_6490_-1.root coin_replay_production_6491_-1.root coin_replay_production_6493_-1.root #check 6491
+hadd run_6496_-1.root coin_replay_production_6496_-1.root coin_replay_production_6497_-1.root coin_replay_production_6498_-1.root coin_replay_production_6499_-1.root   
+
+
+#======================================================================================
+#kin10 pip
+hadd run_6194_-1.root coin_replay_production_6194_-1.root coin_replay_production_6195_-1.root
+hadd run_6198_-1.root coin_replay_production_6198_-1.root coin_replay_production_6199_-1.root
+hadd run_6205_-1.root coin_replay_production_6205_-1.root coin_replay_production_6208_-1.root coin_replay_production_6209_-1.root coin_replay_production_6210_-1.root   
+hadd run_6215_-1.root coin_replay_production_6215_-1.root coin_replay_production_6216_-1.root coin_replay_production_6217_-1.root coin_replay_production_6219_-1.root coin_replay_production_6120_-1.root 
+
+
+
+#kin9 pim
+hadd run_6245_-1.root coin_replay_production_6245_-1.root coin_replay_production_6246_-1.root coin_replay_production_6247_-1.root 
+hadd run_6248_-1.root coin_replay_production_6248_-1.root coin_replay_production_6249_-1.root coin_replay_production_6250_-1.root 
+hadd run_6263_-1.root coin_replay_production_6263_-1.root coin_replay_production_6264_-1.root coin_replay_production_6265_-1.root coin_replay_production_6266_-1.root coin_replay_production_6267_-1.root  
+hadd run_6270_-1.root coin_replay_production_6270_-1.root coin_replay_production_6271_-1.root coin_replay_production_6272_-1.root coin_replay_production_6273_-1.root   
+#======================================================================================
+#kin11 pip
+hadd run_6419_-1.root coin_replay_production_6419_-1.root coin_replay_production_6420_-1.root coin_replay_production_6421_-1.root coin_replay_production_6422_-1.root   
+hadd run_6429_-1.root coin_replay_production_6429_-1.root coin_replay_production_6430_-1.root coin_replay_production_6430_-1.root    #Rate test runs 
+hadd run_6434_-1.root coin_replay_production_6434_-1.root coin_replay_production_6435_-1.root coin_replay_production_6436_-1.root    #Rate test runs 
+hadd run_6443_-1.root coin_replay_production_6443_-1.root coin_replay_production_6444_-1.root coin_replay_production_6445_-1.root coin_replay_production_6446_-1.root coin_replay_production_6447_-1.root coin_replay_production_6448_-1.root   
+
+
+
+#kin12 pim
+hadd run_6451_-1.root coin_replay_production_6451_-1.root coin_replay_production_6452_-1.root coin_replay_production_6453_-1.root 
+hadd run_6459_-1.root coin_replay_production_6459_-1.root coin_replay_production_6460_-1.root #took only high rate =====
+hadd run_6465_-1.root coin_replay_production_6465_-1.root coin_replay_production_6466_-1.root coin_replay_production_6467_-1.root 
+hadd run_6473_-1.root coin_replay_production_6473_-1.root coin_replay_production_6474_-1.root coin_replay_production_6475_-1.root coin_replay_production_6476_-1.root coin_replay_production_6477_-1.root coin_replay_production_6478_-1.root coin_replay_production_6479_-1.root  
+#======================================================================================
+#kin14 pip
+hadd run_6309_-1.root coin_replay_production_6309_-1.root coin_replay_production_6310_-1.root
+hadd run_6322_-1.root coin_replay_production_6322_-1.root coin_replay_production_6323_-1.root
+hadd run_6324_-1.root coin_replay_production_6324_-1.root coin_replay_production_6325_-1.root coin_replay_production_6326_-1.root coin_replay_production_6327_-1.root
+hadd run_6339_-1.root coin_replay_production_6339_-1.root coin_replay_production_6340_-1.root coin_replay_production_6341_-1.root coin_replay_production_6342_-1.root coin_replay_production_6343_-1.root coin_replay_production_6344_-1.root coin_replay_production_6347_-1.root  
+
+
+
+#kin13 pim
+hadd run_6290_-1.root coin_replay_production_6290_-1.root coin_replay_production_6291_-1.root
+hadd run_6292_-1.root coin_replay_production_6292_-1.root coin_replay_production_6293_-1.root
+hadd run_6306_-1.root coin_replay_production_6306_-1.root coin_replay_production_6307_-1.root coin_replay_production_6308_-1.root 
+hadd run_6348_-1.root coin_replay_production_6349_-1.root coin_replay_production_6350_-1.root coin_replay_production_6351_-1.root coin_replay_production_6352_-1.root 
+
+#======================================================================================
+#kin15 pip
+hadd run_6387_-1.root coin_replay_production_6387_-1.root coin_replay_production_6388_-1.root coin_replay_production_6397_-1.root coin_replay_production_6398_-1.root 
+hadd run_6393_-1.root coin_replay_production_6393_-1.root coin_replay_production_6394_-1.root coin_replay_production_6395_-1.root coin_replay_production_6396_-1.root 
+hadd run_6399_-1.root coin_replay_production_6399_-1.root coin_replay_production_6400_-1.root coin_replay_production_6401_-1.root coin_replay_production_6402_-1.root coin_replay_production_6303_-1.root coin_replay_production_6404_-1.root  
+hadd run_6410_-1.root coin_replay_production_6410_-1.root coin_replay_production_6411_-1.root coin_replay_production_6412_-1.root coin_replay_production_6413_-1.root coin_replay_production_6415_-1.root coin_replay_production_6416_-1.root coin_replay_production_6417_-1.root  
+
+
+
+#kin16 pim
+hadd run_6359_-1.root coin_replay_production_6359_-1.root coin_replay_production_6360_-1.root
+hadd run_6367_-1.root coin_replay_production_6367_-1.root coin_replay_production_6370_-1.root
+hadd run_6375_-1.root coin_replay_production_6375_-1.root coin_replay_production_6376_-1.root coin_replay_production_6377_-1.root
+hadd run_6378_-1.root coin_replay_production_6378_-1.root coin_replay_production_6379_-1.root coin_replay_production_6380_-1.root coin_replay_production_6381_-1.root 
+
+#======================================================================================
+#kin17 pip/pim
+#pip
+hadd run_6524_-1.root coin_replay_production_6524_-1.root coin_replay_production_6525_-1.root coin_replay_production_6526_-1.root
+
+#pim
+hadd run_6518_-1.root coin_replay_production_6518_-1.root coin_replay_production_6519_-1.root coin_replay_production_6520_-1.root
+
+
+
+#kin18 pip/pim
+#pip
+hadd run_6535_-1.root coin_replay_production_6535_-1.root coin_replay_production_6536_-1.root 
+
+#pim
+hadd run_6527_-1.root coin_replay_production_6527_-1.root coin_replay_production_6528_-1.root coin_replay_production_6529_-1.root
+
+
+
+#======================================================================================
+#spring
+#======================================================================================
+#kin34 pip
+hadd run_7635_-1.root coin_replay_production_7635_-1.root coin_replay_production_7636_-1.root coin_replay_production_7637_-1.root 
+hadd run_7642_-1.root coin_replay_production_7642_-1.root coin_replay_production_7643_-1.root coin_replay_production_7644_-1.root coin_replay_production_7645_-1.root 
+hadd run_7646_-1.root coin_replay_production_7646_-1.root coin_replay_production_7647_-1.root coin_replay_production_7648_-1.root coin_replay_production_7649_-1.root coin_replay_production_7650_-1.root coin_replay_production_7651_-1.root coin_replay_production_7652_-1.root 
+hadd run_7661_-1.root coin_replay_production_7661_-1.root coin_replay_production_7662_-1.root coin_replay_production_7663_-1.root coin_replay_production_7664_-1.root coin_replay_production_7665_-1.root coin_replay_production_7666_-1.root coin_replay_production_7667_-1.root coin_replay_production_7668_-1.root coin_replay_production_7669_-1.root coin_replay_production_7670_-1.root 
+
+
+
+#kin33 pim
+hadd run_7593_-1.root coin_replay_production_7593_-1.root coin_replay_production_7594_-1.root coin_replay_production_7595_-1.root coin_replay_production_7596_-1.root  coin_replay_production_7597_-1.root 
+hadd run_7608_-1.root coin_replay_production_7608_-1.root coin_replay_production_7609_-1.root coin_replay_production_7610_-1.root
+hadd run_7611_-1.root coin_replay_production_7611_-1.root coin_replay_production_7612_-1.root coin_replay_production_7613_-1.root coin_replay_production_7614_-1.root coin_replay_production_7615_-1.root coin_replay_production_7616_-1.root 
+hadd run_7625_-1.root coin_replay_production_7625_-1.root coin_replay_production_7626_-1.root coin_replay_production_7527_-1.root coin_replay_production_7628_-1.root coin_replay_production_7629_-1.root coin_replay_production_7630_-1.root coin_replay_production_7631_-1.root coin_replay_production_7632_-1.root coin_replay_production_7633_-1.root coin_replay_production_7634_-1.root
+
+#======================================================================================
+#kin36 pip
+hadd run_7699_-1.root coin_replay_production_7699_-1.root coin_replay_production_7702_-1.root coin_replay_production_7703_-1.root 
+hadd run_7706_-1.root coin_replay_production_7706_-1.root coin_replay_production_7707_-1.root coin_replay_production_7708_-1.root coin_replay_production_7709_-1.root coin_replay_production_7710_-1.root 
+hadd run_7716_-1.root coin_replay_production_7716_-1.root coin_replay_production_7717_-1.root coin_replay_production_7718_-1.root coin_replay_production_7719_-1.root coin_replay_production_7720_-1.root coin_replay_production_7721_-1.root coin_replay_production_7722_-1.root 
+
+
+
+#kin35 pim
+hadd run_7671_-1.root coin_replay_production_7671_-1.root coin_replay_production_7672_-1.root
+hadd run_7679_-1.root coin_replay_production_7679_-1.root coin_replay_production_7680_-1.root coin_replay_production_7681_-1.root coin_replay_production_7682_-1.root
+hadd run_7684_-1.root coin_replay_production_7684_-1.root coin_replay_production_7685_-1.root coin_replay_production_7586_-1.root coin_replay_production_7687_-1.root coin_replay_production_7688_-1.root coin_replay_production_7689_-1.root  coin_replay_production_7690_-1.root  coin_replay_production_7692_-1.root 
+
+#======================================================================================
+#kin38 pip
+hadd run_7735_-1.root coin_replay_production_7735_-1.root coin_replay_production_7736_-1.root
+hadd run_7737_-1.root coin_replay_production_7737_-1.root coin_replay_production_7738_-1.root coin_replay_production_7739_-1.root coin_replay_production_7740_-1.root
+hadd run_7757_-1.root coin_replay_production_7757_-1.root coin_replay_production_7758_-1.root coin_replay_production_7759_-1.root 
+
+
+
+
+#kin37 pim
+hadd run_7767_-1.root coin_replay_production_7767_-1.root coin_replay_production_7768_-1.root coin_replay_production_7769_-1.root coin_replay_production_7770_-1.root coin_replay_production_7771_-1.root
+hadd run_7775_-1.root coin_replay_production_7775_-1.root coin_replay_production_7776_-1.root coin_replay_production_7777_-1.root
+hadd run_7783_-1.root coin_replay_production_7783_-1.root coin_replay_production_7784_-1.root coin_replay_production_7785_-1.root coin_replay_production_7786_-1.root coin_replay_production_7787_-1.root
+#67?????
+#======================================================================================
+#kin40 pip
+hadd run_7808_-1.root coin_replay_production_7808_-1.root coin_replay_production_7809_-1.root
+hadd run_7813_-1.root coin_replay_production_7813_-1.root coin_replay_production_7814_-1.root
+hadd run_7815_-1.root coin_replay_production_7815_-1.root coin_replay_production_7816_-1.root coin_replay_production_7817_-1.root 
+
+
+
+#kin39 pim
+hadd run_7796_-1.root coin_replay_production_7796_-1.root coin_replay_production_7797_-1.root
+hadd run_7798_-1.root coin_replay_production_7798_-1.root coin_replay_production_7799_-1.root
+hadd run_7805_-1.root coin_replay_production_7805_-1.root coin_replay_production_7806_-1.root coin_replay_production_7807_-1.root
+#=================================done=====================================================
+
+
+
+
+
+
+
+
+eval "ls -ltrh *run*.root"
+
+eval "scp *run*.root hadded_ROOTfiles" 
+
+eval "ls -ltrh hadded_ROOTfiles/*.root"
