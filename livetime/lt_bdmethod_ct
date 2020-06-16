@@ -1,0 +1,139 @@
+#define NRUNS 11
+void mark_livetime_ct(){
+  
+  Int_t rruns[NRUNS] = {6429, 6430, 6431, 6432, 6433, 6459, 6460, 6461, 6462, 6463, 6464};
+  for (int i=0;i<NRUNS;i++){
+    TString filename = Form("/home/hdbhatt/Desktop/new_hcana_lt/tr_lt/ROOTfiles/coin_replay_production_%d_-1.root",rruns[i]);
+    TFile *f = new TFile(filename, "READ");
+    //cout<< "Opening Run Num = "<<rruns[i] <<endl; 
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      //exit(-1);
+      continue;
+    }
+    
+    TTree *tdata = (TTree*) f->Get("T");
+    TTree *tscal = (TTree*) f->Get("TSP");
+
+    double evNum;
+    double bcm1_q;
+    double bcm1_i;
+    double s1x_scal;
+    double elclean;
+    double pTRIG6;
+    double scal_time;
+    double setCur ;
+    double th_current = 3.; //3 uA
+    double prev_time=0.;
+    double prev_char=0.;
+    double prev_s1x=0.;
+    double prev_trig6=0.;
+    double prev_pedtm_scaler=0.;
+    double tot_time=0.;
+    double tot_char=0.;
+    double tot_trig6=0.;
+    double total_scal_q_cut=0.;
+    double total_time_cut=0.;
+    double total_ptrig6_cut=0.;
+    double total_pedtm_scaler=0.;
+    double total_pedtm_scaler_cut=0.;
+
+    double evtyp;
+    double evNum_data;
+    double pEDTM_scaler;
+
+    double ptrig6_data;
+    double edtm;
+    double pelclean;
+
+    tscal->SetBranchAddress("evNumber", &evNum);
+    tscal->SetBranchAddress("P.BCM4A.scalerCharge", &bcm1_q);
+    tscal->SetBranchAddress("P.BCM4A.scalerCurrent", &bcm1_i);
+    tscal->SetBranchAddress("P.pTRIG6.scaler", &pTRIG6);
+    tscal->SetBranchAddress("P.1MHz.scalerTime", &scal_time);
+    tscal->SetBranchAddress("P.EDTM.scaler",&pEDTM_scaler);
+    tscal->SetBranchAddress("P.pEL_CLEAN.scaler", &elclean); 
+    TH1F *hcurrent = new TH1F("current","",1000, 10, 100);
+    const int  tscal_entries =tscal->GetEntries();
+    int ev_flag[tscal_entries];
+    int scal_evt_num[tscal_entries];
+ 
+    for (int j = 0; j < tscal_entries; j++){ 
+      tscal->GetEntry(j);
+      hcurrent->Fill(bcm1_i);
+    }
+
+    for (int i = 0; i < tscal_entries; i++){ 
+      tscal->GetEntry(i);
+      ev_flag[i] = 0;
+      scal_evt_num[i] = evNum;
+      setCur = hcurrent->GetBinCenter(hcurrent->GetMaximumBin());
+      tot_char=bcm1_q; 
+      tot_trig6=pTRIG6;
+      total_pedtm_scaler=pEDTM_scaler;
+
+      if(abs(s1x_scal-prev_s1x) < 100000000.){
+	if(abs(setCur - bcm1_i) < th_current){
+	  ev_flag[i] = 1; // turn the flag on
+   
+	  total_time_cut = total_time_cut + (scal_time-prev_time);
+	  total_scal_q_cut = total_scal_q_cut + (bcm1_q-prev_char);
+	  total_ptrig6_cut = total_ptrig6_cut + (pTRIG6-prev_trig6);
+	  total_pedtm_scaler_cut = total_pedtm_scaler_cut + (pEDTM_scaler-prev_pedtm_scaler); 
+	}
+   
+	prev_char = bcm1_q;
+	prev_trig6 = pTRIG6;
+	prev_pedtm_scaler = pEDTM_scaler;
+      }  
+    }
+
+    double pTRIG6_rate = total_ptrig6_cut/total_time_cut/1000.;
+    double pEDTM_rate = total_pedtm_scaler_cut/total_time_cut/1000.;
+    pTRIG6_rate = pTRIG6_rate - pEDTM_rate;
+
+    //=====DATA=====
+
+    tdata->SetBranchAddress("g.evtyp", &evtyp);
+    tdata->SetBranchAddress("g.evnum", &evNum_data);
+
+    tdata->SetBranchAddress("T.coin.pEDTM_tdcTimeRaw",&edtm);
+    tdata->SetBranchAddress("T.coin.pTRIG6_ROC2_tdcTimeRaw",&ptrig6_data);
+    //tdata->SetBranchAddress("T.coin.pEL_CLEAN_ROC2_tdcTimeRaw",&pelclean);
+
+    double acc_trig6_cut = 0.;
+    double edtm_singles = 0.;
+    double edtm_coin = 0.;
+    int scal = 0;   //scaler read counter
+    const int  tdata_entries =tdata->GetEntries();
+ 
+    for (int j = 0; j < tdata_entries; j++){
+      tdata->GetEntry(j);
+      if(ev_flag[scal]==1){
+	//count the accepted ptrig6 events
+	if(ptrig6_data > 0.){
+	  acc_trig6_cut++;
+	}
+	//count accepted edtm events
+	if(edtm > 0.){
+	  if(evtyp==4){
+	    //if(pelclean>0.){
+	      edtm_coin++;
+	    };
+	  //}
+	}
+      }//end bcm flag
+
+      if(evNum_data >  scal_evt_num[scal]){
+	scal++;    
+      }
+    } //end event entry loop
+ 
+    double comp_lt = acc_trig6_cut / total_ptrig6_cut;
+    double comp_lt_error = TMath::Sqrt(acc_trig6_cut) / total_ptrig6_cut;
+    double tot_lt =  edtm_coin / total_pedtm_scaler_cut;
+    double tot_lt_error = TMath::Sqrt(((edtm_coin*(total_pedtm_scaler_cut-edtm_coin)))/(total_pedtm_scaler_cut*total_pedtm_scaler_cut*total_pedtm_scaler_cut));
+ 
+    cout<<rruns[i]<<"   "<<edtm_coin<<" "<<total_pedtm_scaler_cut<<" "<<tot_lt<<" "<<tot_lt_error<<"  "<<comp_lt<<"   "<<comp_lt_error<<endl;
+  }
+}
