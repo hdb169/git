@@ -1,0 +1,238 @@
+#define NRUNS 2
+
+void lt_mark_copy(){//Logentry 127,Jun05
+  ofstream txtfile("lt_mark.txt",ios::app);
+  TGraphErrors * gr = new TGraphErrors();
+
+  Int_t runs[NRUNS]= {6429, 6430};//, 6431, 6432, 6433, 6459, 6460, 6461, 6462, 6463, 6464 };
+  Int_t rate[NRUNS] = {522, 519};//, 518, 396, 267, 421, 423, 370, 327, 238, 242};
+
+  gROOT->SetBatch(kTRUE);
+  
+  for(Int_t r=0; r<NRUNS; r++){
+    TString filename  = Form("/home/hdbhatt/Desktop/new_hcana_lt/tr_lt/ROOTfiles/coin_replay_production_%d_-1.root", runs[r]);
+
+    TFile *f = new TFile(filename, "READ");
+    //cout<< "Opening Run Num = "<< runs[r] <<endl; 
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      //exit(-1);
+      continue;
+    }
+    TTree * tt = (TTree *)f->Get("T");
+    TTree * ss = (TTree *)f->Get("TSP");
+    ///added_br
+    double prev_trig6=0.;
+    double prev_pedtm_scaler=0.;
+    double tot_trig6=0.;
+    double total_pedtm_scaler=0.;
+    double total_ptrig6_cut=0.;
+    double total_pedtm_scaler_cut=0.;
+    
+    double pden1=0;
+    double pden2=0;
+    double pden1cut=0;
+    double pden2cut=0;
+
+  
+
+    TH1F *hcurrent = new TH1F("current","",100, 10, 100);
+    TH1F *hpbeta = new TH1F("beta","",100, -100, 100);
+    TH1F *hpedtmtdctimeraw = new TH1F("edtm_tdctime_raw","",100, -100, 100000000);
+    TH1F *hcurrent_thcut = new TH1F("current_thcut","",100, 10, 100);
+    TH1F *hcurrent_5cut = new TH1F("current_5cut","",100, 10, 100);
+
+
+
+    double data_eventnum,ngcer,pcaletottrack,pcaleprtrack,pcaletotnorm,pdelta,xptar,ytar,pdcntrack,eventtype,phodbetanotrack,phodgoodscinhit,pdctnhit,edtmtdctimeraw,ptrig6tdctimeraw,ptrig2tdctimeraw,pelcleantdctimeraw;
+
+    double scaler_eventnum,bcm1charge,bcm1current,scaler1MHztime,scaler1MHztimecut,bcm1chargecut,s1xscaler,s1yscaler,s2xscaler,s2yscaler,ptrig1scaler,ptrig2scaler,ptrig3scaler,ptrig4scaler,ptrig6scaler,pedtmscaler,pelcleanscaler,pl1acceptscaler,edtmtdctime, mult;
+
+    double  current_bcmcut, current_nobcmcut, ptrig3scalercut, ptrig4scalercut, ptrig5scalercut, ptrig6scalercut,pbeta,pedtmscalercut;
+    double setCur ;
+    double th_current = 3.; //3 uA=============================5
+
+    tt->SetBranchAddress("g.evnum",&data_eventnum);
+    tt->SetBranchAddress("g.evtyp", &eventtype);
+    tt->SetBranchAddress("T.coin.pEDTM_tdcTime",&edtmtdctime);
+    tt->SetBranchAddress("T.coin.pEDTM_tdcTimeRaw",&edtmtdctimeraw);
+    tt->SetBranchAddress("T.coin.pTRIG6_ROC2_tdcTimeRaw",&ptrig6tdctimeraw);
+    tt->SetBranchAddress("T.coin.pTRIG2_ROC2_tdcTimeRaw",&ptrig2tdctimeraw);
+    tt->SetBranchAddress("P.gtr.beta",&pbeta);
+
+
+    ss->SetBranchAddress("evNumber", &scaler_eventnum);
+    ss->SetBranchAddress("P.BCM1.scalerCharge", &bcm1charge);
+    ss->SetBranchAddress("P.BCM1.scalerCurrent", &bcm1current);
+    ss->SetBranchAddress("P.1MHz.scalerTime", &scaler1MHztime);
+    ss->SetBranchAddress("P.1MHz.scalerTimeCut",&scaler1MHztimecut);
+    ss->SetBranchAddress("P.BCM1.scalerChargeCut",&bcm1chargecut);
+    ss->SetBranchAddress("P.pTRIG3.scaler", &ptrig3scaler);
+    ss->SetBranchAddress("P.pTRIG4.scaler", &ptrig4scaler);
+    ss->SetBranchAddress("P.pTRIG6.scaler", &ptrig6scaler);
+    ss->SetBranchAddress("P.EDTM.scaler",&pedtmscaler);
+    ss->SetBranchAddress("P.pEL_CLEAN.scaler", &pelcleanscaler);
+    ss->SetBranchAddress("P.pL1ACCP.scaler",&pl1acceptscaler);
+    ss->SetBranchAddress("P.EDTM.scalerCut",&pedtmscalercut);
+    ss->SetBranchAddress("P.pTRIG4.scalerCut", &ptrig4scalercut);
+    ss->SetBranchAddress("P.pTRIG5.scalerCut", &ptrig5scalercut);
+    ss->SetBranchAddress("P.pTRIG6.scalerCut", &ptrig6scalercut);
+
+    const int  nentriesD = tt->GetEntries();
+    //cout<<"Data entries = "<<nentriesD<<"  "<<endl;
+    const int  nscalerD = ss->GetEntries();
+    //cout<<"Scaler entries = "<<nscalerD<<"  "<<endl;
+
+
+    int ev_flag[nscalerD];//---------------------------f1
+    int scal_evt_num[nscalerD];//---------------------f2
+    double dden1[nscalerD];
+    double dden1cut[nscalerD];
+    double den1[nscalerD];
+    double den1cut[nscalerD];
+    
+    double dden2[nscalerD];
+    double dden2cut[nscalerD];
+    double den2[nscalerD];
+    double den2cut[nscalerD];
+    
+    
+    for (int j = 0; j < nscalerD; j++){ 
+      ss->GetEntry(j);
+
+      scal_evt_num[j] = scaler_eventnum;
+
+      hcurrent->Fill(bcm1current);
+    }
+
+    setCur = hcurrent->GetBinCenter(hcurrent->GetMaximumBin());
+
+   
+    for (int i = 0; i < nscalerD; i++){
+      ss->GetEntry(i);
+      // scal_evt_num[i] = scaler_eventnum;
+ 
+   
+      den1[i] =  ptrig6scaler;
+      den2[i] =  pedtmscaler;
+
+      den1cut[i] = ptrig6scalercut;
+      den2cut[i] = pedtmscalercut;
+
+      // cout<<   den1[i] << " " <<  den1cut[i]<<endl;
+
+   
+
+    }
+
+    dden1[0] = den1[0];
+    dden2[0] = den2[0];
+    dden1cut[0] = den1cut[0];
+    dden2cut[0] = den2cut[0];
+  
+   
+    for (int i = 0; i < nscalerD; i++){ 
+      ss->GetEntry(i);
+      ev_flag[i] = 0;
+
+      if( i > 0){
+	dden1[i] =  den1[i] - den1[i-1];
+	dden2[i] =  den2[i] - den2[i-1];
+  
+	dden1cut[i] =  den1cut[i] - den1cut[i-1];
+	dden2cut[i] =  den2cut[i] - den2cut[i-1];
+      
+      }
+      if(abs(setCur - bcm1current) < th_current){
+	ev_flag[i] = 1;
+	hcurrent_thcut->Fill(bcm1current);
+
+	pden1 = pden1 + dden1[i];
+	pden2 = pden2 + dden2[i];
+	pden1cut = pden1cut + dden1cut[i];
+	pden2cut = pden2cut + dden2cut[i];
+     
+      }
+      
+    }
+
+  
+
+  
+    cout<<  "pden1= "  << pden1 << "  " << "pden1cut =" << pden1cut <<" " 	<<  pden2 << "  " <<	pden2cut 	<<  endl;
+
+    cout<< "done"<<endl;
+    TCanvas * c1 = new TCanvas ("c1", "c1", 1600, 1200);
+    c1->Divide(3,2);
+    c1->cd(1);gPad->SetLogy();
+    hcurrent->Draw();
+
+    c1->cd(2);gPad->SetLogy();
+    hcurrent_thcut->Draw();
+
+
+    
+    c1->cd(3);gPad->SetLogy();
+    hcurrent_5cut->Draw();
+
+    int scal = 0;
+    
+    for (int j = 0; j < nentriesD; j++){
+      tt->GetEntry(j);
+      if(ev_flag[scal]==1){
+	
+	if (eventtype > 3){  
+	  hpbeta->Fill(pbeta);
+	}
+    	
+	if(edtmtdctimeraw>0 ){
+	  hpedtmtdctimeraw->Fill(edtmtdctimeraw);
+	  
+	}
+      }
+
+      //  cout<< data_eventnum << "   " << scal_evt_num[scal]<< "  " <<scal<< endl;
+      if(data_eventnum==scal_evt_num[scal]){ scal++;}
+    }
+
+    c1->cd(4);gPad->SetLogy();
+    hpbeta->Draw();
+
+    c1->cd(5);gPad->SetLogy();
+    hpedtmtdctimeraw->Draw();
+
+
+    
+
+    c1->SaveAs(Form("pdf/nocut_cut_curr_%d.pdf",runs[r]));
+    double good_Ev = hpbeta->GetEntries();
+    double nEDTM= hpedtmtdctimeraw->GetEntries();
+    double numerator = good_Ev - nEDTM ;
+    double denom_latest =  pden1 - pden2;
+
+ 
+    double denominator = ptrig6scalercut -  pedtmscalercut;
+  
+
+    double LT = numerator / denominator;
+    double LT_err = LT * sqrt(1/numerator);
+
+    double LT_latest = numerator/denom_latest;
+    
+
+    cout << LT_latest <<endl;
+
+  
+
+    delete c1;
+
+   
+    
+    
+    cout << "=========== Next Run=============  " <<endl;
+
+    
+
+  }
+ 
+}
