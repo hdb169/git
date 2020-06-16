@@ -1,0 +1,95 @@
+
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void read_mkjones_method()
+{
+  std::ifstream infile("mark_method_pip.txt"); //reads first txtfile
+
+  std::string line;
+  vector <double> run; 
+  vector <double> rate;
+  vector <double> lt;
+  vector <double> lt_err;
+
+  while (std::getline(infile, line)){
+
+    std::istringstream iss(line);
+    double a, b, c, d ;
+    if (!(iss >> a >> b >> c >> d ))
+      {
+           
+	break;
+           
+      } 
+       
+    run.push_back(a);
+    rate.push_back(b);
+    lt.push_back(c);
+    lt_err.push_back(d);
+
+  }
+
+  std::ifstream infile1("mark_method_pim.txt"); //reads first txtfile
+
+  std::string line1;
+  vector <double> run1; 
+  vector <double> rate1;
+  vector <double> lt1;
+  vector <double> lt_err1;
+
+  while (std::getline(infile1, line1)){
+
+    std::istringstream iss(line1);
+    double a1, b1, c1, d1 ;
+    if (!(iss >> a1 >> b1 >> c1 >> d1 ))
+      {
+           
+	break;
+           
+      } 
+       
+    run1.push_back(a1);
+    rate1.push_back(b1);
+    lt1.push_back(c1);
+    lt_err1.push_back(d1);
+
+  }
+
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
+  c1->Divide(1,1);
+  c1->cd(1);
+  auto mg = new TMultiGraph("mg","mg");
+  auto gr1 = new TGraphErrors(run.size(), &rate[0], &lt[0], 0, &lt_err[0]);
+  gr1->SetName("gr1");
+  gr1->SetMarkerStyle(22);
+  gr1->SetMarkerSize(1.4);
+  gr1->SetTitle("LT pip");
+  gr1->SetFillStyle(0);
+
+  auto gr2 = new TGraphErrors(run1.size(), &rate1[0], &lt1[0], 0, &lt_err1[0]);
+  gr2->SetName("gr2");
+  gr2->SetMarkerStyle(22);
+  gr2->SetMarkerSize(1.4);
+  gr2->SetTitle("LT pim");
+  gr2->SetLineColor(kRed);
+  gr2->SetMarkerColor(kRed);
+  gr2->SetFillStyle(0);
+  // gr2->Draw("AP");
+  
+  mg->Add(gr1);
+  mg->Add(gr2);
+  gr2->Draw("AP");
+
+  mg->SetTitle("Live Time; SHMS 3/4 Rate  ; Live Time");
+  c1->BuildLegend();
+  gPad->Modified();
+  gPad->Update();
+  mg->Draw("AP");
+ 
+ 
+  
+}
+
