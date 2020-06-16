@@ -1,0 +1,213 @@
+
+#define ROOT_header
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TVectorD.h"
+#include "TMatrixD.h"
+#include "TDecompLU.h"
+#include "TMath.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include <time.h>
+#include <vector>
+#include <string>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TSpectrum.h>
+#include <TPolyMarker.h>
+#include <TMath.h>
+#include <TSystem.h>
+#define NRUNS 11
+void livetime_peter_method(){
+
+
+  ofstream txtfile("peter_method.txt",ios::app);
+  txtfile<< "run" <<"\t"<<"rate"<<"\t"<<"edtrigacc"<<"\t"<<"edscaler"<<"\t"<<"f_curr"<<"\t"<<"LT"<<"\t"<<"LT_err"<<endl;
+
+  gROOT->SetBatch(kTRUE);
+
+  
+  Int_t runs[NRUNS]=   {6429, 6430, 6431, 6432, 6433, 6459, 6460, 6461, 6462, 6463, 6464 };
+  Int_t rate[NRUNS] = {522, 519, 518, 396, 267, 421, 423, 370, 327, 238, 242};
+
+
+  
+  gStyle->SetOptStat(111111);
+  gStyle->SetErrorX(0);
+
+  for(Int_t r=0; r<NRUNS; r++){
+
+    TString filename  = Form("/home/hdbhatt/Desktop/new_hcana_lt/tr_lt/ROOTfiles/coin_replay_production_%d_-1.root", runs[r]);
+
+    TFile *f = new TFile(filename, "READ");
+
+    //cout<< "Opening Run Num = "<< runs[r] <<endl; 
+    
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      //exit(-1);
+      continue;
+    }
+
+  
+    TTree * tt = (TTree *)f->Get("T");
+    TTree * ss = (TTree *)f->Get("TSP");
+    //TFile *ff = new TFile(Form("root/livetime_peter_method_%d.root", runs[r]),"RECREATE");   
+
+    double total_scaler1MHztime=0.;
+    double total_bcm1charge=0;
+    double total_ptrig6scaler=0;
+    double total_pedtmscaler=0;
+
+    double previous_scaler1MHztime =0;
+    double previous_bcmcharge =0;
+    double previous_ptrig6scaler=0;;
+    double previous_pedtmscaler=0;
+  
+    double total_scaler1MHztime_new=0;
+    double total_bcm1charge_new=0;
+    double total_ptrig6scaler_new=0;
+    double total_pedtmscaler_new=0;
+
+
+    TH1F *hcurrent = new TH1F("current","",100, -10, 100);
+    TH1F *hcurrent_bcmcut = new TH1F("hcurrent_bcmcut","",100, -10, 100);
+    TH1F *hcurrent_nobcmcut = new TH1F("hcurrent_nobcmcut","",100, -10, 100);
+
+    TH1F *hcharge = new TH1F("hcharge","",100, -10, 15000);
+    TH1F *hchargecut = new TH1F("hchargecut","",100, -10, 15000);
+
+    TH1F *htime = new TH1F("htime","",100, -1000, 5000);
+    TH1F *htimecut = new TH1F("htimecut","",100, -1000, 5000);
+
+    TH1F *hedtm_trig_gen = new TH1F("htriggen","",500, -1000, 100000);
+    TH1F *hedtm_trig_acc_all = new TH1F("htrigaccall","",500, 120, 250);
+    TH1F *hedtm_trig_acc_mult5 = new TH1F("htrigaccmult5","",500, 120, 250);
+    TH1F *hedtm_trig_acc_mult5plus = new TH1F("htrigaccmult5plus","",500, 120, 250);
+
+  
+
+    double data_eventnum,ngcer,pcaletottrack,pcaleprtrack,pcaletotnorm,pdelta,xptar,ytar,pdcntrack,eventtype,phodbetanotrack,phodgoodscinhit,pdctnhit,edtmtdctimeraw,ptrig6tdctimeraw,ptrig2tdctimeraw,pelcleantdctimeraw;
+
+    double scaler_eventnum,bcm1charge,bcm1current,scaler1MHztime,scaler1MHztimecut,bcm1chargecut,s1xscaler,s1yscaler,s2xscaler,s2yscaler,ptrig1scaler,ptrig2scaler,ptrig3scaler,ptrig4scaler,ptrig6scaler,pedtmscaler,pelcleanscaler,pl1acceptscaler,edtmtdctime, mult;
+
+    double  current_bcmcut, current_nobcmcut;
+    tt->SetBranchAddress("g.evnum",&data_eventnum);
+    tt->SetBranchAddress("P.cal.etottracknorm",&pcaletottrack);
+    tt->SetBranchAddress("P.cal.eprtracknorm",&pcaleprtrack);
+    tt->SetBranchAddress("g.evtyp", &eventtype);
+    tt->SetBranchAddress("T.coin.pEDTM_tdcTime",&edtmtdctime);
+    tt->SetBranchAddress("T.coin.pEDTM_tdcTimeRaw",&edtmtdctimeraw);
+    tt->SetBranchAddress("T.coin.pTRIG6_ROC2_tdcTimeRaw",&ptrig6tdctimeraw);
+    tt->SetBranchAddress("T.coin.pTRIG2_ROC2_tdcTimeRaw",&ptrig2tdctimeraw);
+    tt->SetBranchAddress("T.coin.pEL_CLEAN_ROC2_tdcTimeRaw",&pelcleantdctimeraw);
+    tt->SetBranchAddress("T.coin.pT2_tdcMultiplicity",&mult);
+
+
+    ss->SetBranchAddress("evNumber", &scaler_eventnum);
+    ss->SetBranchAddress("P.BCM1.scalerCharge", &bcm1charge);
+    ss->SetBranchAddress("P.BCM1.scalerCurrent", &bcm1current);
+    ss->SetBranchAddress("P.1MHz.scalerTime", &scaler1MHztime);
+    ss->SetBranchAddress("P.1MHz.scalerTimeCut",&scaler1MHztimecut);
+    ss->SetBranchAddress("P.BCM1.scalerChargeCut",&bcm1chargecut);
+    ss->SetBranchAddress("P.S1X.scaler", &s1xscaler);
+    ss->SetBranchAddress("P.S1Y.scaler", &s1yscaler);
+    ss->SetBranchAddress("P.S2X.scaler", &s2xscaler);
+    ss->SetBranchAddress("P.pTRIG3.scaler", &ptrig3scaler);
+    ss->SetBranchAddress("P.pTRIG4.scaler", &ptrig4scaler);
+    ss->SetBranchAddress("P.pTRIG6.scaler", &ptrig6scaler);
+    ss->SetBranchAddress("P.EDTM.scaler",&pedtmscaler);
+    ss->SetBranchAddress("P.pEL_CLEAN.scaler", &pelcleanscaler);
+    ss->SetBranchAddress("P.pL1ACCP.scaler",&pl1acceptscaler);
+ 
+
+    Long64_t nentriesD = tt->GetEntries();
+    //cout<<" Data entries = "<<nentriesD<<"  "<<endl;
+    Long64_t nscalerD = ss->GetEntries();
+    //cout<<" Scaler entries = "<<nscalerD<<"  "<<endl;
+
+  
+    for (int j = 0; j < nscalerD; j++){
+      ss->GetEntry(j);
+    
+      hcurrent->Fill(bcm1current);
+      hcharge->Fill(bcm1charge);
+      hchargecut->Fill(bcm1chargecut);
+      htime->Fill(scaler1MHztime);
+      htimecut->Fill(scaler1MHztimecut);
+      current_bcmcut = bcm1chargecut/scaler1MHztimecut;
+      current_nobcmcut = bcm1charge/scaler1MHztime;
+      hcurrent_bcmcut->Fill(current_bcmcut);
+      hcurrent_nobcmcut->Fill(current_nobcmcut);
+      hedtm_trig_gen->Fill(pedtmscaler);
+    }
+  
+  
+
+    Bool_t tdctime_cut;
+    
+   
+
+    for (int kk=0; kk<nentriesD;  kk++){
+      tt->GetEntry(kk);
+
+      
+      if (edtmtdctime != 0){
+	hedtm_trig_acc_all->Fill(edtmtdctime);	
+      }
+    }
+    
+
+    TCanvas * c1 = new TCanvas ("c1", "c1", 600, 400);
+    c1->Divide(2,1);
+ 
+    c1->cd(1);gPad->SetLogy();
+    hedtm_trig_acc_all->Draw();
+    hedtm_trig_acc_all->SetTitle(Form("Run Number: %d", runs[r]));
+    hedtm_trig_acc_all->GetXaxis()->SetTitle("T.coin.pEDTM_tdcTime");
+    hedtm_trig_acc_all->SetLineWidth(1);
+    hedtm_trig_acc_all->SetLineColor(kRed);
+
+
+   
+    c1->cd(2);gPad->SetLogy();
+    hedtm_trig_gen->Draw();
+    hedtm_trig_gen->SetTitle(Form("Run Number: %d", runs[r]));
+    hedtm_trig_gen->GetXaxis()->SetTitle("P.EDTM.scaler");
+    hedtm_trig_gen->SetLineWidth(1);
+    hedtm_trig_gen->SetLineColor(kRed);
+
+   
+    c1->SaveAs(Form("plot_%d.pdf",runs[r]));
+
+    double f_curr  = current_nobcmcut/ current_bcmcut;
+    double pedtmtrigacc_all = hedtm_trig_acc_all->GetEntries();
+   
+
+    double rmeas = pedtmtrigacc_all / pedtmscaler ;
+
+    double LT = (rmeas - ( 1.0 - f_curr ))/ f_curr;
+
+    double LT_err= LT * sqrt(1./pedtmtrigacc_all + 1/pedtmscaler);
+    // txtfile<< runs[r] <<"\t"<<rate[r]<<"\t"<<LT<<"\t"<<LT_err<<endl;
+
+    
+
+    txtfile<< runs[r] <<"\t"<<rate[r]<<"\t"<<pedtmtrigacc_all<<"\t"<<pedtmscaler<<"\t"<<f_curr<<"\t"<<LT<<"\t"<<LT_err<<endl;
+
+    cout<< runs[r] <<"\t"<<rate[r]<<"\t"<<pedtmtrigacc_all<<"\t"<<pedtmscaler<<"\t"<<f_curr<<"\t"<<LT<<"\t"<<LT_err<<endl;
+
+    
+    delete c1;
+    
+    //cout << " ======================================================== "<<endl;
+
+  }
+}
+
