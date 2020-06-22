@@ -1,0 +1,178 @@
+#define NRUNS 380//519
+void lt_mark_plus_6gev(){
+ 
+  ofstream txtfile("txtfile/lt_mark.txt",ios::app);
+  ofstream txtfile1("txtfile/lt_6gev.txt",ios::app);
+
+
+  Int_t rruns[NRUNS]= {
+    6307, 6308, 6309, 6310, 6311, 6312, 6317, 6318, 6322, 6323, 6325, 6326, 6327, 6328, 6329, 6339, 6340, 6341, 6342, 6343, 6344, 6345, 6346, 6347, 6348, 6349, 6350, 6351, 6352, 6353, 6354, 6359, 6360, 6363, 6364, 6365, 6367, 6368, 6370, 6371, 6372, 6373, 6374, 6375, 6376, 6377, 6378, 6379, 6380, 6381, 6382, 6383, 6385, 6386, 6387, 6388, 6389, 6390, 6391, 6393, 6394, 6395, 6396, 6397, 6398, 6399, 6400, 6401, 6402, 6403, 6404, 6405, 6406, 6407, 6408, 6410, 6411, 6412, 6413, 6415, 6416, 6417, 6419, 6421, 6422, 6423, 6425, 6426, 6427, 6428, 6429, 6430, 6431, 6432, 6433, 6434, 6435, 6436, 6439, 6440, 6441, 6442, 6443, 6444, 6445, 6446, 6447, 6448, 6451, 6452, 6453, 6454, 6455, 6456, 6459, 6460, 6461, 6462, 6463, 6464, 6465, 6466, 6467, 6468, 6469, 6470, 6471, 6472, 6473, 6474, 6475, 6476, 6477, 6478, 6479, 6482, 6483, 6484, 6485, 6486, 6487, 6488, 6489, 6490, 6491, 6493, 6494, 6495, 6496, 6497, 6498, 6499, 6500, 6501, 6502, 6503, 6504, 6506, 6507, 6509, 6510, 6512, 6513, 6514, 6515, 6516, 6517, 6518, 6519, 6520, 6521, 6522, 6523, 6524, 6525, 6526, 6527, 6528, 6529, 6531, 6532, 6533, 6534, 6535, 6536, 6537, 6538, 6539, 6541, 6542, 6543, 6544, 6545, 6546, 6547, 6548, 6549, 6550, 6551, 6552, 7593, 7594, 7595, 7596, 7597, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7608, 7609, 7610, 7611, 7612, 7613, 7614, 7615, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7625, 7626, 7627, 7628, 7629, 7630, 7631, 7632, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, 7646, 7647, 7648, 7649, 7650, 7651, 7652, 7654, 7655, 7657, 7658, 7659, 7660, 7661, 7662, 7663, 7666, 7667, 7668, 7669, 7670, 7671, 7672, 7673, 7674, 7675, 7676, 7677, 7678, 7679, 7680, 7681, 7682, 7684, 7685, 7686, 7687, 7688, 7689, 7690, 7692, 7694, 7695, 7697, 7698, 7699, 7702, 7703, 7706, 7707, 7708, 7709, 7710, 7711, 7712, 7713, 7714, 7715, 7716, 7717, 7718, 7719, 7720, 7721, 7722, 7724, 7725, 7727, 7728, 7735, 7736, 7737, 7738, 7739, 7740, 7747, 7748, 7749, 7750, 7751, 7752, 7757, 7758, 7759, 7760, 7762, 7768, 7769, 7770, 7771, 7772, 7773, 7774, 7775, 7776, 7777, 7783, 7784, 7785, 7786, 7787, 7790, 7791, 7792, 7793, 7794, 7796, 7797, 7798, 7799, 7800, 7801, 7802, 7803, 7804, 7805, 7806, 7807, 7808, 7809, 7811, 7812, 7813, 7814, 7815, 7816, 7817, 7819, 7820 };
+ 
+  for (int i=0;i<NRUNS;i++){
+    TString filename = Form("/home/hdbhatt/Desktop/new_hcana_lt/tr_lt/all_ROOTfiles/coin_replay_production_%d_-1.root",rruns[i]);
+    TFile *f = new TFile(filename, "READ");
+    //cout<< "Opening Run Num = "<<rruns[i] <<endl; 
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      //exit(-1);
+      continue;
+    }
+
+    
+    TTree *tdata = (TTree*) f->Get("T");
+    TTree *tscal = (TTree*) f->Get("TSP");
+    double setCur;
+    double th_current = 3.; //3 uA
+    double prev_trig6=0.;
+    double tot_trig6=0.;
+    double total_ptrig6_cut=0.;
+
+    //===========SCALER==============
+
+    double evNum;
+    double bcm1;
+    double pTRIG6;
+    double pEDTM;
+
+    TH1F *hcurrent = new TH1F("current","",1000, 4, 80);
+
+    double pden1=0;
+    double pden2=0;
+    
+
+    tscal->SetBranchAddress("evNumber", &evNum);
+    tscal->SetBranchAddress("P.BCM1.scalerCurrent", &bcm1);
+    tscal->SetBranchAddress("P.pTRIG6.scaler", &pTRIG6);
+    tscal->SetBranchAddress("P.EDTM.scaler",&pEDTM);
+
+    const int  tscal_entries =tscal->GetEntries();
+    int ev_flag[tscal_entries];
+    int scal_evt_num[tscal_entries];
+    double dden1[tscal_entries];
+    double den1[tscal_entries];
+    double dden2[tscal_entries];
+    double den2[tscal_entries];
+
+
+    
+    for (int j = 0; j < tscal_entries; j++){ 
+      tscal->GetEntry(j);
+      hcurrent->Fill(bcm1);
+    }
+    setCur = hcurrent->GetBinCenter(hcurrent->GetMaximumBin());
+
+    for (int i = 0; i < tscal_entries; i++){ 
+      tscal->GetEntry(i);
+      ev_flag[i] = 0;
+      scal_evt_num[i] = evNum;
+      tot_trig6=pTRIG6;
+      if(abs(setCur - bcm1) < th_current){
+	// if(bcm1 > th_current){
+	ev_flag[i] = 1; // turn the flag on
+	total_ptrig6_cut = total_ptrig6_cut + (pTRIG6-prev_trig6);
+      }
+      prev_trig6 = pTRIG6;
+    }
+
+    //===============6GeV-Done
+    //Mark
+    for (int i = 0; i < tscal_entries; i++){
+      tscal->GetEntry(i);
+      den1[i] =  pTRIG6;
+      den2[i] =  pEDTM;
+
+      // cout<<   den1[i] << " " <<  den2[i]<<endl;
+    }
+    dden1[0] = den1[0];
+    dden2[0] = den2[0];
+    
+    for (int i = 0; i < tscal_entries; i++){ 
+      tscal->GetEntry(i);
+      ev_flag[i] = 0;
+
+      if( i > 0){
+	dden1[i] =  den1[i] - den1[i-1];//diff betwen two scaler reads
+	dden2[i] =  den2[i] - den2[i-1];
+ 
+      }
+      if(abs(setCur - bcm1) < th_current){
+	// if((setCur/bcm1current) > 0.90){//============================cur/peak_cur >0.9
+	// if( bcm1current > th_current){//you can just use cur > 5uA
+
+	
+	ev_flag[i] = 1;
+	//hcurrent_thcut->Fill(bcm1current);
+
+	pden1 = pden1 + dden1[i];//keep on adding the difference between scalar reads
+	pden2 = pden2 + dden2[i];
+      }
+
+    } 
+    
+    //===========SCALER-END==========
+
+
+    //===========DATA=============
+
+    double evtyp;
+    double evNum_data;
+    double ptrig6_data;    
+    double edtmtdctimeraw;
+
+    tdata->SetBranchAddress("g.evtyp", &evtyp);
+    tdata->SetBranchAddress("g.evnum", &evNum_data);
+    tdata->SetBranchAddress("T.coin.pTRIG6_ROC2_tdcTimeRaw",&ptrig6_data);
+    tdata->SetBranchAddress("T.coin.pEDTM_tdcTimeRaw",&edtmtdctimeraw);
+
+    double acc_trig6_cut = 0.;
+    double nEDTM = 0.;
+    double good_Ev = 0.;
+
+    int scal = 0;   //scaler read counter
+    const int  tdata_entries =tdata->GetEntries();
+ 
+    for (int j = 0; j < tdata_entries; j++){
+      tdata->GetEntry(j);
+      if(ev_flag[scal]==1){
+	if(ptrig6_data> 0.&&evtyp>3){
+
+	  acc_trig6_cut++;//count the accepted ptrig6 events
+	}
+
+	if(evtyp >3){
+	  good_Ev++;
+	}
+	if(edtmtdctimeraw >0){
+	  nEDTM++;
+	}
+      }//end bcm flag
+
+      //cout << evNum_data <<"   "<< scal_evt_num[scal] << "   "<<scal << endl;
+      if(evNum_data ==  scal_evt_num[scal]){
+	scal++;    
+      }
+    } //end event entry loop
+
+    //============DATA-END==========
+    
+    double comp_lt_6gev = acc_trig6_cut / total_ptrig6_cut;    
+    // double comp_lt_error =  TMath::Sqrt(acc_trig6_cut) / total_ptrig6_cut;//carlos
+    double comp_lt_6gev_err =  comp_lt_6gev * TMath::Sqrt(1/acc_trig6_cut + 1/total_ptrig6_cut);
+
+    double Mark_numer = good_Ev - nEDTM;
+    double Mark_denom = pden1 - pden2;
+    double Mark_LT =Mark_numer/Mark_denom;
+    double Mark_LT_err = Mark_LT *sqrt(1/Mark_numer  + 1/Mark_denom);
+
+    // cout <<rruns[i]<<"\t"<<  good_Ev << "\t"<< nEDTM <<"\t"<< pden1 <<"\t"<< pden2 <<"\t"<< Mark_numer <<"\t"<< Mark_denom <<"\t"<<  Mark_LT <<"\t"<< Mark_LT_err << endl;
+
+    cout<<"Mark = "<<rruns[i]<<"\t\t"<<Mark_numer<<"\t\t"<<Mark_denom<<"\t\t"<<Mark_LT<<"\t\t"<< Mark_LT_err << endl;
+
+    cout<<"6GeV = "<<rruns[i]<<"\t\t"<<acc_trig6_cut<<"\t\t"<<total_ptrig6_cut<<"\t\t"<<comp_lt_6gev<<"\t\t"<<comp_lt_6gev_err << endl;
+
+    txtfile<<rruns[i]<<"\t\t"<<Mark_numer<<"\t\t"<<Mark_denom<<"\t\t"<<Mark_LT<<"\t\t"<< Mark_LT_err << endl;
+
+    txtfile1<<rruns[i]<<"\t\t"<<acc_trig6_cut<<"\t\t"<<total_ptrig6_cut<<"\t\t"<<comp_lt_6gev<<"\t\t"<<comp_lt_6gev_err << endl;
+
+  }
+}
