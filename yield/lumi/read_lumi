@@ -1,0 +1,98 @@
+//This is working all
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void read_lumi_trlt_pip()
+{
+  //std::ifstream infile("singles.txt"); //reads first txtfile
+  std::ifstream infile("txtfile/lumi_trltcorr_pip.txt"); //reads first txtfile
+
+  std::string line;// read line by line
+  vector <int> run; // define the following quantities which are actually the columns in the shms_eff.txt file, specify which is of int or float or double type
+  vector <double> current;
+  vector <double> rate;
+  vector <double> bare_yield;
+    vector <double> lt_yield;
+
+   vector <double> yield;
+
+  vector <double> yield_err;
+
+  while (std::getline(infile, line))//while loop to read all the lines , getline is to read all line of the txt file which is stored as infile, and reading all the lines
+    {
+      std::istringstream iss(line);// to read the whole strings in a line
+      double a, b, c, d, e, f, g;// define eun by a, did by b, should by c, eff by d and eff_err by e
+      if (!(iss >> a >> b >> c >> d >> e >> f >>g)) // if it could not fine a, b, c, d, e, then not to proceed, so there must be 5 columns in this case.
+	  {
+            
+	    break; 
+            
+	  } // error
+        
+      run.push_back(a);//now run is stored in a
+      current.push_back(b);//did is stored in b
+      rate.push_back(c);//should is stored as c
+      bare_yield.push_back(d);//eff err = e
+      lt_yield.push_back(e);//eff err = e
+      yield.push_back(f);//eff err = e
+      yield_err.push_back(g);//eff err = e
+
+
+    }
+
+  
+  for (int i =0; i< run.size(); i++)// for cout you have to have elements equal to in one column or column with maximum elements 
+    {
+      cout <<  run[i]<<endl;//you have to cout each elements , so need i
+      cout<<  yield_err[i]<<endl;
+    }
+  TCanvas *c1 = new TCanvas("c1", "c1", 1600, 1200);
+  c1->Divide(1,1);
+  c1->cd(1);
+   auto gr = new TGraphErrors(run.size(), &rate[0], &yield[0],  0, &yield_err[0]);// you are including Graph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+  gr->Draw("ap");
+  gr->SetMarkerColor(kRed);
+  gr->SetLineColor(kRed);
+
+  gr->SetMarkerStyle(21);
+  gr->GetXaxis()->SetTitle("3/4 Rate (kHz)");
+  gr->GetYaxis()->SetTitle("Tr_LT_corrected Yield (counts/mC)");
+  gr->SaveAs("pdf/lumi_trlt_corr_pim.pdf");
+
+  gr->SetTitle("Charge Normalized Yield vs SHMS 3/4 Rate, Pi+ (TrEff_LT_Corr)");
+  gr->GetXaxis()->CenterTitle();
+  gr->GetYaxis()->CenterTitle();
+  gr->SetLineWidth(3);
+  gr->GetXaxis()->SetLimits(240, 550);//pip
+  gr->GetYaxis()->SetRangeUser(175, 205);//pip
+  // gr->GetXaxis()->SetLimits(235, 425);//pim
+  //gr->GetYaxis()->SetRangeUser(100, 130);//pim
+
+
+  
+   TCanvas *c2 = new TCanvas("c2", "c2", 1600, 1200);
+  c2->Divide(1,1);
+  c2->cd(1);
+   auto gr1 = new TGraphErrors(run.size(), &current[0], &yield[0],  0, &yield_err[0]);// you are including Gr1aph with Error, first one is to set points equal to size of first column, u can keep any columns, the x axis quantities, beginning from first number[0], y axis quantities[0], error along xaxis quantity = 0, if no error is defined, error in y axis quantities[0]
+  gr1->Draw("ap");
+  gr1->SetMarkerColor(kRed);
+  gr1->SetLineColor(kRed);
+
+  gr1->SetMarkerStyle(21);
+  gr1->GetXaxis()->SetTitle("BCM1 Current (uA)");
+  gr1->GetYaxis()->SetTitle("Tr_LT_corrected Yield (counts/mC)");
+  gr1->SaveAs("pdf/lumi_trlt_corr_pos.pdf");
+  gr1->GetXaxis()->SetLimits(18, 42);//pip
+  gr1->GetYaxis()->SetRangeUser(175, 205);//pip
+  // gr1->GetXaxis()->SetLimits(32, 65);//pim
+  //gr1->GetYaxis()->SetRangeUser(100, 130);//pim
+
+
+  gr1->SetTitle("Charge Normalized Yield vs Current, Pi+ (TrEff_LT_Corr)");
+  gr1->GetXaxis()->CenterTitle();
+  gr1->GetYaxis()->CenterTitle();
+  gr1->SetLineWidth(3);
+  
+  
+}
