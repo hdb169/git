@@ -61,7 +61,7 @@ void a(){
 
       }
   }
-  if (!(h_zpip->GetSumw2N() > 0)) h_zpip->Sumw2(kTRUE);
+//  if (!(h_zpip->GetSumw2N() > 0)) h_zpip->Sumw2(kTRUE);
 
   
   for (int ll=0; ll<nentries2; ll++){
@@ -87,7 +87,7 @@ void a(){
 
       }
   }
-  if (!(h_zpim->GetSumw2N() > 0)) h_zpim->Sumw2(kTRUE);
+  //if (!(h_zpim->GetSumw2N() > 0)) h_zpim->Sumw2(kTRUE);
 
   c1->Divide(2,2);
   c1->cd(1);
