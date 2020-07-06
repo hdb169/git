@@ -1,0 +1,135 @@
+void a(){
+  gStyle->SetOptStat(0);
+  gStyle->SetErrorX(0);
+  
+  TChain *t1 = new TChain("h666");
+  t1->Add("/home/hdbhatt/Desktop/data_simc/ROOTfiles/pip_x50_z60_7671.root");
+    
+  TChain *t2 = new TChain("h666");
+  t2->Add("/home/hdbhatt/Desktop/data_simc/ROOTfiles/pim_x50_z60_7671.root");
+
+   // TFile *f2 = new TFile("/w/hallc-scifs17exp/c-sidis18/hdbhatt/DATA_vs_SIMC/csv/recreate_ld2_17_pim.root", "RECREATE");     
+  int nentries1 = t1->GetEntries();
+  cout<< "piplus Simc Entries:\t"<<nentries1<<endl;
+
+  int nentries2 = t2->GetEntries();
+  cout<< "piminus Simc Entries:\t"<<nentries2<<endl;
+  double normwtp,normwtm,xbjp,xbjm,hdeltap,pdeltap,wtp,nxbhm,hdeltam,pdeltam,wtm,z;
+
+
+
+  TH1D *h_xp = new TH1D("h_xp",    "X_bj_piplus" ,5, 0.0,1.0);
+  TH1D *h_xm = new TH1D("h_xm",    "X_bj_piminus" ,5, 0.0,1.0);
+  TH1D *h_pdeltap = new TH1D("s_pdeltap","SHMS DELTA (%)",5,-10,20);   
+  TH1D *h_pdeltam = new TH1D("s_pdeltam","SHMS DELTA (%)",5,-10,20); 
+  TH1D *h_pip_pim = new TH1D("h_pip_pim",   "X_Ratio_Pi+_Pi-" ,5, 0.0,1.0);
+  TH1D *h_del_ratio = new TH1D("h_del_ratio",   "Delta_of_pi+_divide_Delta_of_pi-" ,5, -10,20);
+  TH1D *h_zpip = new TH1D("h_zpip",    "Z_piplus" ,10, 0.0,1.0);
+  TH1D *h_zpim = new TH1D("h_zpim",    "Z_piminus" ,10, 0.0,1.0);
+  TH1D *h_zpip_div_pim = new TH1D("h_zpip+div_pim",    "Z_pip_div_pim" ,10, 0.0,1.0);
+
+
+  TH2D *h_x_delp = new TH2D("h_x_delp","x_vs_delta_pi+",5,-10,20,5,0.0,1.0);
+  TH2D *h_x_delm = new TH2D("h_x_delm","x_vs_delta_piminus",5,-10,20,5,0.0,1.0);
+  TH2D *h_ratio = new TH2D("h_ratio","xvsdelta+_vs_xvsdelta- ",5,-10,20,5,0.0,1.0);
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1500,1500);
+  // TCanvas *c2 = new TCanvas("c2", "c2", 1500,1500);
+
+
+  for (int kk=0; kk<nentries1; kk++){
+    t1->GetEntry(kk);
+    if (kk % 50000 == 0) cout << kk*1000/nentries1 << "   % of simc done" << endl; 
+
+    xbjp = t1->GetLeaf("xbj")->GetValue();
+    hdeltap = t1->GetLeaf("hsdelta")->GetValue();
+    pdeltap = t1->GetLeaf("ssdelta")->GetValue();
+    wtp = t1->GetLeaf("Weight")->GetValue();
+
+    Double_t normfac_pip = 0.120083E+12;  //pip7671 
+    Double_t simcfactor_pip = normfac_pip/500000; 
+    normwtp = wtp*simcfactor_pip;
+
+
+    if (hdeltap >- 10 && hdeltap < 10 && pdeltap > -10 && pdeltap < 20)
+      {
+  	h_xp->Fill(xbjp,normwtp);
+  	h_pdeltap->Fill(pdeltap,normwtp); 
+	h_x_delp->Fill(pdeltap,xbjp,normwtp);
+		h_zpip->Fill(z,normwtp);
+	//	h_zpip->Fill(z);
+
+      }
+  }
+  if (!(h_zpip->GetSumw2N() > 0)) h_zpip->Sumw2(kTRUE);
+
+  
+  for (int ll=0; ll<nentries2; ll++){
+    t2->GetEntry(ll);
+    if (ll % 50000 == 0) cout << ll*1000/nentries2 << "   % of simc done" << endl; 
+
+    xbjm = t2->GetLeaf("xbj")->GetValue();
+    hdeltam = t2->GetLeaf("hsdelta")->GetValue();
+    pdeltam = t2->GetLeaf("ssdelta")->GetValue();
+    wtm = t2->GetLeaf("Weight")->GetValue();
+    Double_t normfac_pim =0.120200E+12;   //pim7671
+    Double_t simcfactor_pim = normfac_pim/500000; 
+    normwtm = wtm*simcfactor_pim;
+
+
+    if (hdeltam > -10 && hdeltam < 10 && pdeltam > -10 && pdeltam < 20)
+      {
+  	h_xm->Fill(xbjm,normwtm);
+  	h_pdeltam->Fill(pdeltam,normwtm);
+	h_x_delm->Fill(pdeltam,xbjm,normwtm);
+		h_zpim->Fill(z,normwtm);
+	//h_zpim->Fill(z);
+
+      }
+  }
+  if (!(h_zpim->GetSumw2N() > 0)) h_zpim->Sumw2(kTRUE);
+
+  c1->Divide(2,2);
+  c1->cd(1);
+  // h_del_ratio->Divide(h_pdeltap,h_pdeltam);
+  // h_del_ratio->GetYaxis()->SetRangeUser(1,2);
+  // //h_del_ratio->Draw();
+  // h_del_ratio->SetMarkerStyle(21);
+  // h_del_ratio->SetMarkerColor(kRed);
+  // h_del_ratio->SetLineColor(kRed);
+
+  h_zpip_div_pim->Divide(h_zpip, h_zpim);
+  h_zpip_div_pim->Draw("p, e1");
+  h_zpip_div_pim->SetLineColor(kBlue);
+  h_zpip_div_pim->SetMarkerStyle(21);
+
+  c1->cd(2);
+  h_zpip->Draw("p, e1");
+  h_zpip->SetMarkerStyle(21);
+
+  c1->cd(3);
+  h_zpim->Draw("p, e1");
+  h_zpim->SetMarkerStyle(21);
+
+  // h_z_pip_div_pim->Draw("APL")
+
+  // c1->Divide(3,2);
+  // c1->cd(1);
+  // h_xp->Draw("p e1");
+  // c1->cd(2);
+  // h_xm->Draw("p e1");
+  // c1->cd(3);
+  // h_x_delp->Draw("");
+  // c1->cd(4);
+  // h_x_delm->Draw("");
+  // c1->cd(5);
+  //  h_pip_pim->Divide(h_xp,h_xm);
+  //h_pip_pim->Draw();
+  // c1->cd(6);
+  // h_ratio->Divide(h_x_delp,h_x_delm);
+  // h_ratio->Draw("");
+  // c1->cd(7);
+  // h-pip_pim_del->Divide(h_ratio,h_pdeltap);
+
+
+}
