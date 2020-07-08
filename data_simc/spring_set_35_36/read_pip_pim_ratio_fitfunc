@@ -1,0 +1,259 @@
+#define ROOT_header
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TVectorD.h"
+#include "TMatrixD.h"
+#include "TDecompLU.h"
+#include "TMath.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include <time.h>
+#include <vector>
+#include <string>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TSpectrum.h>
+#include <TPolyMarker.h>
+#include <TMath.h>
+#include <TSystem.h>
+#include <sstream>
+#include <string>
+#include <fstream>
+
+void read()
+{
+  double z[100];
+  double R_D[100];
+  double ratio_fit[100];
+
+  
+  
+  std::ifstream infile("piplus.txt"); 
+  std::string line;
+  vector <int> run;
+  vector <double> zpip;
+  vector <double> yieldpip;
+  vector <double> yieldpip_err1;
+  vector <double> yieldpip_err2;
+
+  while (std::getline(infile, line))
+    {
+      std::istringstream iss(line);
+      double a, b, c, d, e ;
+      if (!(iss >> a >> b >> c >>d >>e  )) 
+        {
+           
+	  break;
+           
+        } // error
+       
+      run.push_back(a);
+      zpip.push_back(b);
+      yieldpip.push_back(c);
+      yieldpip_err1.push_back(d);
+      yieldpip_err2.push_back(e);
+
+
+    }
+  cout<< "I am good"<<endl;
+ 
+  for (int i =0; i< run.size(); i++)
+    {
+      cout<<"1="<< run[i] <<endl;
+    
+    }
+  cout<< "I am good"<<endl;
+  //====================================
+
+  std::ifstream infile2("piminus.txt"); 
+
+  std::string line2;
+  vector <double> run2;
+  vector <double> zpim;
+  vector <double> yieldpim;
+  vector <double> yieldpim_err1;
+  vector <double> yieldpim_err2;
+
+
+  while (std::getline(infile2, line2))
+    {
+      std::istringstream iss(line2);
+      double a2, b2, c2, d2, e2;
+      if (!(iss >> a2>> b2 >>c2 >>d2 >>e2 )) 
+        {
+           
+	  break;
+           
+        } // error
+       
+      run2.push_back(a2);
+      zpim.push_back(b2);
+      yieldpim.push_back(c2);
+      yieldpim_err1.push_back(d2);
+      yieldpim_err2.push_back(e2);
+
+
+    }
+
+  for (int i =0; i< run2.size(); i++)
+    {
+      cout<< "2 "<< run2[i] <<endl;
+     
+    }
+  cout<< "I am good ok"<<endl;
+
+  
+
+  std::ifstream infile3("ratio.txt"); 
+
+  std::string line3;
+  vector <double> run3;
+  vector <double> zratio;
+  vector <double> ratio;
+  vector <double> ratio_err;
+
+
+  while (std::getline(infile3, line3))
+    {
+      std::istringstream iss(line3);
+      double a3, b3, c3, d3;
+      if (!(iss >> a3>> b3 >>c3 >>d3 ))
+        {
+           
+	  break;
+           
+        } // error
+       
+      run3.push_back(a3);
+      zratio.push_back(b3);
+      ratio.push_back(c3);
+      ratio_err.push_back(d3);
+
+
+    }
+
+  for (int i =0; i< run3.size(); i++)
+    {
+      cout<< run3[i] <<endl;
+     
+    }
+  cout<< "I am good"<<endl;
+  //fit func
+  for (int i = 0; i < 100; i++)//taking all int numbers from 0 t0 1
+    {
+      z[i] = i/100.0;//made each number 0.1, 0.2, 0.3, ..
+
+      R_D[i] = pow((1.0-z[i]),0.083583)/pow((1.0+z[i]),1.9838);//Rd
+
+      ratio_fit[i]= (R_D[i]+4)/ (4*R_D[i]+1);//pi+/pi-
+      // cout << z[i]<< endl;
+
+      // rd_ratio[i] = (4 - ratio [i]) / (ratio[i] - 1);//Rd_measured (4-R)/(R-1)
+
+
+    }
+
+
+  
+  
+    TCanvas *c1 = new TCanvas ("c1", "c1", 800, 500);
+    c1->Divide(1,1);
+    c1->cd(1);
+    auto gr = new TGraphErrors(run.size(), &zpip[0], &yieldpip[0], 0, &yieldpip_err1[0]);
+    gr->Draw("ap");
+    gr->SetMarkerColor(kBlue);
+    gr->SetLineColor(kBlue);
+    gr->SetLineWidth(2);
+    gr->SetMarkerStyle(21);
+    gr->GetXaxis()->SetTitle("z_hadron");
+    gr->GetYaxis()->SetTitle("piplus yield");
+    gr->SetTitle("piplus yield for x = 0.5, z = 0.6, 0.5, 0.4");
+    gr->SaveAs("yield_piplus.pdf");
+    //r->GetYaxis()->SetRangeUser(0.98,1);
+    gr->SetTitle("");
+    gr->GetXaxis()->CenterTitle();
+    gr->GetYaxis()->CenterTitle();
+    //gr->GetYaxis()->SetRangeUser(0.85,1.0);
+  
+    TCanvas *c2 = new TCanvas ("c2", "c2", 800, 500);
+    c2->Divide(1,1);
+    c2->cd(1);
+    auto gr1 = new TGraphErrors(run2.size(), &zpim[0], &yieldpim[0], 0, &yieldpim_err1[0]);
+    gr1->Draw("AP");
+    gr1->SetMarkerColor(kBlack);
+    gr1->SetLineColor(kBlack);
+    gr1->SetLineWidth(2);
+    gr1->SetMarkerStyle(21);
+    gr1->GetXaxis()->SetTitle("z_hadron");
+    gr1->GetYaxis()->SetTitle("piminus yield");
+    gr1->SetTitle("piminus yield for x = 0.5, z = 0.6, 0.5, 0.4");
+    gr1->SaveAs("yield_piminus.pdf");
+  
+    //r->GetYaxis()->SetRangeUser(0.98,1);
+    gr1->SetTitle("");
+    gr1->GetXaxis()->CenterTitle();
+    gr1->GetYaxis()->CenterTitle();
+    //gr1->GetYaxis()->SetRangeUser(0.85,1.0);
+
+   
+  TCanvas *c3 = new TCanvas ("c3", "c3", 800, 500);
+  c3->cd();gPad->SetGridx();gPad->SetGridy();
+   
+  auto mg = new TMultiGraph();
+ 
+  //auto *gr3 = new TGraphErrors(100, &z[0], &ratio_fit[0], 0, 0);//to plot Yield ratio
+
+
+
+   
+ 
+  auto gr2 = new TGraphErrors(run2.size(), &zratio[0], &ratio[0], 0, &ratio_err[0]);
+  // gr2->Draw("AP");
+  gr2->SetMarkerColor(kBlack);
+  gr2->SetLineColor(kBlack);
+  gr2->SetLineWidth(2);
+  gr2->SetMarkerStyle(21);
+  gr2->GetXaxis()->SetTitle("Z_hadron");
+  gr2->GetYaxis()->SetTitle("Pi+/Pi- Yield Ratio");
+  gr2->SetTitle("Pi + Pi- Yield Ratio for x = 0.5, z = 0.6, 0.5, 0.4");
+  // gr2->GetYaxis()->SetRangeUser(1.5, 1.9);
+  gr2->GetYaxis()->SetRangeUser(0., 2);
+  gr2->GetXaxis()->CenterTitle();
+  gr2->GetYaxis()->CenterTitle();
+  gr2->GetXaxis()->SetLimits(0.35, 0.7);
+  gr2->SetName("gr2");
+  mg->Add(gr2);
+
+  auto *gr3 = new TGraph(100, z, ratio_fit);//to plot Yield ratio
+
+  
+  //gr3->Draw("same");
+  //gr2->Draw("");
+  //gr3->Draw("");
+ 
+  mg->Add(gr3);
+  mg->Draw("ap");
+  gr3->SetMarkerSize(1);
+  gr3->SetMarkerColor(kRed);
+  gr3->SetMarkerStyle(22);
+  gr3->GetXaxis()->SetLimits(0.35, 0.7);
+  gr3->SetName("gr3");
+  mg->GetXaxis()->SetLimits(0.35, 0.7);
+  mg->GetYaxis()->SetRangeUser(1., 2);
+
+  mg->GetXaxis()->SetTitle("Z_hadron");
+  mg->GetYaxis()->SetTitle("Pi+/Pi- Yield Ratio");
+  mg->SetTitle("Pi+ / Pi- Yield Ratio for x = 0.5, z = 0.6, 0.5, 0.4");
+  mg->GetXaxis()->CenterTitle();
+  mg->GetYaxis()->CenterTitle();
+  // gr3->Draw("same");
+  gPad->Update();
+  mg->SaveAs("yield_ratio_data.pdf");
+
+}
