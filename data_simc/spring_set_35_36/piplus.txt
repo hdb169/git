@@ -1,0 +1,4 @@
+7699	0.6	105.10	0.69	2.33
+7706	0.5	104.40	0.64	2.10
+7716	0.4	99.86	  0.66	2.03
+Run   z   yield Err_with_datacts Error_with_data_dummy_cts
