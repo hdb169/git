@@ -96,9 +96,9 @@ void shms_yield_final(){
   Double_t  Scal_EDTM;
   ss->SetBranchAddress("P.EDTM.scaler",&Scal_EDTM);
   Double_t  Scal_hEL_CLEAN;
-  ss->SetBranchAddress("P.hEL_CLEAN.scaler",&Scal_hEL_CLEAN);
+  ss->SetBranchAddress("P.pEL_CLEAN.scaler",&Scal_hEL_CLEAN);
   Double_t  Scal_hEL_REAL;
-  ss->SetBranchAddress("P.hEL_REAL.scaler",&Scal_hEL_REAL);
+  ss->SetBranchAddress("P.pEL_REAL.scaler",&Scal_hEL_REAL);
   Double_t  Scal_TRIG2;
   ss->SetBranchAddress("P.pTRIG2.scaler",&Scal_TRIG2);
   Double_t  Scal_TRIG3;
