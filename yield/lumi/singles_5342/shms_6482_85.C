@@ -1,7 +1,3 @@
-//This is for 6482-85, shms singles runs. Additional Correction for elt (1-pTRIG1_Rate*50e-9) 
-//was applied, which reduces the slope for data yield from 22% per 100 uC to 16 %per 100 uA.
-//But Elreal yield slope goes to 1%per 100 uC from 6% per 100 uA. But still higher yield for elcean trigger i.e. 9% from 15.6 per 100 uA.
-//still Need to undrstand more. 
 #include <TSystem.h>
 #include <TString.h>
 #include "TFile.h"
@@ -34,17 +30,24 @@ ofstream txtfile("txtfile_shms/shms_all.txt");
 ofstream txtfile1("txtfile_shms/shms_livetime_comp.txt");//,ios::app to rewrite at the end of file
 ofstream txtfile2("txtfile_shms/shms_livetime_edtm.txt");
 ofstream txtfile3("txtfile_shms/shms_tracking_eff_pid.txt");
-ofstream txtfile4("txtfile_shms/shms_yield_track_clt.txt");
 ofstream txtfile5("txtfile_shms/shms_yield_track_edtmlt.txt");
 ofstream txtfile6("txtfile_shms/shms_current_cut.txt");
-ofstream txtfile7("txtfile_shms/shms_yield_elreal.txt");
-ofstream txtfile8("txtfile_shms/shms_yield_elclean.txt");
+
+//good
+ofstream txtfile4("txtfile_shms/shms_yield_track_clt_elt.txt");
+ofstream txtfile7("txtfile_shms/shms_yield_elreal_elt.txt");
+ofstream txtfile8("txtfile_shms/shms_yield_elclean_elt.txt");
+
+ofstream txtfile9("txtfile_shms/shms_yield_track_clt.txt");
+ofstream txtfile10("txtfile_shms/shms_yield_elreal.txt");
+ofstream txtfile11("txtfile_shms/shms_yield_elclean.txt");
 
 
-void shms_6482_85(){
-  //Int_t runs[NRUNS] = {5347, 5348, 5349, 5350};
-  Int_t runs[NRUNS] = {6482, 6483, 6484, 6485};
-  Int_t ps[NRUNS] = {513, 513, 257, 257};
+
+void shms_D2_5347_50(){
+  Int_t runs[NRUNS] = {5347, 5348, 5349, 5350};
+  // Int_t runs[NRUNS] = {6482, 6483, 6484, 6485};
+  Int_t ps[NRUNS] = {1, 1, 1, 1};
 
   for (int r=0; r< NRUNS; r++){
     TString filename = Form("/home/hdbhatt/Desktop/lumi/marklumi/ROOTfiles_bcm_flag_edtm/coin_replay_production_%d_-1.root", runs[r]);
@@ -369,7 +372,7 @@ void shms_6482_85(){
     Double_t good_counts_track = h_good_counts_track->Integral();//delta and ntrack>0 & cal, cer
 
 
-    Double_t comp_lt = good_evts*ps[r]/(tot_scal_cut_TRIG1) ;//Trig2 for peter, trig1 for 6482 
+    Double_t comp_lt = good_evts*ps[r]/(tot_scal_cut_TRIG2) ;//Trig2 for peter, trig1 for 6482 
     Double_t comp_lt_err = comp_lt * sqrt(1./good_evts) ;
 
     Double_t edtm_lt = nEDTM/tot_scal_cut_EDTM;
@@ -399,7 +402,7 @@ void shms_6482_85(){
     //Rate
     Double_t Elclean_Rate = tot_scal_cut_hEL_CLEAN/(tot_scal_cut_time*1000);
     Double_t Elreal_Rate = tot_scal_cut_hEL_REAL/(tot_scal_cut_time*1000);
-    Double_t PTRIG1_Rate = tot_scal_cut_TRIG1/(tot_scal_cut_time*1000);
+    Double_t PTRIG2_Rate = tot_scal_cut_TRIG2/(tot_scal_cut_time*1000);
     Double_t hgcer_trig_rate =  tot_scal_cut_pHGCER/(tot_scal_cut_time*1000);//kHz
 
 
@@ -468,22 +471,27 @@ void shms_6482_85(){
     */
 
 
-      txtfile1<< runs[r]<<"    "<< cut_current<< "    "<<PTRIG1_Rate<<        "    "<< comp_lt<<                 "    "<< comp_lt_err<<endl;
-      txtfile2<< runs[r]<<"    "<< cut_current<< "    "<<PTRIG1_Rate<<        "    "<< edtm_lt <<                "    "<< edtm_lt_err<< endl;
-      txtfile3<< runs[r]<<"    "<< cut_current<< "    "<<PTRIG1_Rate<<        "    "<< tr_eff_pid <<             "    "<< tr_eff_pid_err<<endl;
-      txtfile5<< runs[r]<<"    "<< cut_current<<"    "<<PTRIG1_Rate<<        "    "<< yield_edtmlt_track << "    "<< yield_edtmlt_track_err<<endl;
-      txtfile6<< runs[r]<<"    "<<cut_current<< "    "<<PTRIG1_Rate<<        "    "<<charge_sum_cut<<endl;
-
+      txtfile1<< runs[r]<<"    "<< cut_current<< "    "<<Elreal_Rate<<        "    "<< comp_lt<<                 "    "<< comp_lt_err<<endl;
+      txtfile2<< runs[r]<<"    "<< cut_current<< "    "<<Elreal_Rate<<        "    "<< edtm_lt <<                "    "<< edtm_lt_err<< endl;
+      txtfile3<< runs[r]<<"    "<< cut_current<< "    "<<Elreal_Rate<<        "    "<< tr_eff_pid <<             "    "<< tr_eff_pid_err<<endl;
+      txtfile5<< runs[r]<<"    "<< cut_current<<"    "<<Elreal_Rate<<        "    "<< yield_edtmlt_track << "    "<< yield_edtmlt_track_err<<endl;
+      //good
+      txtfile9<< runs[r]<<"    "<< cut_current<<"    "<<Elreal_Rate<<        "    "<< yield_clt_track << "    "<< yield_clt_track_err<<endl;
+      txtfile10<< runs[r]<<"    "<< cut_current<<"    "<<Elreal_Rate<<        "    "<< Elclean_yield << "    "<< Elclean_yield_err<<endl;
+      txtfile11<< runs[r]<<"    "<< cut_current<<"    "<<Elreal_Rate<<        "    "<< Elreal_yield << "    "<< Elreal_yield_err<<endl;
 
 
     
-      txtfile4<< runs[r]<<"    "<< cut_current<<"    "<<PTRIG1_Rate<<        "    "<< yield_clt_track_elt <<    "    "<< yield_clt_track_elt_err<<endl;
+    
+      txtfile4<< runs[r]<<"    "<< cut_current<<"    "<<Elreal_Rate<<        "    "<< yield_clt_track_elt <<    "    "<< yield_clt_track_elt_err<<endl;
       txtfile7<< runs[r]<<"    "<< cut_current<<"    "<<Elreal_Rate<<        "    "<<  Elreal_yield_elt   <<"    "<<   Elreal_yield_elt_err  <<endl;
       txtfile8<< runs[r]<<"    "<< cut_current<<"    "<<Elclean_Rate<<        "    "<<  Elclean_yield_elt   <<"    "<<   Elclean_yield_elt_err  <<endl;
+      //good
+      txtfile6<< runs[r]<<"    "<<cut_current<< "    "<<Elreal_Rate<<        "    "<<charge_sum_cut<<endl;
 
 
     
-    txtfile<< runs[r]<<"    "<< cut_current <<"    "<<charge_sum_cut<<"    "<< PTRIG1_Rate << "    "<< Elclean_Rate << "    "<< Elreal_Rate<<"    "<<comp_lt <<"    "<< comp_lt_err<<"    "<< tr_eff_pid<<"    "<< tr_eff_pid_err<<"    "<< yield_clt_track<<"    "<< yield_clt_track_err<<"    "<< yield_clt_track_elt<<  "    "<<yield_clt_track_elt_err<<"    "<<Elclean_yield<<"    "<< Elclean_yield_err<<"    "<<  Elclean_yield_elt <<"    "<< Elclean_yield_elt_err<<"    "<< Elreal_yield << "    "<< Elreal_yield_err<<"    "<< Elreal_yield_elt  <<"    "<<Elreal_yield_elt_err<<"   "<<factor_ptig1_ele_lt<<"    "<< factor_hgcer_ele_lt <<endl;
+    txtfile<< runs[r]<<"    "<< cut_current <<"    "<<charge_sum_cut<<"    "<< Elreal_Rate << "    "<< Elclean_Rate << "    "<< Elreal_Rate<<"    "<<comp_lt <<"    "<< comp_lt_err<<"    "<< tr_eff_pid<<"    "<< tr_eff_pid_err<<"    "<< yield_clt_track<<"    "<< yield_clt_track_err<<"    "<< yield_clt_track_elt<<  "    "<<yield_clt_track_elt_err<<"    "<<Elclean_yield<<"    "<< Elclean_yield_err<<"    "<<  Elclean_yield_elt <<"    "<< Elclean_yield_elt_err<<"    "<< Elreal_yield << "    "<< Elreal_yield_err<<"    "<< Elreal_yield_elt  <<"    "<<Elreal_yield_elt_err<<"   "<<factor_ptig1_ele_lt<<"    "<< factor_hgcer_ele_lt <<endl;
   }
 }
 
