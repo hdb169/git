@@ -1,0 +1,4 @@
+updated Sept1, 2020
+This repository has the Correct defination of Livetime.
+I have not used Cherenkov Cut as a pid for electrons.
+Reads the livetime and tracking as well as a long file with various columns (26 Columns), but only from one txtfile.
