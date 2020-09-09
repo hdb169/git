@@ -1,0 +1,31 @@
+1)Need to choose the location where you wish to keep text by giving x and y coordinates.
+2) TText *t88 = new TText(-0.15,2,"Incl. + No Rad (10)");
+   t88->SetTextAlign(11);
+   t88->SetTextColor(kRed);
+   t88->SetTextFont(43);
+   t88->SetTextSize(13);
+   t88->SetTextAngle(90);
+   t88->Draw();
+   TText *t89 = new TText(-0.1,2,"Incl. +  Rad (11)");
+   t89->SetTextAlign(11);
+   t89->SetTextColor(kBlue);
+   t89->SetTextFont(43);
+   t89->SetTextSize(13);
+   t89->SetTextAngle(90);
+   t89->Draw();
+
+   TText *t90 = new TText(-0.05,2,"Excl. +  Rad (01)");
+   t90->SetTextAlign(11);
+   t90->SetTextColor(kBlack);
+   t90->SetTextFont(43);
+   t90->SetTextSize(13);
+   t90->SetTextAngle(90);
+   t90->Draw();
+   
+TText *t91 = new TText(0,2,"Excl. +  No Rad (00)");
+   t91->SetTextAlign(11);
+   t91->SetTextColor(kGreen);
+   t91->SetTextFont(43);
+   t91->SetTextSize(13);
+   t91->SetTextAngle(90);
+   t91->Draw();
