@@ -55,7 +55,7 @@ ofstream txtfile_plt("txtfile_shms/shms_yield_plt.txt");
 ofstream txtfile_all("txtfile_shms/shms_yield_all.txt");
 
 
-void shms_edtm_sub_davemack_sep13(){
+void shms_carbon_yield(){
   //txtfile<<"#"<< "RunNum"<<"    "<<"cut_cur"<<"    "<<"charge"<<"    "<<"PTRIG2_R" << "    "<< "Elclean_R" << "    "<< "Elreal_R"<<"    "<<"comp_lt" <<"    "<< "comp_lt_err"<<"    "<<"tr_eff"<<"    "<< "tr_eff_err"<<"    "<< "yield_elR" << "    "<< "yield_elR_err"<<"    "<<"yield_elc"<<"    "<< "yield_elc_err"<<"    " << "yield_clt_notrack"<<"    "<< "yield_clt_notrack_err"<<"    "<< "yield_clt_track"<<"    "<< "yield_clt_track_err"<<"    "<<endl;
  txtfile_all<<"#"<<"     "<<"Run"<<"    "<<"cur"<<"    "<<"Q"<<"    "<<"Rate3" << "    "<< "ElC_R" << "    "<< "ElR_R"<<"    "<<"CLT" <<"    "<< "CLTEr"<<"    "<<"TRE"<<"    "<< "TREr"<<"    "<< "YElr" << "    "<< "YElRErr"<<"    "<<"YElCl"<<"    "<< "YElClErr"<<"    " << "YCltNT"<<"    "<< "YCltNTErr"<<"    "<< "YCltTr"<<"    "<< "YCltTrErr"<<"    "<<"YPltNtr"<<"    "<< "YPltNtrErr"<<"    "<< "YPltTr"<<"    "<< "YPltTrErr"<<"    "<<   "YTltNtr"<<"    "<<   "YTltNtrErr"<<"    "<< "YTltTr"<<"    "<< "YTltTrErr"<<"    "<<endl;
 
