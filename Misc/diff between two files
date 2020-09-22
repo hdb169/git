@@ -1,0 +1,10 @@
+1. diff -q file1 file2
+if the files are different :just say yes or no
+
+2. diff -y -suppress-common-lines file1 files2
+
+ suppress the common lines and show output in two columns
+
+3. diff -u file1 file2
+shows detail
+             
