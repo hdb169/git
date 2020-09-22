@@ -1,0 +1,3 @@
+For Pyroot, need ROOT version 6.18
+do this to use pyROOT
+source /apps/root/6.18.04/setroot_CUE.csh 
