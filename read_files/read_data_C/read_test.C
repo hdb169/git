@@ -1,5 +1,9 @@
 //This macro reads 3 columns of test.dat and fill then in 3 hists h1, h2, h3 such that first column in h1 and so on. Also 
 // creates ntuplus of x, y and z.
+
+
+//http://www1.phys.vt.edu/~dayabay/Presentations/090916.dm.Root1.pdf
+
 #include "Riostream.h"
 void read_test() {
   ifstream in;
