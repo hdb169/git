@@ -1,0 +1,7 @@
+read_hcal_eff.C
+plot multigraph
+Reads, 6 text files, with 4 colums run, mom, eff, err
+Builds legends
+Saves the graph as arootfile
+saves the file as .gif
+display file.gif to open
