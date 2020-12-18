@@ -81,3 +81,7 @@ if(runs[r]>=7727 && runs[r]<=7736){offsetrf = 498.25;}
 if(runs[r]>=7737 && runs[r]<=7792){offsetrf = 400.00;}
 if(runs[r]>=7793 && runs[r]<=7820){offsetrf = 400.00;}
 
+
+
+  
+  
