@@ -1,0 +1,15 @@
+//This macro plots a gaussian with desired height. Here param 0 is height and kept at 33.0 (fixparameter)
+//The next parameter 1 is mean at 0 (Fixparameter)
+//sigma is param 2, width sigma is 1.4
+
+void gaus(){
+TF1 *f_g = new TF1("f_g","gaus", -4.5,4.5);
+f_g->FixParameter(0,33.0);//height //
+f_g->SetParLimits(0,78.,83.0); // ?
+f_g->FixParameter(1,0.0);//mean
+f_g->FixParameter(2,1.4);//sigma1.99276 // 2.20649 original on Sept 4 beginning //
+f_g->SetParLimits(2,1.3,1.5);
+f_g->SetLineColor(kBlue);
+f_g->SetLineWidth(2); // line width f_g->SetLineStyle(2);
+f_g->Draw();
+}
