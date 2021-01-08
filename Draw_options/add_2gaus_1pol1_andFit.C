@@ -8,7 +8,7 @@ void plot_aerofit_eff(){
     //#include "bin7808.h"
  										  
   TFile *f1 = new TFile("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/root_tree_new/charge_norm_data_hist_7808.root");//pip
-  TFile *f3 = new TFile("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/root_tree_new/charge_norm_data_hist_7796.root");//pim
+  TFile *f2 = new TFile("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/root_tree_new/charge_norm_data_hist_7796.root");//pim
 
 											  
   TH1D * haero_pos = (TH1D*)f1->Get("aero_1dc");//data
