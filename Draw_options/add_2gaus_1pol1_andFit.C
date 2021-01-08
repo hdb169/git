@@ -1,5 +1,4 @@
-//void add_3hists_z4039(Int_t run11pos, Int_t run01pos, Int_t run012pos, Int_t run11neg, Int_t run01neg, Int_t run013neg){
-
+//this adds 2 gaus and 1 pol 1 functions and fits the shape, prints parameters.
 void plot_aerofit_eff(){
 
   // gStyle->SetOptStat(1000011);//int
