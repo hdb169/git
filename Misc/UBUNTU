@@ -1,0 +1,4 @@
+Split book into chapters
+
+take chgapter 6 only from the book, note the pages 261-319 are actual pages of pdf not the priten page num
+hdbhatt@hdbhatt:~/ENM2021DD$ pdftk jackson_book.pdf cat 261-319 output jackson_chapter6.pdf
