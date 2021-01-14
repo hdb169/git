@@ -1,0 +1,8 @@
+void bishnu(){
+TF1* f21 = new TF1("f21","gaus",1.2, 1.8);
+f21->SetParameter(0,180);//height
+f21->SetParLimits(0, 150, 200.);
+f21->FixParameter(1, 2,10.4);
+f21->SetLineColor(kGreen);
+f21->Draw();
+}
