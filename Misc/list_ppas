@@ -1,6 +1,2 @@
 grep -r --include '*.list' '^deb ' /etc/apt/sources.list /etc/apt/sources.list.d/
 
-
-I have changed this 
-
-hdbhatt@hdbhatt:~$ sudo mv /etc/apt/sources.list sources_backup.list
