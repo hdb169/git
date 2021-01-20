@@ -1,0 +1,74 @@
+//This will plot eff vs z for 4 z settings.
+
+void plot_caleff_vsz(){
+  TFile *f1 = new TFile("root/pcal_eff_6145.root");
+  TFile *f2 = new TFile("root/pcal_eff_6170.root");
+  TFile *f3 = new TFile("root/pcal_eff_6179.root");
+  TFile *f4 = new TFile("root/pcal_eff_6185.root");
+
+  TH1D *h1 = new TH1D("h1", "h1", 100, 0.2, 0.9);
+  gStyle->SetErrorX(0);
+  //gROOT->SetBatch("kTRUE");
+  //gStyle->SetOptStat(0);
+  //gStyle->SetOptStat(1000011);
+  gStyle->SetPalette(1,0);
+  gStyle->SetOptStat(1000011);
+  gStyle->SetOptFit(11);
+  gStyle->SetTitleOffset(1.,"Y");
+  gStyle->SetTitleOffset(.7,"X");
+  gStyle->SetLabelSize(0.04,"XY");
+  gStyle->SetTitleSize(0.06,"XY");
+  gStyle->SetPadLeftMargin(0.12);
+     
+  TH1D * eff_z07 = (TH1D*)f1->Get("hist_pcal_eff");
+  TH1D * eff_z06 = (TH1D*)f2->Get("hist_pcal_eff");
+  TH1D * eff_z05 = (TH1D*)f3->Get("hist_pcal_eff");
+  TH1D * eff_z04 = (TH1D*)f4->Get("hist_pcal_eff");
+
+  TCanvas *c1 = new TCanvas("c1", "pcal eff", 1000, 800);
+  c1->Divide(2,2);
+  c1->cd(1);gPad->SetGrid();//x();gPad->Gridy();
+  eff_z07->Draw();
+  eff_z07->SetMarkerStyle(21);
+  eff_z07->SetMarkerColor(kRed);
+  eff_z07->SetLineColor(kRed);
+
+  eff_z07->GetYaxis()->SetRangeUser(0.85, 1.05);
+      
+  c1->cd(2);gPad->SetGrid();
+  eff_z06->Draw();
+  eff_z06->SetMarkerStyle(21);
+  eff_z06->GetYaxis()->SetRangeUser(0.85, 1.05);
+  eff_z06->SetMarkerStyle(21);
+  eff_z06->SetLineColor(kBlue);
+  eff_z06->SetMarkerColor(kBlue);
+
+  c1->cd(3);gPad->SetGrid();
+  eff_z05->Draw();
+  eff_z05->SetMarkerStyle(21);
+  eff_z05->GetYaxis()->SetRangeUser(0.85, 1.05);
+  eff_z05->SetLineColor(kBlack);
+  eff_z05->SetMarkerColor(kBlack);
+
+  c1->cd(4);gPad->SetGrid();
+  eff_z04->Draw();
+  eff_z04->SetMarkerStyle(21);
+  eff_z04->GetYaxis()->SetRangeUser(0.85, 1.05);
+  eff_z04->SetLineColor(kMagenta);
+  eff_z04->SetMarkerColor(kMagenta);
+  eff_z04->GetXaxis()->SetRangeUser(0.34,0.5);
+
+  // c1->cd(5);
+  // h1->Draw();
+  // eff_z07->Draw("");
+  // eff_z06->Draw("same");
+  // eff_z05->Draw("sames");
+  // eff_z04->Draw("sames");
+
+      
+  c1->SaveAs("pdf/all_eff.pdf");
+
+
+      
+ 
+}
