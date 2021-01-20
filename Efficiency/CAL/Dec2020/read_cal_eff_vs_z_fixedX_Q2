@@ -1,0 +1,105 @@
+//This will plot the efficiency vs z for four z settings, z = 0.7, 0.6, 0.5, 0.4 each one has 5 bins. It plots the efficiency from textfile.
+#include <sstream>
+#include <string>
+#include <fstream>
+#include "TFile.h"
+#include "TCanvas.h"
+#include "TTree.h"
+#include "TH1.h"
+#include "TMath.h"
+#include "TRandom3.h"
+#include "TGraph.h"
+#include "TLegend.h"
+#include "TFrame.h"
+#include "TPaveLabel.h"
+
+void read_merge_txt(){
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
+  c1->SetGrid();
+
+  auto mg = new TMultiGraph("mg","PCAL Efficiency");
+  TFile * f1 = new TFile("root/phcal_eff.root","RECREATE");
+
+ 
+  
+  std::ifstream infile("txtfile/pcal_efficiency.txt");
+
+  double runNo, x, y, y_err;
+
+  vector <double> run; 
+  vector <double> xvalue;
+  vector <double> eff;
+  vector <double> eff_err;
+
+
+  while (infile >> runNo >> x >> y>> y_err){
+       
+    run.push_back(runNo);
+    xvalue.push_back(x);
+    eff.push_back(y);
+    eff_err.push_back(y_err);
+
+  }
+ 
+
+ 
+
+  auto gr2 = new TGraphErrors(run.size(), &xvalue[0], &eff[0], 0, &eff_err[0]);
+  gr2->SetName("gr2");
+  gr2->SetMarkerStyle(20);
+  gr2->SetMarkerSize(1.4);
+  gr2->SetTitle("pcal_eff");
+  gr2->SetLineWidth(2);
+  gr2->SetFillStyle(0);
+  gr2->Draw("AP");
+  gr2->SetMarkerColor(kWhite);
+  gr2->SetLineColor(kWhite);
+
+    gr2->GetXaxis()->SetLimits(0.325,0.85);
+    gr2->GetYaxis()->SetRangeUser(0.8,1.10);
+
+
+  double * nx = gr2->GetX();
+  double * ny = gr2->GetY();
+  double * runs = run.data();
+  gr2->GetXaxis()->SetAxisColor(17);
+  gr2->GetYaxis()->SetAxisColor(17);
+  //gr2->GetXaxis()->Set(run.size(),-0.5,run.size()-0.5);
+  gPad->Modified();gPad->Update();
+  
+  
+  for(int i = 0; i<19; i++){
+    TMarker * Mar = new TMarker (nx[i],ny[i],20);//x, y co-ordinate, MarkerStyle
+    if(run[i] == 6145) Mar->SetMarkerColor(kRed);
+    if(run[i] == 6170) Mar->SetMarkerColor(kBlue);
+    if(run[i] == 6179) Mar->SetMarkerColor(kBlack);
+    if(run[i] == 6185) Mar->SetMarkerColor(kMagenta);
+    Mar->Draw();
+    TLine * line = new TLine (nx[i], ny[i]-eff_err[i], nx[i],ny[i]+eff_err[i]);//x1,  y1 of lower error vallue, x2, y2 of upper error value 
+    if(run[i] == 6145) line->SetLineColor(kRed);
+    if(run[i] == 6170) line->SetLineColor(kBlue);
+    if(run[i] == 6179) line->SetLineColor(kBlack);
+    if(run[i] == 6185) line->SetLineColor(kMagenta);
+    line->Draw();
+    line->SetLineWidth(2);
+    //gr2->GetXaxis()->SetBinLabel(i+1,Form("%f.2f",nx[i]));
+    
+  }
+
+  TLatex let;
+  let.SetNDC();
+  let.SetTextSize(0.04);
+  let.SetTextColor(kRed);
+  let.DrawLatex(0.65,0.35,"z = 0.7");
+  let.SetTextColor(kBlue);
+  let.DrawLatex(0.65,0.30,"z = 0.6");
+  let.SetTextColor(kBlack);
+  let.DrawLatex(0.65,0.25,"z = 0.5");
+  let.SetTextColor(kMagenta);
+  let.DrawLatex(0.65,0.20,"z = 0.4");
+
+  
+  c1->Print("pdf/pcal_effff.gif");
+
+}
