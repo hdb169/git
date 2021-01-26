@@ -1,0 +1,7 @@
+//Note For RF eff just take 
+//rf_1d in line 613-620 which is stored in ROOTfile root_zbin (others from line 572 to line 640 are when we divide z into 4 parts, which is to check)
+//Then the other script
+
+//root -l 'plot_rf_kaon_cont_fromfit.C(7699, 3.51)' (run num, mom) plots the rf eff in fig 5.
+//we need to adjust the mean of kaon peak from the information printed in the terminal, about what time the kaon comes wrt to the RF pion at 1.
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/
