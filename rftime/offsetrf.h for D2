@@ -92,6 +92,6 @@ if(runs[r]>=7737 && runs[r]<=7792){offsetrf = 400.00;}
 if(runs[r]>=7793 && runs[r]<=7807){offsetrf = 400.05;}
 if(runs[r]>=7808 && runs[r]<=7820){offsetrf = 400.05;}
 
-
+//7706 good = 398.05
   
   
