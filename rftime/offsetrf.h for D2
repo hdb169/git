@@ -73,7 +73,7 @@ if(runs[r]>=6405 && runs[r]<=6417){offsetrf = 398.90;}
 if(runs[r]>=6518 && runs[r]<=6536){offsetrf = 399.07;}
 
 
-//////////spring/////////
+//////////spring///////// use the next new one 
 if(runs[r]>=7593 && runs[r]<=7670){offsetrf = 400.00;}//kin33-34
 if(runs[r]>=7671 && runs[r]<=7699){offsetrf = 400.10;}
 if(runs[r]>=7700 && runs[r]<=7722){offsetrf = 398.05;}
@@ -81,6 +81,16 @@ if(runs[r]>=7727 && runs[r]<=7736){offsetrf = 498.25;}
 if(runs[r]>=7737 && runs[r]<=7792){offsetrf = 400.00;}
 if(runs[r]>=7793 && runs[r]<=7820){offsetrf = 400.00;}
 
+NEW: updated Jan 25, 2020 for spring
+if(runs[r]>=7593 && runs[r]<=7670){offsetrf = 400.00;}//kin33-34
+if(runs[r]>=7671 && runs[r]<=7698){offsetrf = 400.10;}
+if(runs[r]>=7699 && runs[r]<=7699){offsetrf = 400.08;}//jan 25, 2020
+if(runs[r]>=7700 && runs[r]<=7722){offsetrf = 398.1;}//.08 0r 0.1
+if(runs[r]>=7724 && runs[r]<=7725){offsetrf = 398.05;}
+if(runs[r]>=7727 && runs[r]<=7736){offsetrf = 498.25;}
+if(runs[r]>=7737 && runs[r]<=7792){offsetrf = 400.00;}
+if(runs[r]>=7793 && runs[r]<=7807){offsetrf = 400.05;}
+if(runs[r]>=7808 && runs[r]<=7820){offsetrf = 400.05;}
 
 
   
