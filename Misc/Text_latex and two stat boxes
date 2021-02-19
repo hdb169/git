@@ -1,0 +1,38 @@
+//this has to be done after you plot hist
+TLatex let;
+  let.SetNDC();
+  let.SetTextSize(0.04);
+  let.SetTextColor(kRed);
+  let.DrawLatex(0.65,0.35,"z = 0.7");
+  let.SetTextColor(kBlue);
+  let.DrawLatex(0.65,0.30,"z = 0.6");
+  let.SetTextColor(kBlack);
+  let.DrawLatex(0.65,0.25,"z = 0.5");
+  let.SetTextColor(kMagenta);
+  let.DrawLatex(0.65,0.20,"z = 0.4");
+  
+  
+  
+  
+  
+  Two stat boxes after you plot both, later one with sames
+  
+  gPad->Update();
+    TPaveStats *p1 = (TPaveStats*) hRF_pion_nocut->FindObject("stats");
+    p1->SetY1NDC(.68);
+    p1->SetY2NDC(.93);
+    p1->SetX1NDC(.55); 
+    p1->SetX2NDC(0.9);
+    p1->SetLineColor(kBlue);
+    p1->SetLineWidth(2);
+    p1->SetTextColor(kBlue);
+    gPad->Update();
+    TPaveStats *p2 = (TPaveStats*) hRF_pion_nocut_hgc->FindObject("stats");
+    p2->SetY1NDC(.4);
+    p2->SetY2NDC(.65);
+    p2->SetX1NDC(.55); 
+    p2->SetX2NDC(0.9);
+    p2->SetLineColor(kRed);
+    p2->SetLineWidth(2);
+    p2->SetTextColor(kRed);
+    gPad->Update();
