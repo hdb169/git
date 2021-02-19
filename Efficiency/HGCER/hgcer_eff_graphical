@@ -1,0 +1,804 @@
+#include "header.h"
+#include <iostream>
+#include <string>
+#include "TCanvas.h"
+#include "TGraphErrors.h"
+#include "TF1.h"
+#include "TPaveText.h"
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TLine.h>
+#include <TMath.h>
+#include <TPaveText.h>
+#include <TGaxis.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdio.h>
+#include <TSystem.h>
+#include <TTree.h>
+#include <TArc.h>
+#include <TCutG.h>
+#include <TExec.h>
+#include <TColor.h>
+#define NRUNS 3
+
+
+Double_t fun(double *x, double * par){// x = mom
+  if (x[0] > 3.7 && x[0] < 4.15) {
+    TF1::RejectPoint();
+    return 0;
+  }
+  return par[0]*(1-par[1] * (x[0]*x[0]+0.1395701835*0.1395701835)/(1.00137*1.00137*x[0]*x[0]));
+}
+
+Double_t fun2(double *x, double * par){
+  return par[0]*(1-par[1] * (x[0]*x[0]+0.1395701835*0.1395701835)/(1.00137*1.00137*x[0]*x[0]));
+}
+
+
+double RI = 1.00137;
+
+void gr_xcut_nocut_3p9_6194(){
+  gStyle->SetPalette(1,0);//color in 2D 3D
+  gStyle->SetOptStat(1000011);
+  gStyle->SetOptFit(11);
+  gStyle->SetTitleOffset(1.,"Y");
+  gStyle->SetTitleOffset(.7,"X");
+  gStyle->SetLabelSize(0.04,"XY");
+  gStyle->SetTitleSize(0.06,"XY");
+  gStyle->SetPadLeftMargin(0.12);  
+  //#include "gStyle.h"
+  //gStyle->SetOptStat(0);
+  //gStyle->SetOptStat(1000011);//integral
+  // gStyle->SetOptStat(1111111);//integral
+  gStyle->SetOptFit(1);//integral
+  ofstream txtfile("txtfile/hgcer_eff_noXCerCut.txt",ios::app);
+
+  
+  Int_t runs[NRUNS]={6194, 6245, 7796};//, 6245};//, 7796, 7768, 7735};
+   
+  Double_t mom[NRUNS] ={ 3.936, 3.936, 3.461};//, 3.936};//, 3.4, 3.2, 3.2 };
+  // gROOT->SetBatch("kTRUE");
+  for(Int_t r=0; r<NRUNS; r++){
+
+    TString filename  = Form("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/ROOTfiles/hgcer/added_%d.root", runs[r]);
+    // TString filename  = Form("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/ROOTfiles/hgcer/coin_replay_production_%d_-1.root", runs[r]);
+
+    TFile *f = new TFile(filename, "READ");
+    TFile * f11 = new TFile(Form("root_rfeff/rfplot_zbins_%d.root",runs[r]),"RECREATE");
+
+    cout<< "Opening Run Num = "<< runs[r] <<endl; 
+    
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      continue;
+    }
+
+    //DEFINING CUT REGION
+    TCutG *cutg = new TCutG("cutg",25);
+    cutg->SetVarX("");
+    cutg->SetVarY("");
+ 
+    cutg->SetPoint(0, -11.21, 1.05);
+    cutg->SetPoint(1, -7.28, 0.96);
+    cutg->SetPoint(2, -7.18, -0.11);
+    cutg->SetPoint(3, -6.48, -0.02);
+    cutg->SetPoint(4, -6.39, -0.77);
+    cutg->SetPoint(5, -3.21, -0.93);
+    cutg->SetPoint(6, -3.16, -1.52);
+    cutg->SetPoint(7, -1.76, -1.68 );
+    cutg->SetPoint(8, -1.94, -2.34);
+    cutg->SetPoint(9, -0.67, -2.43);
+    cutg->SetPoint(10, -0.81, -2.93);
+    cutg->SetPoint(11, 3.89, -2.93);
+    cutg->SetPoint(12, 3.99, -0.69);
+    cutg->SetPoint(13, 5.06, 0.05);
+    cutg->SetPoint(14, 11.15, 0.02);
+    cutg->SetPoint(15, 11.10, 3.20);
+    cutg->SetPoint(16, 6.63, 3.54);
+    cutg->SetPoint(17, 5.49, 4.86);
+    cutg->SetPoint(18, 0.71, 4.78);
+    cutg->SetPoint(19, 0.71, 3.37);
+    cutg->SetPoint(20, -1.52, 3.20);
+    cutg->SetPoint(21, -1.66, 2.37);
+    cutg->SetPoint(22, -11.16, 2.46);
+    cutg->SetPoint(23, -12.00, 2.46);
+    cutg->SetPoint(24, -11.21, 1.05);
+
+
+
+    
+    //#include "binkin391_401.h"
+#include "bin7808.h"
+
+    
+    Double_t pionmass   = 0.1395701835;    //Gev/c^2 
+    Double_t protonmass = 0.93827231;//GeV/c2
+    Double_t dxbj, dQ2, dnu,domega,  dW2, dpmiss, demiss,  zhad, Mx2,Mx2a_acccut,Epi_acccut,zhad_acccut,Epi_pidcut,zhad_pidcut,Mx2_pidcut,Epi_cut,zhad_cut,Mx2_cut ;//d = data
+    Double_t pbeta,hbeta,pdelta,hdelta,hcaletottrack,pcaletottrack,pcalepr,hcalepr,paero,hcernpe,hgcer,W,Q2,xbj,ctime,Epi,Epi_d,Epi_acc,z,z_d,z_acc,pkinomega,PgtrP,HgtrP,hhodstarttime,phodstarttime,hdipole, pdipole,pcaletotnorm,phodgoodscinhit,betanotrack,pdcntrack,pdcch1nhit,pdcch2nhit, phodrftdcmult,phodrftdctime,prftdcmult,prftdctime , hhodrftdcmult,hhodrftdctime,hrftdcmult,hrftdctime,phodfphitstime,hhodfphitstime,rfminusfp,eventtype,rf_pion,hhodgoodscinhit,hhodbetanotrack,hdcntrack,hgtry,pgtry,phodbetanotrack,hcaletotnorm,gevnum,hxptar,hyptar,pxptar,pyptar ;
+
+    double scaler_eventnum,bcm1charge,bcm1current,scaler1MHztime,scaler1MHztimecut,bcm1chargecut,s1xscaler,s1yscaler,s2xscaler,s2yscaler,ptrig1scaler,ptrig2scaler,ptrig3scaler,ptrig4scaler,ptrig6scaler,pedtmscaler,pelcleanscaler,pl1acceptscaler,edtmtdctime,edtmtdctimeraw,mult,ptrig1rate,rate,charge,hgc_xAtCer,hgc_yAtCer   ;
+    
+    Double_t Epi_dcut0, z_dcut0, Epi_dcut1, z_dcut1, Epi_dcut2, z_dcut2, Epi_dcut3, z_dcut3, Epi_dcut1plus2, z_dcut1plus2; 
+    Double_t Epi_acc0, z_acc0, Epi_acc1, z_acc1, Epi_acc2, z_acc2, Epi_acc3, z_acc3, Epi_acc1plus2, z_acc1plus2;
+
+    Bool_t  accR_cut, accL_cut,shms_cut,pid_cut,tracking_cut,did_cut,should_cut,acc_cut_should,acc_cut_did,pid_cut_acc,hgcer_cut, paero_cut, mod4_pioncut, mod4_notpioncut, pcal_cut, ctime_cut, hms_cut, pcal_cut_tight, cuttype1, cuttype1acc, cuttype2, cuttype2acc, cuttype1plus2, cuttype1plus2acc , hgcer_cut_loose,  paero_cut_loose,  cuttype0, cuttype0acc, common_cut, cuttype3, cuttype3acc, accsub_cut, acc_cut, shms_tr_did_cut, shms_tr_should_cut, hms_tr_did_cut, hms_tr_should_cut,basic_cut,basic_cal_aero, hms_cal_should_cut, hms_cal_did_cut, shms_cal_should_cut, shms_cal_did_cut, cal_eff_hms_shms_base_cut  ;
+
+    Double_t Epi_cut_acc, zhad_cut_acc, Mx2_cut_acc;
+    Double_t ctmin = 2.0;//1.5
+    Double_t ctmax = 2.0;//1.5
+    Double_t rfmin = 0.5;//0.5;
+    Double_t rfmax = 1.5;//1.5;
+    Double_t eprmin = 0.0;
+    Double_t eprmax = 0.2;//0.15;
+    Double_t pcaletotmin = 0.0;
+    Double_t pcaletotmax = 0.75;
+    Double_t offsetrf;
+    double nbin  = 100;
+    double lowxy = -40;
+    double hixy  = 40;
+    double lodelta = -10;
+    double hidelta = 20;
+    double npelo = 0;
+    double npehi = 30;
+    
+    TH2D *h2_XYAtCer1                      = new TH2D("h2_XYAtCer1","HGC, P_hgcer_npeSum 1.5; P_hgcer_yAtCer; P_hgcer_xAtCer;", nbin, lowxy, hixy, nbin, lowxy, hixy );
+    TH2D *h2_XYAtCer0p5                    = new TH2D("h2_XYAtCer0p5","HGC, P_hgcer_npeSum 0.5; P_hgcer_yAtCer; P_hgcer_xAtCer;", nbin, lowxy, hixy, nbin, lowxy, hixy );
+    TH3D *h3_XYAtCer_eff                   = new TH3D("h3_XYAtCer_eff","HGC Eff; P_hgcer_yAtCer; P_hgcer_xAtCer; Eff;", nbin, lowxy, hixy, nbin, lowxy, hixy, nbin, 0, 1);//eff
+    //2D==3D, no bins in 3rd Axis, 0-1 = Weight //Devi BEst
+    TProfile2D * twoD_eff = new TProfile2D("twoD_eff","Hgcer Eff as a function of x and y At Cer;P.hgcer.yAtCer;P.hgcer.xAtCer;Eff", nbin, lowxy, hixy, nbin,lowxy, hixy, 0, 1);
+    //2D==3D, no bins in 3rd Axis, 0-1 = Weight //Devi BEst
+    TH3D *h3_XYAtCer_npeSum1     = new TH3D("h3_XYAtCer_npeSum1","HGC Eff; P_hgcer_yAtCer; P_hgcer_xAtCer; NPE;", nbin, lowxy, hixy, nbin, lowxy, hixy, nbin, npelo, npehi);
+    TProfile2D * hgcer_eff_npe0p5 = new TProfile2D("hgcer_eff_npe0p5","Hgcer Eff for Npe > 0.5; P_hgcer_yAtCer; P_hgcer_xAtCer; eff", nbin, lowxy, hixy, nbin,lowxy, hixy, 0, 1);
+    TH2D *hRF_pion_vs_hgcer = new TH2D("hRF_pion_vs_hgcer","hRF_pion_vs_hgcer;  RF Time (ns); Hgcer NpeSum", nbin, 0, 4, nbin, npelo, npehi);
+
+    //nocut
+    TH1F *hTotal1dx_nocut = new TH1F ("hTotal1dx_nocut","",nbin, lowxy, hixy);               
+    TH1F *hPass1dx_nocut = new TH1F("hpass1dx_nocut","",nbin, lowxy, hixy);
+    TH1F *hTotal1dy_nocut = new TH1F ("hTotal1dy_nocut","",nbin, lowxy, hixy);          
+    TH1F *hPass1dy_nocut = new TH1F("hpass1dy_nocut","",nbin, lowxy, hixy);
+    TH1F *hTotal1ddp_nocut = new TH1F ("hTotal1ddp_nocut","",nbin, lodelta, hidelta); 
+    TH1F *hPass1ddp_nocut = new TH1F("hpass1ddp_nocut","",nbin, lodelta, hidelta);
+    TH2F *hTotal_2d_nocut = new TH2F ("hTotal_2d_nocut","",nbin, lowxy, hixy, nbin, lowxy, hixy);
+    TH2F *hPass_2d_nocut = new TH2F("hpass_2d_nocut","",nbin, lowxy, hixy, nbin, lowxy, hixy);
+    TProfile2D * xy_vs_npe_nocut = new TProfile2D("xy_vs_npe_nocut","Hgcer NPE as a function of x and y At Cer;P.hgcer.yAtCer;P.hgcer.xAtCer;NPESUM", nbin, lowxy, hixy, nbin,lowxy, hixy, npelo, npehi);
+    TH1D *hRF_pion_nocut = new TH1D("hRF_pion","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    TH1D *hRF_pion_nocut_hgc = new TH1D("hRF_pion_nocut_hgc","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    //xcut
+    TH1F *hTotal1dx_xcut = new TH1F ("hTotal1dx_xcut","",nbin, lowxy, hixy);               
+    TH1F *hPass1dx_xcut = new TH1F("hpass1dx_xcut","",nbin, lowxy, hixy);
+    TH1F *hTotal1dy_xcut = new TH1F ("hTotal1dy_xcut","",nbin, lowxy, hixy);          
+    TH1F *hPass1dy_xcut = new TH1F("hpass1dy_xcut","",nbin, lowxy, hixy);
+    TH1F *hTotal1ddp_xcut = new TH1F ("hTotal1ddp_xcut","",nbin, lodelta, hidelta); 
+    TH1F *hPass1ddp_xcut = new TH1F("hpass1ddp_xcut","",nbin, lodelta, hidelta);
+    TH2F *hTotal_2d_xcut = new TH2F ("hTotal_2d_xcut","",nbin, lowxy, hixy, nbin, lowxy, hixy);
+    TH2F *hPass_2d_xcut = new TH2F("hpass_2d_xcut","",nbin, lowxy, hixy, nbin, lowxy, hixy);
+    TProfile2D * xy_vs_npe_xcut = new TProfile2D("xy_vs_npe_xcut","Hgcer NPE as a function of x and y At Cer;P.hgcer.yAtCer;P.hgcer.xAtCer;NPESUM", nbin, lowxy, hixy, nbin,lowxy, hixy, npelo, npehi);
+    TH1D *hRF_pion_xcut  = new TH1D("hRF_pion_xcut","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    TH1D *hRF_pion_xcut_hgc = new TH1D("hRF_pion_xcut_hgc","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    //grcut
+    TH1F *hTotal1dx_grcut = new TH1F ("hTotal1dx_grcut","",nbin, lowxy, hixy);               
+    TH1F *hPass1dx_grcut = new TH1F("hpass1dx_grcut","",nbin, lowxy, hixy);
+    TH1F *hTotal1dy_grcut = new TH1F ("hTotal1dy_grcut","",nbin, lowxy, hixy);          
+    TH1F *hPass1dy_grcut = new TH1F("hpass1dy_grcut","",nbin, lowxy, hixy);
+    TH1F *hTotal1ddp_grcut = new TH1F ("hTotal1ddp_grcut","",nbin, lodelta, hidelta); 
+    TH1F *hPass1ddp_grcut = new TH1F("hpass1ddp_grcut","",nbin, lodelta, hidelta);
+    TH2F *hTotal_2d_grcut = new TH2F ("hTotal_2d_grcut","",nbin, lowxy, hixy, nbin, lowxy, hixy);
+    TH2F *hPass_2d_grcut = new TH2F("hpass_2d_grcut","",nbin, lowxy, hixy, nbin, lowxy, hixy); 
+    TProfile2D * xy_vs_npe_grcut = new TProfile2D("xy_vs_npe_grcut","Hgcer NPE as a function of x and y At Cer;P.hgcer.yAtCer;P.hgcer.xAtCer;NPESUM", nbin, lowxy, hixy, nbin,lowxy, hixy, npelo, npehi);
+    TH1D *hRF_pion_grcut   = new TH1D("hRF_pion_grcut","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    TH1D *hRF_pion_grcut_hgc  = new TH1D("hRF_pion_grcut_hgc","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    //dip
+    TH1F *hTotal1dx_dip = new TH1F ("hTotal1dx_dip","",nbin, lowxy, hixy);               
+    TH1F *hPass1dx_dip = new TH1F("hpass1dx_dip","",nbin, lowxy, hixy);
+    TH1F *hTotal1dy_dip = new TH1F ("hTotal1dy_dip","",nbin, lowxy, hixy);          
+    TH1F *hPass1dy_dip = new TH1F("hpass1dy_dip","",nbin, lowxy, hixy);
+    TH1F *hTotal1ddp_dip = new TH1F ("hTotal1ddp_dip","",nbin, lodelta, hidelta); 
+    TH1F *hPass1ddp_dip = new TH1F("hpass1ddp_dip","",nbin, lodelta, hidelta);
+    TH2F *hTotal_2d_dip = new TH2F ("hTotal_2d_dip","",nbin, lowxy, hixy, nbin, lowxy, hixy);
+    TH2F *hPass_2d_dip = new TH2F("hpass_2d_dip","",nbin, lowxy, hixy, nbin, lowxy, hixy); 
+    TProfile2D * xy_vs_npe_dip = new TProfile2D("xy_vs_npe_dip","Hgcer NPE as a function of x and y At Cer;P.hgcer.yAtCer;P.hgcer.xAtCer;NPESUM", nbin, lowxy, hixy, nbin,lowxy, hixy, npelo, npehi);
+    TH1D *hRF_pion_dip   = new TH1D("hRF_pion_dip","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    TH1D *hRF_pion_dip_hgc  = new TH1D("hRF_pion_dip_hgc","hRF_pion;  RF Time (ns); Counts", nbin, 0, 4);
+    
+    TH1F *hmom = new TH1F("hmom","hmom", nbin, 2.5, 5.5);
+    
+
+    // TProfile * hgc_npe_vs_mom = new TProfile(" hgc_npe_vs_mom"," hgc_npe_vs_mom", nbin, 3.5, 4.8,  npelo, npehi);//1D==2D Profile 0-30 = Weight (3.5 to 4.8 for 3.93 GeV)
+   
+#include "offsetrf.h"
+    TTree * tt = (TTree *)f->Get("T");
+    TTree * ss = (TTree *)f->Get("TSP");
+#include "define_histogram.h"
+
+    //----------------------------------------Fill Hist
+#include "branch.h"
+
+    Long64_t nentriesD = tt->GetEntries();
+   
+   
+#include "scaler_branch.h"
+    Long64_t scal_entries = ss->GetEntries();
+#include "scaler_analysis.h"
+
+    Int_t nscaler_reads_acc=0;
+    for (int kk=0; kk<nentriesD;  kk++){//---------------------------------------For Cointime and Acc subtraction only
+      tt->GetEntry(kk);
+
+      if (event_flag[nscaler_reads_acc]==1) {
+	paero_cut = paero>3.0;
+	hgcer_cut = hgcer>1.0;
+	rf_pion = (fmod(-prftdctime+phodfphitstime+ offsetrf ,4.008));
+	mod4_pioncut = rf_pion > rfmin && rf_pion < rfmax;
+	mod4_notpioncut =!mod4_pioncut;
+	pcal_cut =  pcaletottrack < pcaletotmax ;// && pcalepr< eprmax ;
+
+	Epi_cut_acc = sqrt(pow(pionmass,2) + pow(PgtrP,2));//variable same
+	zhad_cut_acc = Epi_cut_acc/dnu;//variable name is same between acc abd real, but histogram name is different
+	Mx2_cut_acc=(protonmass + dnu - zhad_cut_acc*dnu) *  (protonmass + dnu - zhad_cut_acc*dnu) - abs(dpmiss)*abs(dpmiss);
+   	
+	hms_cut  =  hdelta> -8 && hdelta < 8  && hhodstarttime ==1 && hdipole==1  && hcaletottrack > 0.8 &&hcernpe>1.0 &&dW2>4 && Mx2_cut_acc > 1.6    && hxptar>-0.08&&hxptar<0.08&&hyptar>-0.04&&hyptar<0.04;
+	shms_cut =  pdelta >-10 && pdelta < 20   && phodstarttime == 1  && eventtype > 3 &&  pcal_cut && mod4_pioncut && paero_cut && pdipole ==1  && pxptar>-0.05&&pxptar<0.05&&pyptar>-0.04&&pyptar<0.04;
+	pid_cut  = hms_cut && shms_cut;
+       
+      
+	if (pid_cut){//Note this is not the accidental, cut see below for the accidental cut section.
+	  hpbeta->Fill(pbeta);
+	  hctime->Fill(ctime);
+	  hmom->Fill(PgtrP);
+	}  
+	 
+      }
+      
+      if (gevnum == scal_event_number[nscaler_reads_acc])  nscaler_reads_acc++;
+    }
+
+    
+    Int_t bin_max = hctime->GetMaximumBin();
+    Double_t max_value = hctime->GetBinCenter(bin_max);
+    double centralP = hmom->GetMean();
+    cout<<" "<<endl;
+    cout<< runs[r]<<"  "<< "Central P = "<< centralP << endl;
+    cout<<"  "<<endl;
+
+    double binloP = centralP*0.9;
+    double binhiP = centralP*1.2;
+		
+
+    TProfile * hgc_npe_vs_mom_nocut = new TProfile(" hgc_npe_vs_mom_nocut"," hgc_npe_vs_mom_nocut", nbin, binloP, binhiP,  npelo, npehi);
+    TProfile * hgc_npe_vs_mom_xcut  = new TProfile(" hgc_npe_vs_mom_xcut"," hgc_npe_vs_mom_xcut", nbin, binloP, binhiP,  npelo, npehi);
+    TProfile * hgc_npe_vs_mom_grcut = new TProfile(" hgc_npe_vs_mom_grcut"," hgc_npe_vs_mom_grcut", nbin, binloP, binhiP,  npelo, npehi);
+    TProfile * hgc_npe_vs_mom_dip = new TProfile(" hgc_npe_vs_mom_dip"," hgc_npe_vs_mom_dip", nbin, binloP, binhiP,  npelo, npehi);
+
+
+		
+    Bool_t hgcer_cut1 ,paero_cut1 , mod4_pioncut1,  mod4_notpioncut1,   pcal_cut1,   hms_cut1,   shms_cut1, shms_cut2, pid_cut1, ctime_cut1, acc_cut1, acc_cut1hardcut,acc_cut_norf;
+
+
+    Int_t nscaler_reads=0;
+
+      
+    for (int kk=0; kk<nentriesD;  kk++){//-----------------------------------------------------Main Evt Loop
+      tt->GetEntry(kk);
+      if (event_flag[nscaler_reads]==1) {
+
+	 
+	Epi_cut = sqrt(pow(pionmass,2) + pow(PgtrP,2));//variable same
+	zhad_cut = Epi_cut/dnu;//variable name is same between acc abd real, but histogram name is different
+	Mx2_cut=(protonmass + dnu - zhad_cut*dnu) *  (protonmass + dnu - zhad_cut*dnu) - abs(dpmiss)*abs(dpmiss);
+
+	accL_cut        =   ctime > (max_value - 18 ) && ctime < (max_value - 10);
+	accR_cut        =   ctime > (max_value + 14 ) && ctime < (max_value + 22);
+	acc_cut1hardcut = (accR_cut || accL_cut);
+	ctime_cut1 = ctime > max_value - ctmin && ctime < max_value + ctmax;
+
+
+	paero_cut1 = paero>3.0;
+	hgcer_cut =  hgcer>2.0;
+	rf_pion = (fmod(-prftdctime+phodfphitstime+ offsetrf ,4.008));
+	mod4_pioncut1 = rf_pion > rfmin && rf_pion < rfmax;
+	mod4_notpioncut1 =!mod4_pioncut;
+	pcal_cut1 =  pcaletottrack < pcaletotmax;
+
+	
+	hms_cut1  =  hdelta> -8 && hdelta < 8 && hhodstarttime ==1 && hdipole==1  && hcaletottrack > 0.8 &&hcernpe>1.0 &&dW2>4&&Mx2_cut>1.6 ;
+	shms_cut1 =  pdelta >-10 && pdelta < 20   && phodstarttime == 1 && pdipole ==1 ;
+	shms_cut2 =  pcal_cut1 && mod4_pioncut1 && paero_cut1;
+	basic_cut = hms_cut1 && shms_cut1;
+	basic_cal_aero = hms_cut1 && shms_cut1 &&  pcal_cut1 && paero_cut1;//No RF
+	pid_cut1 = hms_cut1 && shms_cut1 && shms_cut2 && ctime_cut1;//-------------------all cut vs1
+	acc_cut1 = hms_cut1 && shms_cut1 && shms_cut2 && acc_cut1hardcut;//final accidental cut----------------------------------------->
+	//acc cut when you doot have RF time
+	acc_cut_norf = hms_cut1 && shms_cut1 && pcal_cut1 &&  paero_cut1  && acc_cut1hardcut;
+ 
+      	/////////////////hgcer eff//////////////////////////////////==============================================================================================
+	//nocut
+	if(hms_cut1 && shms_cut1 && pcal_cut1 && ctime_cut1 && paero > 4  && mod4_pioncut1){
+	  hRF_pion_nocut->Fill(rf_pion);
+	  xy_vs_npe_nocut->Fill(hgc_yAtCer,hgc_xAtCer,hgcer);
+	  hgc_npe_vs_mom_nocut->Fill(PgtrP,hgcer);
+	  
+	  hTotal1ddp_nocut->Fill(pdelta);
+	  hTotal1dx_nocut->Fill(hgc_xAtCer);
+	  hTotal1dy_nocut->Fill(hgc_yAtCer);
+	  hTotal_2d_nocut->Fill(hgc_yAtCer,hgc_xAtCer);
+
+	  if(hgcer>0.5){
+	    hRF_pion_nocut_hgc->Fill(rf_pion);
+	    hPass1ddp_nocut->Fill(pdelta);
+	    hPass1dx_nocut->Fill(hgc_xAtCer);
+	    hPass1dy_nocut->Fill(hgc_yAtCer);
+	    hPass_2d_nocut->Fill(hgc_yAtCer,hgc_xAtCer);
+	  }
+	}//no cut done
+	if( hms_cut1 && shms_cut1 && pcal_cut1 && ctime_cut1 && paero > 4  && mod4_pioncut1  && (hgc_xAtCer<-4 || hgc_xAtCer>6)){//xcut
+
+	  hRF_pion_xcut->Fill(rf_pion);
+	  xy_vs_npe_xcut->Fill(hgc_yAtCer,hgc_xAtCer,hgcer);
+	  hgc_npe_vs_mom_xcut->Fill(PgtrP,hgcer);
+
+	  hTotal1ddp_xcut->Fill(pdelta);
+	  hTotal1dx_xcut->Fill(hgc_xAtCer);
+	  hTotal1dy_xcut->Fill(hgc_yAtCer);
+	  hTotal_2d_xcut->Fill(hgc_yAtCer,hgc_xAtCer);
+
+	  if(hgcer>0.5){
+	    hRF_pion_xcut_hgc->Fill(rf_pion);
+	    hPass1ddp_xcut->Fill(pdelta);
+	    hPass1dx_xcut->Fill(hgc_xAtCer);
+	    hPass1dy_xcut->Fill(hgc_yAtCer);
+	    hPass_2d_xcut->Fill(hgc_yAtCer,hgc_xAtCer);
+	  }
+	
+	}//xcut done
+	
+	if(  hms_cut1 && shms_cut1 && pcal_cut1 && ctime_cut1 && paero > 4  && mod4_pioncut1   && (!cutg->IsInside(hgc_yAtCer,hgc_xAtCer))){//gr cut
+
+	  hRF_pion_grcut->Fill(rf_pion);
+	  xy_vs_npe_grcut->Fill(hgc_yAtCer,hgc_xAtCer,hgcer);
+	  hgc_npe_vs_mom_grcut->Fill(PgtrP,hgcer);
+
+	  hTotal1ddp_grcut->Fill(pdelta);
+	  hTotal1dx_grcut->Fill(hgc_xAtCer);
+	  hTotal1dy_grcut->Fill(hgc_yAtCer);
+	  hTotal_2d_grcut->Fill(hgc_yAtCer,hgc_xAtCer);
+
+	  if(hgcer>0.5){
+	    hRF_pion_grcut_hgc->Fill(rf_pion);
+	    hPass1ddp_grcut->Fill(pdelta);
+	    hPass1dx_grcut->Fill(hgc_xAtCer);
+	    hPass1dy_grcut->Fill(hgc_yAtCer);
+	    hPass_2d_grcut->Fill(hgc_yAtCer,hgc_xAtCer);
+	  }
+	}//gr cut done
+	  
+	if(hms_cut1 && shms_cut1 && pcal_cut1 && ctime_cut1 && paero > 4  && mod4_pioncut1  &&  (cutg->IsInside(hgc_yAtCer,hgc_xAtCer))){//region of dip
+	  hRF_pion_dip->Fill(rf_pion);
+	  xy_vs_npe_dip->Fill(hgc_yAtCer,hgc_xAtCer,hgcer);
+	  hgc_npe_vs_mom_dip->Fill(PgtrP,hgcer);
+
+	  hTotal1ddp_dip->Fill(pdelta);
+	  hTotal1dx_dip->Fill(hgc_xAtCer);
+	  hTotal1dy_dip->Fill(hgc_yAtCer);
+	  hTotal_2d_dip->Fill(hgc_yAtCer,hgc_xAtCer);
+
+	  if(hgcer>0.5){
+	    hRF_pion_dip_hgc->Fill(rf_pion);
+	    hPass1ddp_dip->Fill(pdelta);
+	    hPass1dx_dip->Fill(hgc_xAtCer);
+	    hPass1dy_dip->Fill(hgc_yAtCer);
+	    hPass_2d_dip->Fill(hgc_yAtCer,hgc_xAtCer);
+
+	  }
+	}//dip 
+	  
+      }//scaler entries
+      if (gevnum == scal_event_number[nscaler_reads])  nscaler_reads++;
+    }	//entries data scal
+
+    //}//entries
+    //no cut
+    TEfficiency *pEff_x_nocut = new TEfficiency();
+    pEff_x_nocut = new TEfficiency(*hPass1dx_nocut, *hTotal1dx_nocut); 
+    TEfficiency *pEff_y_nocut = new TEfficiency();
+    pEff_y_nocut = new TEfficiency(*hPass1dy_nocut, *hTotal1dy_nocut); 
+    TEfficiency *pEff_delta_nocut = new TEfficiency();
+    pEff_delta_nocut = new TEfficiency(*hPass1ddp_nocut, *hTotal1ddp_nocut); 
+    TEfficiency *pEff_nocut = new TEfficiency();
+    pEff_nocut = new TEfficiency(*hPass_2d_nocut, *hTotal_2d_nocut); 
+
+    //x cut
+    TEfficiency *pEff_x_xcut = new TEfficiency();
+    pEff_x_xcut = new TEfficiency(*hPass1dx_xcut, *hTotal1dx_xcut); 
+    TEfficiency *pEff_y_xcut = new TEfficiency();
+    pEff_y_xcut = new TEfficiency(*hPass1dy_xcut, *hTotal1dy_xcut); 
+    TEfficiency *pEff_delta_xcut = new TEfficiency();
+    pEff_delta_xcut = new TEfficiency(*hPass1ddp_xcut, *hTotal1ddp_xcut); 
+    TEfficiency *pEff_xcut = new TEfficiency();
+    pEff_xcut = new TEfficiency(*hPass_2d_xcut, *hTotal_2d_xcut); 
+
+    //gr cut 
+    TEfficiency *pEff_x_grcut = new TEfficiency();
+    pEff_x_grcut = new TEfficiency(*hPass1dx_grcut, *hTotal1dx_grcut); 
+    TEfficiency *pEff_y_grcut = new TEfficiency();
+    pEff_y_grcut = new TEfficiency(*hPass1dy_grcut, *hTotal1dy_grcut); 
+    TEfficiency *pEff_delta_grcut = new TEfficiency();
+    pEff_delta_grcut = new TEfficiency(*hPass1ddp_grcut, *hTotal1ddp_grcut); 
+    TEfficiency *pEff_grcut = new TEfficiency();
+    pEff_grcut = new TEfficiency(*hPass_2d_grcut, *hTotal_2d_grcut);
+
+    //dip
+    TEfficiency *pEff_x_dip = new TEfficiency();
+    pEff_x_dip = new TEfficiency(*hPass1dx_dip, *hTotal1dx_dip); 
+    TEfficiency *pEff_y_dip = new TEfficiency();
+    pEff_y_dip = new TEfficiency(*hPass1dy_dip, *hTotal1dy_dip); 
+    TEfficiency *pEff_delta_dip = new TEfficiency();
+    pEff_delta_dip = new TEfficiency(*hPass1ddp_dip, *hTotal1ddp_dip); 
+    TEfficiency *pEff_dip = new TEfficiency();
+    pEff_dip = new TEfficiency(*hPass_2d_dip, *hTotal_2d_dip);
+
+
+
+
+    
+
+    ////////average Efficiency////for Npe > 0.5
+    //nocut
+    double did_nocut =  hRF_pion_nocut_hgc->Integral();
+    double should_nocut = hRF_pion_nocut->Integral();
+    double efficiency_nocut =  did_nocut/should_nocut;
+    cout<<""<<endl;
+    cout<< runs[r]<<"   Eff No Cut = "<<did_nocut<<"/"<<should_nocut<<" = "<<efficiency_nocut<<endl;
+    txtfile<< runs[r]<<"   "<<"no cut"<<"   "<<did_nocut<<"   "<< should_nocut<<"   "<<efficiency_nocut << endl;
+    cout<<""<<endl;
+    //x cut
+    double did_xcut =  hRF_pion_xcut_hgc->Integral();
+    double should_xcut =  hRF_pion_xcut->Integral();
+    double efficiency_xcut =  did_xcut/should_xcut;
+    cout<<""<<endl;
+    cout<< runs[r]<<"   Eff X Cut = "<<did_xcut<<"/"<<should_xcut<<" = "<<efficiency_xcut<<endl;
+    txtfile<< runs[r]<<"   "<<"no cut"<<"   "<<did_xcut<<"   "<< should_xcut<<"   "<<efficiency_xcut << endl;
+    cout<<""<<endl;
+    //gr cut
+
+    double did_grcut =  hRF_pion_grcut_hgc->Integral();
+    double should_grcut =  hRF_pion_grcut->Integral();
+    double efficiency_grcut =  did_grcut/should_grcut;
+     
+    cout<<""<<endl;
+    cout<< runs[r]<<"   Eff GR Cut = "<<did_grcut<<"/"<<should_grcut<<" = "<<efficiency_grcut<<endl;
+    txtfile<< runs[r]<<"   "<<"no cut"<<"   "<<did_grcut<<"   "<< should_grcut<<"   "<<efficiency_grcut << endl;
+    cout<<""<<endl;
+    //dip cut
+    double did_dip =  hRF_pion_dip_hgc->Integral();
+    double should_dip =  hRF_pion_dip->Integral();
+    double efficiency_dip =  did_dip/should_dip;
+     
+    cout<<""<<endl;
+    cout<< runs[r]<<"   Eff GR Cut = "<<did_dip<<"/"<<should_dip<<" = "<<efficiency_dip<<endl;
+    txtfile<< runs[r]<<"   "<<"no cut"<<"   "<<did_dip<<"   "<< should_dip<<"   "<<efficiency_dip << endl;
+    cout<<""<<endl;
+
+    
+    TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
+    c1->Divide(3,4);
+
+    //no cut
+    c1->cd(1); gPad->SetGrid();
+    pEff_delta_nocut->Draw("");
+    pEff_delta_nocut->SetTitle(Form("Eff vs dP (No XCer Cut) %d",runs[r]));
+    pEff_delta_nocut->SetLineWidth(2);
+
+
+    c1->cd(2);  gPad->SetGrid();
+    pEff_x_nocut->Draw("");
+    pEff_x_nocut->SetTitle("Eff vs X AtCer (No XCer Cut) ");
+    pEff_x_nocut->SetLineWidth(2);
+    
+    c1->cd(3);  gPad->SetGrid();
+    pEff_y_nocut->Draw("");
+    pEff_y_nocut->SetTitle("Eff vs Y AtCer (No XCer Cut)" );
+    pEff_y_nocut->SetLineWidth(2);
+    //x cut
+   
+    c1->cd(4); gPad->SetGrid();
+    pEff_delta_xcut->Draw("");
+    pEff_delta_xcut->SetTitle(Form("Eff vs dP (XCer Cut) %d",runs[r]));
+    pEff_delta_xcut->SetLineWidth(2);
+
+
+    c1->cd(5);  gPad->SetGrid();
+    pEff_x_xcut->Draw("");
+    pEff_x_xcut->SetTitle("Eff vs X AtCer (XCer Cut) ");
+    pEff_x_xcut->SetLineWidth(2);
+    
+    c1->cd(6);  gPad->SetGrid();
+    pEff_y_xcut->Draw("");
+    pEff_y_xcut->SetTitle("Eff vs Y AtCer (XCer Cut)" );
+    pEff_y_xcut->SetLineWidth(2);
+    //gr cut
+   
+    c1->cd(7); gPad->SetGrid();
+    pEff_delta_grcut->Draw("");
+    pEff_delta_grcut->SetTitle(Form("Eff vs dP (Graphical Cut) %d",runs[r]));
+    pEff_delta_grcut->SetLineWidth(2);
+
+
+    c1->cd(8);  gPad->SetGrid();
+    pEff_x_grcut->Draw("");
+    pEff_x_grcut->SetTitle("Eff vs X AtCer (Graphical Cut) ");
+    pEff_x_grcut->SetLineWidth(2);
+    
+    c1->cd(9);  gPad->SetGrid();
+    pEff_y_grcut->Draw("");
+    pEff_y_grcut->SetTitle("Eff vs Y AtCer (Graphical Cut)" );
+    pEff_y_grcut->SetLineWidth(2);
+    //x gr cut done
+
+    c1->cd(10);	gPad->SetGrid();
+    hRF_pion_nocut->Draw("");
+    hRF_pion_nocut->SetLineWidth(2);
+    hRF_pion_nocut->SetTitle("RF Time (ns), no X or Gr cut");
+    hRF_pion_nocut_hgc->Draw("sames");
+    hRF_pion_nocut_hgc->SetLineWidth(2);
+    hRF_pion_nocut_hgc->SetLineColor(kRed);
+    //two stat boxes
+
+    gPad->Update();
+    TPaveStats *p1 = (TPaveStats*) hRF_pion_nocut->FindObject("stats");
+    p1->SetY1NDC(.68);
+    p1->SetY2NDC(.93);
+    p1->SetX1NDC(.55); 
+    p1->SetX2NDC(0.9);
+    p1->SetLineColor(kBlue);
+    p1->SetLineWidth(2);
+    p1->SetTextColor(kBlue);
+    gPad->Update();
+    TPaveStats *p2 = (TPaveStats*) hRF_pion_nocut_hgc->FindObject("stats");
+    p2->SetY1NDC(.4);
+    p2->SetY2NDC(.65);
+    p2->SetX1NDC(.55); 
+    p2->SetX2NDC(0.9);
+    p2->SetLineColor(kRed);
+    p2->SetLineWidth(2);
+    p2->SetTextColor(kRed);
+    gPad->Update();
+    TLatex let;
+    let.SetNDC();
+    let.SetTextColor(kBlue);
+    let.SetTextFont(132);
+    let.SetTextColor(kBlack);
+    let.SetTextSize(0.1);
+    let.DrawLatex(0.55, 0.30, Form("Efficiency = %f",efficiency_nocut));
+    gPad->Update();
+    //two stat boxes, text done
+    
+    c1->cd(11);	gPad->SetGrid();
+    hRF_pion_xcut->Draw("");
+    hRF_pion_xcut->SetLineWidth(2);
+    hRF_pion_xcut->SetTitle("RF Time (ns),  X Cut");
+    hRF_pion_xcut_hgc->Draw("sames");
+    hRF_pion_xcut_hgc->SetLineWidth(2);
+    hRF_pion_xcut_hgc->SetLineColor(kRed);
+    //two stat boxes
+
+    gPad->Update();
+    TPaveStats *q1 = (TPaveStats*) hRF_pion_xcut->FindObject("stats");
+    q1->SetY1NDC(.68);
+    q1->SetY2NDC(.93);
+    q1->SetX1NDC(.55); 
+    q1->SetX2NDC(0.9);
+    q1->SetLineColor(kBlue);
+    q1->SetLineWidth(2);
+    q1->SetTextColor(kBlue);
+    gPad->Update();
+    TPaveStats *q2 = (TPaveStats*) hRF_pion_xcut_hgc->FindObject("stats");
+    q2->SetY1NDC(.4);
+    q2->SetY2NDC(.65);
+    q2->SetX1NDC(.55); 
+    q2->SetX2NDC(0.9);
+    q2->SetLineColor(kRed);
+    q2->SetLineWidth(2);
+    q2->SetTextColor(kRed);
+    gPad->Update();
+    
+    TLatex let1;
+    let1.SetNDC();
+    let1.SetTextColor(kBlue);
+    let1.SetTextFont(132);
+    let1.SetTextColor(kBlack);
+    let1.SetTextSize(0.1);
+    let1.DrawLatex(0.55, 0.30, Form("Efficiency = %f",efficiency_xcut));
+    gPad->Update();
+    //two stat boxes, text done
+
+    
+    c1->cd(12);	gPad->SetGrid();
+    hRF_pion_grcut->Draw("");
+    hRF_pion_grcut->SetLineWidth(2);
+    hRF_pion_grcut->SetTitle("RF Time (ns),  Gr cut");
+    hRF_pion_grcut_hgc->Draw("sames");
+    hRF_pion_grcut_hgc->SetLineWidth(2);
+    hRF_pion_grcut_hgc->SetLineColor(kRed);
+
+    gPad->Update();
+    TPaveStats *r1 = (TPaveStats*) hRF_pion_grcut->FindObject("stats");
+    r1->SetY1NDC(.68);
+    r1->SetY2NDC(.93);
+    r1->SetX1NDC(.55); 
+    r1->SetX2NDC(0.9);
+    r1->SetLineColor(kBlue);
+    r1->SetLineWidth(2);
+    r1->SetTextColor(kBlue);
+    gPad->Update();
+    TPaveStats *r2 = (TPaveStats*) hRF_pion_grcut_hgc->FindObject("stats");
+    r2->SetY1NDC(.4);
+    r2->SetY2NDC(.65);
+    r2->SetX1NDC(.55); 
+    r2->SetX2NDC(0.9);
+    r2->SetLineColor(kRed);
+    r2->SetLineWidth(2);
+    r2->SetTextColor(kRed);
+    gPad->Update();
+    TLatex let2;
+    let2.SetNDC();
+    let2.SetTextColor(kBlue);
+    let2.SetTextFont(132);
+    let2.SetTextColor(kBlack);
+    let2.SetTextSize(0.1);
+    let2.DrawLatex(0.55, 0.30, Form("Efficiency = %f",efficiency_grcut));
+    gPad->Update();
+
+    c1->SaveAs(Form("pdf_hgc_XY/all_1d_plots_%d.pdf",runs[r]));
+
+    TCanvas *c2 = new TCanvas("c2", "c2", 1200, 800);
+    c2->Divide(3,3);
+
+    c2->cd(1);gPad->SetGrid();
+    hgc_npe_vs_mom_nocut->Draw("");
+    hgc_npe_vs_mom_nocut->GetXaxis()->CenterTitle();                   
+    hgc_npe_vs_mom_nocut->GetYaxis()->CenterTitle();            
+    hgc_npe_vs_mom_nocut->GetXaxis()->SetTitle("Mom_Nocutentum (GeV)");
+    hgc_npe_vs_mom_nocut->GetYaxis()->SetTitle("Hgc NpeSum");
+    hgc_npe_vs_mom_nocut->SetTitle(Form("%d Hgc Npe vs Mom no Cut P = %f",runs[r], mom[r]));
+    hgc_npe_vs_mom_nocut->SetMarkerStyle(22);
+
+    c2->cd(2);gPad->SetGrid();
+    hgc_npe_vs_mom_xcut->Draw("");
+    hgc_npe_vs_mom_xcut->GetXaxis()->CenterTitle();                   
+    hgc_npe_vs_mom_xcut->GetYaxis()->CenterTitle();            
+    hgc_npe_vs_mom_xcut->GetXaxis()->SetTitle("Mom_Xcutentum (GeV)");
+    hgc_npe_vs_mom_xcut->GetYaxis()->SetTitle("Hgc NpeSum");
+    hgc_npe_vs_mom_xcut->SetTitle(Form("Hgc Npe vs Mom X Cut P = %f",mom[r]));
+    hgc_npe_vs_mom_xcut->SetMarkerStyle(22);
+
+    c2->cd(3);gPad->SetGrid();
+    hgc_npe_vs_mom_grcut->Draw("");
+    hgc_npe_vs_mom_grcut->GetXaxis()->CenterTitle();                   
+    hgc_npe_vs_mom_grcut->GetYaxis()->CenterTitle();            
+    hgc_npe_vs_mom_grcut->GetXaxis()->SetTitle("Mom_Nocutentum (GeV)");
+    hgc_npe_vs_mom_grcut->GetYaxis()->SetTitle("Hgc NpeSum");
+    hgc_npe_vs_mom_grcut->SetTitle(Form("Hgc Npe vs Mom Gr Cut P = %f",mom[r]));
+    hgc_npe_vs_mom_grcut->SetMarkerStyle(22);
+
+    
+    c2->cd(4);gPad->SetGrid();
+    xy_vs_npe_nocut->Draw("colz");
+    
+    c2->cd(5);gPad->SetGrid();
+    xy_vs_npe_xcut->Draw("colz");
+
+    c2->cd(6);gPad->SetGrid();
+    xy_vs_npe_grcut->Draw("colz");
+ 
+    c2->cd(7);gPad->SetGrid();
+    pEff_nocut->Draw("colz");
+
+    c2->cd(8);gPad->SetGrid();
+    pEff_xcut->Draw("colz");
+ 
+    c2->cd(9);gPad->SetGrid();
+    pEff_grcut->Draw("colz");
+ 
+    c2->SaveAs(Form("pdf_hgc_XY/all_2d_plots_%d.pdf",runs[r]));
+
+
+    ////////////For dip region only////////
+    TCanvas *c3 = new TCanvas("c3", "c3", 1200, 800);
+    c3->Divide(3,3);
+   
+    //no cut
+    c3->cd(1); gPad->SetGrid();
+    pEff_delta_dip->Draw("");
+    pEff_delta_dip->SetTitle(Form("Eff vs dP (No XCer Cut) %d",runs[r]));
+    pEff_delta_dip->SetLineWidth(2);
+
+
+    c3->cd(2);  gPad->SetGrid();
+    pEff_x_dip->Draw("");
+    pEff_x_dip->SetTitle("Eff vs X AtCer (No XCer Cut) ");
+    pEff_x_dip->SetLineWidth(2);
+    
+    c3->cd(3);  gPad->SetGrid();
+    pEff_y_dip->Draw("");
+    pEff_y_dip->SetTitle("Eff vs Y AtCer (No XCer Cut)" );
+    pEff_y_dip->SetLineWidth(2);
+
+    c3->cd(4);gPad->SetGrid();
+    hgc_npe_vs_mom_dip->Draw("");
+    hgc_npe_vs_mom_dip->GetXaxis()->CenterTitle();                   
+    hgc_npe_vs_mom_dip->GetYaxis()->CenterTitle();            
+    hgc_npe_vs_mom_dip->GetXaxis()->SetTitle("Momentum (GeV)");
+    hgc_npe_vs_mom_dip->GetYaxis()->SetTitle("Hgc NpeSum");
+    hgc_npe_vs_mom_dip->SetTitle(Form("%d Hgc Npe vs Mom no Cut P = %f",runs[r], mom[r]));
+    hgc_npe_vs_mom_dip->SetMarkerStyle(22);
+
+    c3->cd(5);gPad->SetGrid();
+    xy_vs_npe_dip->Draw("colz");
+
+    c3->cd(6);gPad->SetGrid();
+    pEff_dip->Draw("colz");
+    
+    c3->cd(7);	gPad->SetGrid();
+    hRF_pion_dip->Draw("");
+    hRF_pion_dip->SetLineWidth(2);
+    hRF_pion_dip->SetTitle("RF Time (ns), no X or Gr cut");
+    hRF_pion_dip_hgc->Draw("sames");
+
+
+    hRF_pion_dip_hgc->SetLineWidth(2);
+    hRF_pion_dip_hgc->SetLineColor(kRed);
+    //two stat boxes
+
+    
+
+    gPad->Update();
+    TPaveStats *s1 = (TPaveStats*) hRF_pion_dip->FindObject("stats");
+    s1->SetY1NDC(.68);
+    s1->SetY2NDC(.93);
+    s1->SetX1NDC(.55); 
+    s1->SetX2NDC(0.9);
+    s1->SetLineColor(kBlue);
+    s1->SetLineWidth(2);
+    s1->SetTextColor(kBlue);
+    gPad->Update();
+    TPaveStats *s2 = (TPaveStats*) hRF_pion_dip_hgc->FindObject("stats");
+    s2->SetY1NDC(.4);
+    s2->SetY2NDC(.65);
+    s2->SetX1NDC(.55); 
+    s2->SetX2NDC(0.9);
+    s2->SetLineColor(kRed);
+    s2->SetLineWidth(2);
+    s2->SetTextColor(kRed);
+    gPad->Update();
+    TLatex let3;
+    let3.SetNDC();
+    let3.SetTextColor(kBlue);
+    let3.SetTextFont(132);
+    let3.SetTextColor(kBlack);
+    let3.SetTextSize(0.1);
+    let3.DrawLatex(0.55, 0.30, Form("Efficiency = %f",efficiency_dip));
+    gPad->Update();
+
+    
+    c3->SaveAs(Form("pdf_hgc_XY/dip_2d_plot_%d.pdf",runs[r]));
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
