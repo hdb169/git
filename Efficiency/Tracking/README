@@ -1,0 +1,5 @@
+I included scaler file in the data script too. 
+still need to see carefully the current thresholdd of  5 uA (that is to analyse events with curr < 5 only) is applied well
+why there is slight difference in current (>5uA) value is slightly different in the decimal place only than that in REPORT FILE
+Included all the hms cuts for shms and vice versa, but in the numerator used only hms ntrack > 0 and hms delta  -100 to 100 and same for shms too.
+MUst include the RAw Coin Time PEAK.
