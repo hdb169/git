@@ -1,0 +1,12 @@
+No there is no raw coincidence time. You need to calculate
+
+Double_t pTRIG1_ROC2_timeraw;
+tsimc->SetBranchAddress("T.coin.pTRIG1_ROC2_tdcTime",&pTRIG1_ROC2_timeraw);
+Double_t pTRIG4_ROC2_timeraw;
+tsimc->SetBranchAddress("T.coin.pTRIG4_ROC2_tdcTime",&pTRIG4_ROC2_timeraw);
+Double_t pstarttime;
+tsimc->SetBranchAddress("P.hod.starttime",&pstarttime);
+Double_t hstarttime;
+tsimc->SetBranchAddress("H.hod.starttime",&hstarttime);
+
+Double_t rawctime = (pTRIG1_ROC2_timeraw +  pstarttime) - (pTRIG4_ROC2_timeraw + hstarttime);
