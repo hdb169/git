@@ -1,0 +1,10 @@
+to update a new hcana branch (update-april2020)
+1)build hcana as an usual way with the develop branch and make sure origin(you) and remote(jlab) is good.
+2)Follow ROOT analyzer git and do scons-j8, and you should not see any errors
+3)git checkout develop
+4)git pull upstream develop  
+This will update develop branch
+5)to switch to new branch ( update-april2020)
+git checkout -b update-april2020
+6)to make it even with jlab 
+git pull upstream update-april2020 
