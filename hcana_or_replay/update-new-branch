@@ -8,3 +8,7 @@ This will update develop branch
 git checkout -b update-april2020
 6)to make it even with jlab 
 git pull upstream update-april2020 
+//these does not work so I jsut updated my own origin hcana (which was same as jeffersonLab hcana update-april2020 vesrion by following
+
+First follow the ROOT Analyzer git to update develop branch. Then
+ git checkout update-april2020
