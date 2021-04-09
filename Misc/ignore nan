@@ -1,3 +1,11 @@
+  double z1 = 0.0;
+  double y1=0.0;
+  double x1=z1/y1;
+  if(isnan(x1))x1=9999;
+  cout<<"x1 = "<<x1<<endl;
+  it prints 9999 insted of nan
+  
+  
   //if(a quantity =nan) a quantity=99999;
   if(isnan(treff_shms_noct_nodelta))treff_shms_noct_nodelta=999999;
   if(isnan(treff_shms_noct_nodelta_err))treff_shms_noct_nodelta_err=999999;
