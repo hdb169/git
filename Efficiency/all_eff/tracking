@@ -1,0 +1,50 @@
+//1) This macro will calculate the tracking efficiency of one or more shms coincidence runs as well as singles. But the cuts for electron selection has to be changed. For pion selcetion  pcaletotnorm>0.05 && pcaletotnorm<0.5 where as for electron selection (singles), pcaletotnorm>0.7 && pcaletotnorm<1.4
+//2) For, Coin Runs, yield Y = Counts/ (Q* corrected_efficiency), where
+//corrected efficiency = good counts/ [Q(mc)* tr eff * 3/4 shms eff * cpu LT * elec_LT (all< = 1)].
+//3) But for singles, Y =  Counts *ps1_factor / [Q(mc)* tr eff * 3/4 shms eff * cpu LT * elec_LT (all< = 1)].
+//4) The tracking efficiency is printed in the txtfile.
+
+#include "TH1F.h"
+#include <TH2.h>
+#include <TCanvas.h>
+#include <TObject.h>
+
+
+
+
+//no calcut
+
+
+
+
+
+ #define NRUNS 500 
+void tracking_no_pT2_Mult(){
+  // gErrorIgnoreLevel= kError;
+  // gROOT->SetBatch(kTRUE);//kFALSE =0, kTRUE =1, kTRUE not  will display the plot, kFALSE will .
+  //Int_t runs[NRUNS] ={6065,6066, 6068, 6070, 6071, 6073, 6081, 6082, 6083, 6088, 6089, 6090, 6104, 6105, 6106, 6111, 6112, 6114, 6237, 6240, 6241, 6245, 6246,6247, 6248, 6249, 6250, 6253, 6254, 6255, 6285, 6286, 6287, 6290, 6291, 6451, 6452, 6453, 6459, 6460, 6461, 6524, 6525, 6526, 6527, 6528, 6529, 6545, 6548, 6549, 7593, 7594, 7595, 7596, 7597, 7671 , 7672, 7729, 7730, 7733, 7735, 7736, 7776, 7796, 7797};//D2 > 3Gev
+
+     Int_t runs[NRUNS] =   {6498, 6499, 6500, 6501, 6502, 6503, 6504, 6506,  6509, 6510, 6512, 6513, 6514, 6515, 6516, 6517, 6518, 6519, 6520, 6521, 6522, 6523, 6524, 6525, 6526, 6527, 6528, 6529, 6531, 6532, 6533, 6534, 6535, 6536, 6537, 6538, 6539, 6541, 6542, 6543, 6544, 6545, 6546, 6547, 6548, 6549, 6550, 6551, 6552};
+  gStyle->SetOptStat(1000011);
+
+  TFile *f;
+  TTree *tt;
+  for(Int_t i=0; i<NRUNS; i++){
+
+//    f=new TFile(Form("/lustre/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/peter_tracking_param/coin_replay_production_%d_-1.root", runs[i]),"read");
+    // f=new TFile(Form("/home/hdbhatt/ROOTfiles/coin_replay_production_%d_-1.root", runs[i]),"read");
+     f=new TFile(Form("/lustre19/expphy/volatile/hallc/spring17/hdbhatt/group/ROOTfiles/pT2_tdc/coin_replay_production_%d_-1.root", runs[i]),"read");
+
+    //cout<< "Opening Run Num = "<< runs[i] <<endl; 
+
+    if ((!f) || (f->IsZombie())){
+      cout << "No file found or Zombie file" << endl;
+      continue;
+    }
+
+    tt=(TTree *)f->Get("T");
+
+
+    Double_t pionMass = 0.1395701835;
+
+"tracking_no_pT2_Mult.C" 430L, 22233C                                                                                                                                   27,6          Top
