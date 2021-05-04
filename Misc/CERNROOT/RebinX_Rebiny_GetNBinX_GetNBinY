@@ -1,0 +1,9 @@
+void read_YvsX(){
+  TFile *f1 = new TFile("/home/hdbhatt/efficiency/hgcer/root_hgcereff/eff_1.root");
+  TH1D * hYvsX = (TH1D*)f1->Get("xy_vs_npe_grcut");//dataD2+
+  cout<<hYvsX->GetNbinsX()<<endl;
+  cout<<hYvsX->GetNbinsY()<<endl;
+  hYvsX->RebinX(2000);
+  hYvsX->RebinY(2000);
+  hYvsX->Draw("colz");
+}
