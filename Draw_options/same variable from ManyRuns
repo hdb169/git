@@ -1,0 +1,227 @@
+//This Plots same variable from many runs in one canvas, First define hist outside of run loop. Fill hist in event loop. Draw hist outside of run loop
+//first hist is hist num 1 from run 1, and rest Draw("same") from run num 2, and more.
+
+
+//made pcal 0.6, hcal 0.8, rf 0.4 , ctime 2, hcer 8, delta dropped centaral, graphical cut on
+#include "header.h"
+#include <iostream>
+#include <string>
+#include "TCanvas.h"
+#include "TGraphErrors.h"
+#include "TF1.h"
+#include "TPaveText.h"
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TLine.h>
+#include <TMath.h>
+#include <TPaveText.h>
+#include <TGaxis.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdio.h>
+#include <TSystem.h>
+#include <TTree.h>
+#include <TArc.h>
+#include <TCutG.h>
+#include <TExec.h>
+#include <TColor.h>
+#define NRUNS 32//800
+
+void plot_pt(){
+
+  int numruns  = 32;
+
+ TH1F *hpt[numruns];
+
+
+for(int i=0;i<numruns;i++){
+  hpt[i]= new TH1F(Form("hpt[%d]",i),"Pt Distribution for Diff Runs ;Pt (GeV); Entries", 100, -0.2, 0.6);
+}
+
+
+
+//Int_t runs[NRUNS]={1};
+//Int_t runs[NRUNS]={6020, 6021, 6022, 6026, 6027, 6028, 6029, 6030, 6031, 6032, 6043, 6044, 6045, 6046, 6049, 6050, 6051, 6052, 6053, 6054};//, 6055, 6056, 6057, 6058, 6067, 6068, 6070, 6071, 6073, 6080, 6081, 6087, 6088, 6089, 6090, 6091, 6093, 6094, 6095, 6096, 6097, 6098, 6109, 6110, 6111, 6112, 6114, 6115, 6116, 6119, 6120, 6124, 6125, 6127, 6128, 6129, 6130, 6132, 6133, 6135, 6136, 6137, 6138, 6145, 6146, 6154, 6155, 6166, 6168, 6169, 6170, 6171, 6172, 6179, 6180, 6181, 6182, 6183, 6184, 6185, 6186, 6187, 6194, 6195, 6196, 6197, 6198, 6199, 6205, 6208, 6209, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 6219, 6220, 6242, 6243, 6244, 6245, 6246, 6247, 6248, 6249, 6250, 6251, 6252, 6261, 6262, 6263, 6264, 6265, 6266, 6267, 6270, 6271, 6272, 6273, 6274, 6275, 6276, 6288, 6289, 6290, 6291, 6292, 6293, 6294, 6295, 6296, 6304, 6305, 6306, 6307, 6308, 6309, 6310, 6311, 6312, 6317, 6318, 6322, 6323, 6325, 6326, 6327, 6328, 6329, 6339, 6340, 6341, 6342, 6343, 6344, 6345, 6346, 6347, 6348, 6349, 6350, 6351, 6352, 6353, 6354, 6359, 6360, 6363, 6364, 6365, 6367, 6368, 6370, 6371, 6372, 6373, 6374, 6375, 6376, 6377, 6378, 6379, 6380, 6381, 6382, 6383, 6385, 6386, 6387, 6388, 6389, 6390, 6391, 6393, 6394, 6395, 6396, 6397, 6398, 6399, 6400, 6401, 6402, 6403, 6404, 6405, 6406, 6407, 6408, 6410, 6411, 6412, 6413, 6415, 6416, 6417, 6419, 6421, 6422, 6423, 6425, 6426, 6427, 6428, 6429, 6430, 6431, 6432, 6433, 6434, 6435, 6436, 6439, 6440, 6441, 6442, 6443, 6444, 6445, 6446, 6447, 6448, 6451, 6452, 6453, 6454, 6455, 6456, 6459, 6460, 6461, 6462, 6463, 6464, 6465, 6466, 6467, 6468, 6469, 6470, 6471, 6472, 6473, 6474, 6475, 6476, 6477, 6478, 6479,  6486, 6487, 6488, 6489, 6490, 6491, 6493, 6494, 6495, 6496, 6497, 6498, 6499, 6500, 6501, 6502, 6503, 6504, 6506, 6507, 6509, 6510, 6512, 6513, 6514, 6515, 6516, 6517, 6518, 6519, 6520, 6521, 6522, 6523, 6524, 6525, 6526, 6527, 6528, 6529, 6531, 6532, 6533, 6534, 6535, 6536, 6537, 6538, 6539, 6541, 6542, 6543, 6544, 6545, 6546, 6547, 6548, 6549, 6550, 6551, 6552, 7593, 7594, 7595, 7596, 7597, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7608, 7609, 7610, 7611, 7612, 7613, 7614, 7615, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7625, 7626, 7627, 7628, 7629, 7630, 7631, 7632, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, 7646, 7647, 7648, 7649, 7650, 7651, 7652, 7654, 7655, 7657, 7658, 7659, 7660, 7661, 7662, 7663, 7666, 7667, 7668, 7669, 7670, 7671, 7672, 7673, 7674, 7675, 7676, 7677, 7678, 7679, 7680, 7681, 7682, 7684, 7685, 7686, 7687, 7688, 7689, 7690, 7692, 7694, 7695, 7697, 7698, 7699, 7702, 7703, 7706, 7707, 7708, 7709, 7710, 7711, 7712, 7713, 7714, 7715, 7716, 7717, 7718, 7719, 7720, 7721, 7722, 7724, 7725, 7727, 7728, 7735, 7736, 7737, 7738, 7739, 7740, 7747, 7748, 7749, 7750, 7751, 7752, 7757, 7758, 7759, 7760, 7762, 7768, 7769, 7770, 7771, 7772, 7773, 7774, 7775, 7776, 7777, 7783, 7784, 7785, 7786, 7787, 7790, 7791, 7792, 7793, 7794, 7796, 7797, 7798, 7799, 7800, 7801, 7802, 7803, 7804, 7805, 7806, 7807, 7808, 7809, 7811, 7812, 7813, 7814, 7815, 7816, 7817, 7819, 7820};
+ Int_t runs[NRUNS]={7625, 7671,7646, 7657,7620,7661, 7654,7617, 6145,6170,6179,6185,7611,7642,7608,6546,6541,6539,6547,6548,6542,6544,6552,6550, 7640,7605,7635,7638,7593,7600,7808,7811};//,7796,7793,7815,7819,7805,7803,7813,7812,7798,7801,6486,6500,7768,7735,6111,7671,6537,6514,6049,6043, 7783, 6020,7706,7679,7684,7716,7737,7757,7775,7699,7697,7711,7713,7727,7747,7750,7772,7773,7790,6538,6545};
+
+double RI = 1.00137;
+
+  gStyle->SetPalette(1,0);//color in 2D 3D
+  gStyle->SetOptStat(1000011);
+  gStyle->SetOptFit(1);
+  gStyle->SetTitleOffset(1.,"Y");
+  gStyle->SetTitleOffset(.7,"X");
+  gStyle->SetLabelSize(0.04,"XY");
+  gStyle->SetTitleSize(0.06,"XY");
+  gStyle->SetPadLeftMargin(0.12);  
+  //#include "gStyle.h"
+   gStyle->SetOptStat(0);
+  //gStyle->SetOptStat(1000011);//integral
+  // gStyle->SetOptStat(1111111);//integral
+  gStyle->SetOptFit(1);//integral
+  // gStyle->SetErrorX(0); 
+
+
+  
+  gStyle->SetErrorX(0);
+
+  for(Int_t r=0; r<NRUNS; r++){
+  
+      TString filename  = Form("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/ROOTfiles/added_%d.root", runs[r]);//------7796
+      //	  TString filename  = Form("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/ROOTfiles/coin_replay_production_%d_-1.root", runs[r]);//------7796
+    //TString filename  = Form("/home/hdbhatt/ROOTfiles/short_hgc/pimpim_all_2p9plus_%d.root", runs[r]);//------7796
+     //  TString filename  = Form("/home/hdbhatt/ROOTfiles/short_hgc/coin_replay_production_%d_-1.root", runs[r]);//------7796
+
+    TFile *f = new TFile(filename, "READ");
+
+    cout<< "Opening Run Num = "<< runs[r] <<endl; 
+    
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      continue;
+    }
+
+   
+    
+
+#include "grcutfile0.h"
+#include "bin7808.h"
+
+    
+    Double_t pionmass   = 0.1395701835;    //Gev/c^2 
+    Double_t protonmass = 0.93827231;//GeV/c2
+    Double_t dxbj, dQ2, dnu,domega,  dW2, dpmiss, demiss,  zhad, Mx2,Mx2a_acccut,Epi_acccut,zhad_acccut,Epi_pidcut,zhad_pidcut,Mx2_pidcut,Epi_cut,zhad_cut,Mx2_cut ;//d = data
+    Double_t pbeta,hbeta,pdelta,hdelta,hcaletottrack,pcaletottrack,pcalepr,hcalepr,paero,hcernpe,hgcer,W,Q2,xbj,ctime,Epi,Epi_d,Epi_acc,z,z_d,z_acc,pkinomega,mom,HgtrP,hhodstarttime,phodstarttime,hdipole, pdipole,pcaletotnorm,phodgoodscinhit,betanotrack,pdcntrack,pdcch1nhit,pdcch2nhit, phodrftdcmult,phodrftdctime,prftdcmult,prftdctime , hhodrftdcmult,hhodrftdctime,hrftdcmult,hrftdctime,phodfphitstime,hhodfphitstime,rfminusfp,eventtype,rf_pion,hhodgoodscinhit,hhodbetanotrack,hdcntrack,hgtry,pgtry,phodbetanotrack,hcaletotnorm,gevnum,hxptar,hyptar,pxptar,pyptar ;
+
+    double scaler_eventnum,bcm1charge,bcm1current,scaler1MHztime,scaler1MHztimecut,bcm1chargecut,s1xscaler,s1yscaler,s2xscaler,s2yscaler,ptrig1scaler,ptrig2scaler,ptrig3scaler,ptrig4scaler,ptrig6scaler,pedtmscaler,pelcleanscaler,pl1acceptscaler,edtmtdctime,edtmtdctimeraw,mult,ptrig1rate,rate,charge,hgc_xAtCer,hgc_yAtCer,thetaq,ptdata,w2   ;
+    
+    Double_t Epi_dcut0, z_dcut0, Epi_dcut1, z_dcut1, Epi_dcut2, z_dcut2, Epi_dcut3, z_dcut3, Epi_dcut1plus2, z_dcut1plus2; 
+    Double_t Epi_acc0, z_acc0, Epi_acc1, z_acc1, Epi_acc2, z_acc2, Epi_acc3, z_acc3, Epi_acc1plus2, z_acc1plus2 ,rf_pion1 ;
+
+    Bool_t  accR_cut, accL_cut,shms_cut,pid_cut,tracking_cut,did_cut,should_cut,acc_cut_should,acc_cut_did,pid_cut_acc,hgcer_cut, paero_cut, mod4_pioncut, mod4_notpioncut, pcal_cut, hcal_cut, ctime_cut, hms_cut, pcal_cut_tight, cuttype1, cuttype1acc, cuttype2, cuttype2acc, cuttype1plus2, cuttype1plus2acc , hgcer_cut_loose,  paero_cut_loose,  cuttype0, cuttype0acc, common_cut, cuttype3, cuttype3acc, accsub_cut, acc_cut, shms_tr_did_cut, shms_tr_should_cut, hms_tr_did_cut, hms_tr_should_cut,basic_cut,basic_cal_aero, hms_cal_should_cut, hms_cal_did_cut, shms_cal_should_cut, shms_cal_did_cut, cal_eff_hms_shms_base_cut,cointime_cut ;
+
+    Double_t Epi_cut_acc, zhad_cut_acc, Mx2_cut_acc;
+    Double_t ctmin = 2;//2.0;//1.5
+    Double_t ctmax = 2;//2.0;//1.5
+    Double_t rfmin = 0.5;//0.5;//0.5;
+    Double_t rfmax = 1.5;//1.5;//1.5;
+    Double_t eprmin = 0.0;
+    Double_t eprmax = 0.2;//0.15;
+    Double_t pcaletotmin = 0.0;
+    Double_t pcaletotmax = 0.7;//0.75;
+    Double_t hcaletotmin = 0.75;//0.75;
+    Double_t offsetrf;
+    double nbin  = 70;//5;
+    double loxy = -70;//-30;
+    double hixy  = 40;//30;
+    double lodelta = -10;
+    double hidelta = 20;
+    double npelo = 0;
+    double npehi = 30;
+    double binP   = 20;
+    double binloP = 2.9;
+    double binhiP = 5.5;
+    double maxct = 47.5;
+    double minct = 42.5;
+    TH1F *hmom = new TH1F("hmom","", 17, 2.8, 7.0);
+    TH1F *hmom_all_regions = new TH1F("hmom_all_regions (hole removed)","Mom Distn (all regions); Mom (GeV); Counts", 17, 2.8, 7.0);
+    TH1F *hmom_circle1 = new TH1F("hmom_circle1","Mom Distn (inner circle); Mom (GeV); Counts", 17, 2.8, 7.0);
+    TH1F *hmom_circle2 = new TH1F("hmom_circle2","Mom Distn (middle circle); Mom (GeV); Counts", 17, 2.8, 7.0);
+    TH1F *hmom_circle3 = new TH1F("hmom_circle3","Mom Distn (exterior); Mom (GeV); Counts", 17, 2.8, 7.0);
+
+    TH1F *hctimecut = new TH1F("hctimecut","", 100, 30, 55);
+    //TH1F *hpt = new TH1F("hpt","Pt Distribution;Pt (GeV); Counts", 100, -1,1);
+    //TH1F *hpt1 = new TH1F("hpt1",";Pt (GeV); Counts", 100, -1,1);
+
+
+
+
+ 
+   
+#include "offsetrf.h"
+    TTree * tt = (TTree *)f->Get("T");
+    TTree * ss = (TTree *)f->Get("TSP");
+#include "define_histogram.h"
+
+    //----------------------------------------Fill Hist
+    //#include "branch_original.h"
+#include "branch_pt.h"//===================================================branch pt===========
+
+    Long64_t nentriesD = tt->GetEntries();
+   
+   
+#include "scaler_branch.h"
+    Long64_t scal_entries = ss->GetEntries();
+#include "scaler_analysis.h"
+
+    Int_t nscaler_reads_acc=0;
+   
+   
+		
+    Bool_t hgcer_cut1 ,paero_cut1 , mod4_pioncut1,  mod4_notpioncut1,   pcal_cut1, hcal_cut1,  hms_cut1,   shms_cut1, shms_cut2, pid_cut1, ctime_cut1, acc_cut1, acc_cut1hardcut,acc_cut_norf,central_hole,right_or_left_of_hole,remove_region,circle1, circle22, circle2, circle3, pid_cutacc, hms_cutacc ;
+
+
+    Int_t nscaler_reads=0;
+
+      
+    for (int kk=0; kk<nentriesD;  kk++){
+      tt->GetEntry(kk);
+
+      Epi_cut = sqrt(pow(pionmass,2) + pow(mom,2));//variable same
+      zhad_cut = Epi_cut/dnu;
+      Mx2_cut=(protonmass + dnu - zhad_cut *dnu) *  (protonmass + dnu - zhad_cut *dnu) - abs(dpmiss)*abs(dpmiss);
+
+      rf_pion1 = (fmod(-prftdctime+phodfphitstime + offsetrf ,4.008));
+     
+      mod4_pioncut1 = ((rf_pion1 > 0.5 && rf_pion1 < 1.5));
+      mod4_notpioncut1 =!mod4_pioncut;
+      pcal_cut1 =  pcaletottrack < pcaletotmax;
+      hcal_cut1 =  hcaletottrack > hcaletotmin;
+
+      hms_cut1  =  hdelta> -8 && hdelta < 8  && hhodstarttime ==1 && hdipole==1  &&hcernpe>1.0 && hcaletottrack>0.75 && hxptar>-0.08&&hxptar<0.08&&hyptar>-0.04&&hyptar<0.04 && ctime>42 && ctime<46 ;//&& dW2> 4 && Mx2_cut>2.1 ;
+    
+      hms_cutacc  =  hdelta> -8 && hdelta < 8  && hhodstarttime ==1 && hdipole==1  &&hcernpe>1.0 && hcaletottrack>0.75 && hxptar>-0.08&&hxptar<0.08&&hyptar>-0.04&&hyptar<0.04;
+      shms_cut1 =  pdelta >-10 && pdelta < 20   && phodstarttime == 1  && eventtype > 3 && pcaletottrack<0.7 && paero>4 && pdipole ==1 && pxptar>-0.05&&pxptar<0.05&&pyptar>-0.05&&pyptar<0.05;
+      pid_cutacc  = hms_cutacc && shms_cut1 && mod4_pioncut1;//no HGC but RFtime
+      pid_cut1  = hms_cut1 && shms_cut1 && mod4_pioncut1;//no HGC but RFtime
+
+
+      ptdata = mom*sin(thetaq);//just same for all
+
+      if(pid_cut1){hpt[r]->Fill(ptdata);}//need to fill separately for all runs
+      //if(w2>2){hpt[r]->Fill(ptdata);}//need to fill separately for all runs
+
+    
+    }//evt loop
+  }//runs
+
+
+  TCanvas* c1 = new TCanvas ("c1", "c1", 1200, 800);
+  c1->Divide(1,1);
+  c1->cd(1);gPad->SetLogy();
+  hpt[0]->Draw("");//draw the first histogram, zeroth one
+  hpt[0]->SetLineWidth(2);    
+  hpt[0]->SetLineColor(1);    
+
+  for(int j=1;j<numruns;j++){//------------------------------------------------------------->change Num Runs here
+    hpt[j]->SetLineColor(j+1);
+    hpt[j]->Draw("same");//draw starting from 1
+    hpt[j]->SetLineWidth(2);
+    // hpt[j]->GetYaxis()->SetRangeUser(0,100000);
+
+  }
+
+
+  //}//runs
+  //hpt1->SetTitle(Form("Pt Distribution %d",runs[r]));
+  c1->SaveAs("pdf_pt/ptplot_vs1.pdf");
+      
+  
+}
+
+
+		       
+		       
+  
+		       
