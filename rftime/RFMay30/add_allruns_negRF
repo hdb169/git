@@ -1,0 +1,68 @@
+void addRFneg(){
+  gStyle->SetOptFit(1);
+  // gStyle->SetPalette(1,0);//color in 2D 3D
+  // gStyle->SetOptStat(1000011);
+  // gStyle->SetOptFit(1);
+  // gStyle->SetTitleOffset(1.,"Y");
+  // gStyle->SetTitleOffset(1.,"X");
+  // gStyle->SetLabelSize(0.1,"XY");//0.04
+  // gStyle->SetTitleSize(0.1,"XY");//0.06
+  // gStyle->SetPadLeftMargin(0.02);  
+  TList *list = new TList;
+  Int_t runs[]=             { 6081,6068,6070,6071,6073,6081,6080,6082,6083,6088,6089,6090,6087,6084,6085,6086,6545,6546,6546,6548,6549,6547,6111,6112,6114,6109,6110,6104,6105,6106,6486,
+                            6487,6245,6246,6247,6242,6243,6244,6237,6250,6241,6248,6249,6250,6251,6252,6253,6255,6451,6452,6453,6454,6455,6459,6460,6461,6462,6463,6564,6456,6290,6291,
+			    6288,6289,6285,6286,6524,6525,6526,6522,6523,6527,6528,6529,6531,6532,7593,9594,7595,7596,7597,7600,7601,7602,7603,7604,7671,7672,7673,7674,7627,7728,7727,
+			    7728,7796,7797,7798,7799,7800,7801,7802 };
+
+ 
+  int NRUNS = sizeof(runs)/sizeof(*runs);
+  TH1F *hhRF[NRUNS];
+  for(Int_t r=0; r<NRUNS; r++){
+      
+    TString filename  = Form("/home/hdbhatt/efficiency/hgcer/root_rfhist/rftime_hist_%d.root", runs[r]);
+    TFile *f = new TFile(filename, "READ");
+		      
+    hhRF[r] = (TH1F *)f->Get("hRF_clean_neg");
+    list->Add(hhRF[r]);
+    
+  }
+      
+   
+  gStyle->SetTitleYOffset(0.1);
+  gStyle->SetTitleXOffset(0.1);
+  gROOT->ForceStyle(true);
+  
+  TH1F *h = (TH1F*)hhRF[0]->Clone("h");
+  h->Reset();
+  h->Merge(list);
+  TCanvas *c1 = new TCanvas ("c1","",1200,1000);
+  c1->Divide(2,1);
+  c1->cd(1);gPad->SetGrid();
+  h->Draw("hist");
+  h->GetXaxis()->CenterTitle();
+  h->GetYaxis()->CenterTitle();
+
+  // h->Draw("e");
+
+  h->Fit("gaus","R","",0.5,1.5);
+  h->GetXaxis()->SetAxisColor(17);
+  h->GetYaxis()->SetAxisColor(17);
+
+  TF1 *f1 = (TF1*)h->GetFunction("gaus");
+  f1->SetLineColor(kRed);
+  f1->SetLineWidth(2);
+  f1->Draw("same");
+
+  h->SetLineWidth(2);
+  h->SetMarkerStyle(20);
+
+  c1->cd(2);
+  hhRF[0]->Draw();
+  hhRF[0]->GetYaxis()->SetRangeUser(0,3000);
+  hhRF[0]->GetXaxis()->CenterTitle();
+  hhRF[0]->GetYaxis()->CenterTitle();
+  for(int i = 0;i<NRUNS;i++){
+    hhRF[i]->Draw("hist same");
+  }
+  c1->SaveAs("pdf_rf/RFTime_allRuns_neg.pdf");
+}
