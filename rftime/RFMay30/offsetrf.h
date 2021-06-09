@@ -1,4 +1,5 @@
 //kin1-2
+
 if(runs[r]>=6020 && runs[r]<=6022){offsetrf = 397.1;}//kin1-2
 if(runs[r]>=6026 && runs[r]<=6029){offsetrf = 397.05;}
 if(runs[r]>=6030 && runs[r]<=6043){offsetrf = 397.1;}
@@ -36,6 +37,7 @@ if(runs[r]>=6513 && runs[r]<=6517){offsetrf = 396.9;}
 //9-10
 if (runs[r]>=6194 && runs[r]<= 6195){offsetrf = 397.08;}
 if (runs[r]>=6196 && runs[r]<= 6199){offsetrf = 397.05;}
+if (runs[r]>=6200 && runs[r]<= 6204){offsetrf = 397.05;}
 if (runs[r]>=6205 && runs[r]<= 6212){offsetrf = 397.00;}
 if (runs[r]>=6213 && runs[r]<= 6217){offsetrf = 396.95;}
 if (runs[r]>=6219 && runs[r]<= 6220){offsetrf = 398.95;}
