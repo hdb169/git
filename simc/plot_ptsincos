@@ -1,0 +1,466 @@
+
+#define NRUNS 16
+void plot_ptsincos(){
+  gStyle->SetOptStat(0);
+  Int_t runs[NRUNS] = { 60701, 60731,60881,60911,        60201,60291,60431,60491,    60651,60821,60841,60991,       60231,60331,60381,60591};//D2-,D2+,H2-,H2+
+
+  Int_t gevents[NRUNS] = {300000,300000,300000,300000, 300000,300000,300000,300000,  100000,100000,100000,100000,  100000,100000,100000,100000,};
+
+  Double_t normfac[NRUNS] ={0.154889E+12,0.163448E+12,0.163526E+12, 0.164358E+12,   0.154889E+12, 0.163448E+12,  0.163526E+12,0.164358E+12,   0.134357E+12, 0.141900E+12, 0.141832E+12,  0.142192E+12,    0.134357E+12,0.141900E+12,0.141832E+12, 0.142192E+12 };
+
+
+
+  
+  for (int r=0; r< NRUNS; r++){
+
+    
+     TString filename = Form("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/simc_rootfilesOct15/simc_%d.root",runs[r]);
+    // TString filename = Form("/home/hdbhatt/simcROOTfilesaps/simc_%d.root",runs[r]);
+
+    TFile *f = new TFile(filename,"READ");
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      continue;
+    }
+
+    TFile * f1 = new TFile(Form("root_sincos/primary_%d.root",runs[r]),"RECREATE");
+    gStyle->SetOptStat(100111);
+
+    // cout<< "Opening Run Num = "<< runs[r] <<"   "<<gevents[r]<<"   "<< normfac[r]<<endl; 
+    cout<<"  "<<endl;
+    gStyle->SetPalette(1,0);
+    gStyle->SetOptStat(1000011);
+    gStyle->SetOptFit(11);
+    gStyle->SetTitleOffset(1.,"Y");
+    gStyle->SetTitleOffset(.7,"X");
+    gStyle->SetLabelSize(0.04,"XY");
+    gStyle->SetTitleSize(0.06,"XY");
+    gStyle->SetPadLeftMargin(0.12);
+
+#include "bin7813.h"
+   
+    //  cout<<runs[r]<<"  "<<xvalue[r]<< "    "<<zvalue[r]<< "    "<<normfac[r]<<endl;
+    
+    TH1D *h_Q2s = new TH1D("h_Q2s", "h_Q2s", binQ2, loQ2, hiQ2);
+    TH1D *h_W2s = new TH1D("h_W2s", "h_W2s", binW2, loW2, hiW2);
+    TH1D *h_xs = new TH1D("h_xs", "h_xs", binx, lox, hix);
+    TH1D *h_zs = new TH1D("h_zs", "h_zs", binz, loz, hiz);
+    TH1D *h_hdeltas = new TH1D("h_hdeltas", "h_hdeltas", binhdelta, lohdelta, hihdelta);
+    TH1D *h_pdeltas = new TH1D("h_pdeltas", "h_pdeltas", binpdelta, lopdelta, hipdelta);
+    TH1D *h_nus = new TH1D("h_nus", "h_nus", binnu, lonu, hinu);
+    TH1D *h_wprime2s_cut = new TH1D("h_wprime2s_cut", "h_wprime2s_cut", binWp2, loWp2, hiWp2);
+    TH1D *h_wprime2s_nocut = new TH1D("h_wprime2s_nocut", "h_wprime2s_nocut", binWp2, loWp2, hiWp2);
+    TH1D *h_Pms = new TH1D("h_Pms", "h_Pms",  binpm, lopm, hipm);
+    TH1D *h_phadron01 = new TH1D("h_phadron01", "h_phadron01", binphad, lophad, hiphad);
+    TH2D *psinphi_vs_pcosphi_simc = new TH2D("psinphi_vs_pcosphi_simc","",100,-10,10,100,-10,10);
+    TH1D *hsinphi = new TH1D("hsinphi", "", 100,-1.5, 1.5);
+    TH1D *hcosphi = new TH1D("hcosphi", "", 100,-1.5, 1.5);
+    TH1D *hphi = new TH1D("hphi", "", 100,-10, 10);
+
+    Double_t sQ2,sW,sW2, sxbj, szhad, weight,shdelta,spdelta,normwt,snu,phadron,Epi,wprime2,sq,sppi,sPm,hxptar,hyptar,pxptar,pyptar,phisimc,psinphi,pcosphi ;
+    Double_t pionmass   = 0.1395701835;    
+    Double_t protonmass = 0.93827231;
+    cout<<runs[r]<<endl;
+
+    TTree *ts = (TTree*)f->Get("h10");
+    Long64_t simc_entries = ts->GetEntries();
+    // cout<<simc_entries<<endl;
+    for (int i = 0; i < simc_entries; i++) {
+      ts->GetEntry(i);
+      normwt = weight*normfac[r]/gevents[r];
+      sQ2 = ts->GetLeaf("Q2")->GetValue();
+      weight = ts->GetLeaf("Weight")->GetValue();
+      shdelta = ts->GetLeaf("hsdelta")->GetValue();
+      spdelta = ts->GetLeaf("ssdelta")->GetValue();
+      snu = ts->GetLeaf("nu")->GetValue();
+      sq = ts->GetLeaf("q")->GetValue();
+      sPm= ts->GetLeaf("Pm")->GetValue();
+      hxptar=ts->GetLeaf("hsxptar")->GetValue();
+      hyptar=ts->GetLeaf("hsyptar")->GetValue();
+      pxptar=ts->GetLeaf("ssxptar")->GetValue();
+      pyptar=ts->GetLeaf("ssyptar")->GetValue();
+      phisimc=ts->GetLeaf("phipq")->GetValue();
+      sppi =ts->GetLeaf("ppi")->GetValue();
+      sxbj = ts->GetLeaf("xbj")->GetValue();
+      szhad = ts->GetLeaf("z")->GetValue();
+      wprime2 = (protonmass + snu - szhad*snu) * (protonmass + snu - szhad*snu) - abs(sPm)*abs(sPm);
+      sW = ts->GetLeaf("W")->GetValue();
+      sW2 =sW*sW;
+      psinphi = sppi*sin(phisimc);
+      pcosphi = sppi*cos(phisimc);
+
+      if(shdelta>-8 && shdelta< 8 && spdelta>-10 && spdelta<20)// && sW2 > 4 && wprime2 > 2 && hxptar>-0.08&&hxptar<0.08&&hyptar>-0.04&&hyptar<0.04  && pxptar>-0.05&&pxptar<0.05&&pyptar>-0.04&&pyptar<0.04  )
+	{
+
+	  h_Q2s->Fill(sQ2,normwt);
+	  h_xs->Fill(sxbj,normwt);
+	  h_zs->Fill(szhad,normwt);
+	  h_hdeltas->Fill(shdelta,normwt);  
+	  h_pdeltas->Fill(spdelta,normwt);
+	  h_W2s->Fill(sW2,normwt);
+	  h_nus->Fill(snu, normwt);
+	  h_Pms->Fill(sPm,normwt);
+	  h_wprime2s_cut->Fill(wprime2,normwt);
+	  psinphi_vs_pcosphi_simc->Fill(pcosphi,psinphi);
+	  //psinphi_vs_pcosphi_simc->Fill(pcosphi,psinphi, normwt);
+	  hsinphi->Fill(sin(phisimc),normwt);
+	  hcosphi->Fill(cos(phisimc),normwt);
+	  hphi->Fill(phisimc,normwt);
+
+	  
+	}
+    }
+    if (h_Q2s->GetSumw2N() == 0) h_Q2s->Sumw2(kTRUE);
+    if (h_xs->GetSumw2N() == 0) h_xs->Sumw2(kTRUE);
+    if (h_zs->GetSumw2N() == 0) h_zs->Sumw2(kTRUE);
+    if (h_pdeltas->GetSumw2N() == 0) h_pdeltas->Sumw2(kTRUE);
+    if (h_hdeltas->GetSumw2N() == 0) h_hdeltas->Sumw2(kTRUE);
+    if (h_W2s->GetSumw2N() == 0) h_W2s->Sumw2(kTRUE);
+    if (h_nus->GetSumw2N() == 0) h_nus->Sumw2(kTRUE);
+    if (h_Pms->GetSumw2N() == 0) h_Pms->Sumw2(kTRUE);
+    if (h_wprime2s_cut->GetSumw2N() == 0) h_wprime2s_cut->Sumw2(kTRUE);
+    if (psinphi_vs_pcosphi_simc->GetSumw2N() == 0)  psinphi_vs_pcosphi_simc->Sumw2(kTRUE);
+
+    
+    TCanvas *c1 = new TCanvas("c1","c1",1200, 800);
+    // gStyle->SetOptStat(111);
+    // gStyle->SetOptStat(0);
+
+    c1->Divide(3,3);
+    c1->cd(1);
+#define NRUNS 16
+void plot_ptsincos(){
+  gStyle->SetOptStat(0);
+  Int_t runs[NRUNS] = { 60701, 60731,60881,60911,        60201,60291,60431,60491,    60651,60821,60841,60991,       60231,60331,60381,60591};//D2-,D2+,H2-,H2+
+
+  Int_t gevents[NRUNS] = {300000,300000,300000,300000, 300000,300000,300000,300000,  100000,100000,100000,100000,  100000,100000,100000,100000,};
+
+  Double_t normfac[NRUNS] ={0.154889E+12,0.163448E+12,0.163526E+12, 0.164358E+12,   0.154889E+12, 0.163448E+12,  0.163526E+12,0.164358E+12,   0.134357E+12, 0.141900E+12, 0.141832E+12,  0.142192E+12,    0.134357E+12,0.141900E+12,0.141832E+12, 0.142192E+12 };
+
+
+
+  
+  for (int r=0; r< NRUNS; r++){
+
+    
+     TString filename = Form("/home/hdbhatt/Desktop/data_simc/rad_dat_simc/simc_rootfilesOct15/simc_%d.root",runs[r]);
+    // TString filename = Form("/home/hdbhatt/simcROOTfilesaps/simc_%d.root",runs[r]);
+
+    TFile *f = new TFile(filename,"READ");
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      continue;
+    }
+
+    TFile * f1 = new TFile(Form("root_sincos/primary_%d.root",runs[r]),"RECREATE");
+    gStyle->SetOptStat(100111);
+
+    // cout<< "Opening Run Num = "<< runs[r] <<"   "<<gevents[r]<<"   "<< normfac[r]<<endl; 
+    cout<<"  "<<endl;
+    gStyle->SetPalette(1,0);
+    gStyle->SetOptStat(1000011);
+    gStyle->SetOptFit(11);
+    gStyle->SetTitleOffset(1.,"Y");
+    gStyle->SetTitleOffset(.7,"X");
+    gStyle->SetLabelSize(0.04,"XY");
+    gStyle->SetTitleSize(0.06,"XY");
+    gStyle->SetPadLeftMargin(0.12);
+
+#include "bin7813.h"
+   
+    //  cout<<runs[r]<<"  "<<xvalue[r]<< "    "<<zvalue[r]<< "    "<<normfac[r]<<endl;
+    
+    TH1D *h_Q2s = new TH1D("h_Q2s", "h_Q2s", binQ2, loQ2, hiQ2);
+    TH1D *h_W2s = new TH1D("h_W2s", "h_W2s", binW2, loW2, hiW2);
+    TH1D *h_xs = new TH1D("h_xs", "h_xs", binx, lox, hix);
+    TH1D *h_zs = new TH1D("h_zs", "h_zs", binz, loz, hiz);
+    TH1D *h_hdeltas = new TH1D("h_hdeltas", "h_hdeltas", binhdelta, lohdelta, hihdelta);
+    TH1D *h_pdeltas = new TH1D("h_pdeltas", "h_pdeltas", binpdelta, lopdelta, hipdelta);
+    TH1D *h_nus = new TH1D("h_nus", "h_nus", binnu, lonu, hinu);
+    TH1D *h_wprime2s_cut = new TH1D("h_wprime2s_cut", "h_wprime2s_cut", binWp2, loWp2, hiWp2);
+    TH1D *h_wprime2s_nocut = new TH1D("h_wprime2s_nocut", "h_wprime2s_nocut", binWp2, loWp2, hiWp2);
+    TH1D *h_Pms = new TH1D("h_Pms", "h_Pms",  binpm, lopm, hipm);
+    TH1D *h_phadron01 = new TH1D("h_phadron01", "h_phadron01", binphad, lophad, hiphad);
+    TH2D *psinphi_vs_pcosphi_simc = new TH2D("psinphi_vs_pcosphi_simc","",100,-10,10,100,-10,10);
+    TH1D *hsinphi = new TH1D("hsinphi", "", 100,-1.5, 1.5);
+    TH1D *hcosphi = new TH1D("hcosphi", "", 100,-1.5, 1.5);
+    TH1D *hphi = new TH1D("hphi", "", 100,-10, 10);
+
+    Double_t sQ2,sW,sW2, sxbj, szhad, weight,shdelta,spdelta,normwt,snu,phadron,Epi,wprime2,sq,sppi,sPm,hxptar,hyptar,pxptar,pyptar,phisimc,psinphi,pcosphi ;
+    Double_t pionmass   = 0.1395701835;    
+    Double_t protonmass = 0.93827231;
+    cout<<runs[r]<<endl;
+
+    TTree *ts = (TTree*)f->Get("h10");
+    Long64_t simc_entries = ts->GetEntries();
+    // cout<<simc_entries<<endl;
+    for (int i = 0; i < simc_entries; i++) {
+      ts->GetEntry(i);
+      normwt = weight*normfac[r]/gevents[r];
+      sQ2 = ts->GetLeaf("Q2")->GetValue();
+      weight = ts->GetLeaf("Weight")->GetValue();
+      shdelta = ts->GetLeaf("hsdelta")->GetValue();
+      spdelta = ts->GetLeaf("ssdelta")->GetValue();
+      snu = ts->GetLeaf("nu")->GetValue();
+      sq = ts->GetLeaf("q")->GetValue();
+      sPm= ts->GetLeaf("Pm")->GetValue();
+      hxptar=ts->GetLeaf("hsxptar")->GetValue();
+      hyptar=ts->GetLeaf("hsyptar")->GetValue();
+      pxptar=ts->GetLeaf("ssxptar")->GetValue();
+      pyptar=ts->GetLeaf("ssyptar")->GetValue();
+      phisimc=ts->GetLeaf("phipq")->GetValue();
+      sppi =ts->GetLeaf("ppi")->GetValue();
+      sxbj = ts->GetLeaf("xbj")->GetValue();
+      szhad = ts->GetLeaf("z")->GetValue();
+      wprime2 = (protonmass + snu - szhad*snu) * (protonmass + snu - szhad*snu) - abs(sPm)*abs(sPm);
+      sW = ts->GetLeaf("W")->GetValue();
+      sW2 =sW*sW;
+      psinphi = sppi*sin(phisimc);
+      pcosphi = sppi*cos(phisimc);
+
+      if(shdelta>-8 && shdelta< 8 && spdelta>-10 && spdelta<20)// && sW2 > 4 && wprime2 > 2 && hxptar>-0.08&&hxptar<0.08&&hyptar>-0.04&&hyptar<0.04  && pxptar>-0.05&&pxptar<0.05&&pyptar>-0.04&&pyptar<0.04  )
+	{
+
+	  h_Q2s->Fill(sQ2,normwt);
+	  h_xs->Fill(sxbj,normwt);
+	  h_zs->Fill(szhad,normwt);
+	  h_hdeltas->Fill(shdelta,normwt);  
+	  h_pdeltas->Fill(spdelta,normwt);
+	  h_W2s->Fill(sW2,normwt);
+	  h_nus->Fill(snu, normwt);
+	  h_Pms->Fill(sPm,normwt);
+	  h_wprime2s_cut->Fill(wprime2,normwt);
+	  psinphi_vs_pcosphi_simc->Fill(pcosphi,psinphi);
+	  //psinphi_vs_pcosphi_simc->Fill(pcosphi,psinphi, normwt);
+	  hsinphi->Fill(sin(phisimc),normwt);
+	  hcosphi->Fill(cos(phisimc),normwt);
+	  hphi->Fill(phisimc,normwt);
+
+	  
+	}
+    }
+    if (h_Q2s->GetSumw2N() == 0) h_Q2s->Sumw2(kTRUE);
+    if (h_xs->GetSumw2N() == 0) h_xs->Sumw2(kTRUE);
+    if (h_zs->GetSumw2N() == 0) h_zs->Sumw2(kTRUE);
+    if (h_pdeltas->GetSumw2N() == 0) h_pdeltas->Sumw2(kTRUE);
+    if (h_hdeltas->GetSumw2N() == 0) h_hdeltas->Sumw2(kTRUE);
+    if (h_W2s->GetSumw2N() == 0) h_W2s->Sumw2(kTRUE);
+    if (h_nus->GetSumw2N() == 0) h_nus->Sumw2(kTRUE);
+    if (h_Pms->GetSumw2N() == 0) h_Pms->Sumw2(kTRUE);
+    if (h_wprime2s_cut->GetSumw2N() == 0) h_wprime2s_cut->Sumw2(kTRUE);
+    if (psinphi_vs_pcosphi_simc->GetSumw2N() == 0)  psinphi_vs_pcosphi_simc->Sumw2(kTRUE);
+
+    
+    TCanvas *c1 = new TCanvas("c1","c1",1200, 800);
+    // gStyle->SetOptStat(111);
+    // gStyle->SetOptStat(0);
+
+    c1->Divide(3,3);
+    c1->cd(1);
+
+    
+    h_Q2s->Draw("hist");
+    h_Q2s->SetTitle(Form(" Q2 : Run Num %d",runs[r]));
+    
+    c1->cd(2);
+    h_nus->Draw("hist");
+
+    c1->cd(3);
+    h_xs->Draw("hist");
+    
+    c1->cd(4);
+    h_zs->Draw("hist");
+
+    c1->cd(5);
+    h_W2s->Draw("hist");
+     
+    c1->cd(6);
+    h_hdeltas->Draw("hist");
+
+    c1->cd(7);
+    h_pdeltas->Draw("hist");
+    
+    c1->cd(8);
+    h_Pms->Draw("hist");
+    
+    c1->cd(9);
+    h_wprime2s_cut->SetTitle(Form("Wprime2: Run : %d", runs[r]));
+    h_wprime2s_cut->Draw(" hist");
+   
+
+    h_Q2s->Write();
+    h_W2s->Write();
+    h_xs->Write();
+    h_zs->Write();
+    h_hdeltas->Write();
+    h_pdeltas->Write();
+    h_nus->Write();
+    h_wprime2s_cut->Write();
+    h_wprime2s_nocut->Write();
+
+    h_Pms->Write();
+    c1->SaveAs(Form("padptJume17/base_plots_simconly_%d.pdf",runs[r]));
+    TCanvas *c2 = new TCanvas("c2","c2",800, 800);
+ 
+    c2->Divide(1,1);
+    c2->cd(1);gPad->SetLogz();gPad->SetGrid();
+    psinphi_vs_pcosphi_simc->Draw("colz");
+    psinphi_vs_pcosphi_simc->Write();
+    psinphi_vs_pcosphi_simc->GetXaxis()->SetTitle("p cosine (phi)");
+    psinphi_vs_pcosphi_simc->GetYaxis()->SetTitle("p sine (phi)");
+    psinphi_vs_pcosphi_simc->GetXaxis()->CenterTitle();
+    psinphi_vs_pcosphi_simc->GetYaxis()->CenterTitle();
+    psinphi_vs_pcosphi_simc->SetTitle("P sine(phi) vs p cosine (phi): simc");
+
+    c2->SaveAs(Form("padptJume17/psinphi_vs_pcaophi_%d.pdf",runs[r]));
+
+    
+    TCanvas *c3 = new TCanvas("c3","c3",1200, 800);
+    c3->Divide(2,2);
+
+    c3->cd(1);gPad->SetGrid();
+    hphi->Draw("hist");
+    hphi->Write();
+    hphi->GetXaxis()->SetTitle(" (phi), Rad");
+    hphi->GetYaxis()->SetTitle("Entries");
+    hphi->GetXaxis()->CenterTitle();
+    hphi->GetYaxis()->CenterTitle();
+    hphi->SetLineWidth(2);
+    hphi->SetTitle(" (phi), simc");
+
+    
+    c3->cd(3);gPad->SetGrid();
+    hsinphi->Draw("hist");
+    hsinphi->Write();
+    hsinphi->GetXaxis()->SetTitle(" sine (phi)");
+    hsinphi->GetYaxis()->SetTitle("Entries");
+    hsinphi->GetXaxis()->CenterTitle();
+    hsinphi->GetYaxis()->CenterTitle();
+    hsinphi->SetLineWidth(2);
+    hsinphi->SetTitle(" sine (phi), simc");
+
+    c3->cd(4);gPad->SetGrid();
+    hcosphi->Draw("hist");
+    hcosphi->Write();
+    hcosphi->GetXaxis()->SetTitle("cosine (phi))");
+    hcosphi->GetYaxis()->SetTitle("Entries");
+    hcosphi->GetXaxis()->CenterTitle();
+    hcosphi->GetYaxis()->CenterTitle();
+    hcosphi->SetLineWidth(2);
+    hcosphi->SetTitle(" cosine (phi), simc");
+
+
+    c3->SaveAs(Form("pdf_sincos/psinphi_pcaophi_1d_%d.pdf",runs[r]));
+  }
+
+}
+
+
+//  c1->Update();
+// c1->GetFrame()->SetFillColor(21);
+// c1->GetFrame()->SetBorderSize(12);
+// c1->Modified();
+
+
+    
+    h_Q2s->Draw("hist");
+    h_Q2s->SetTitle(Form(" Q2 : Run Num %d",runs[r]));
+    
+    c1->cd(2);
+    h_nus->Draw("hist");
+
+    c1->cd(3);
+    h_xs->Draw("hist");
+    
+    c1->cd(4);
+    h_zs->Draw("hist");
+
+    c1->cd(5);
+    h_W2s->Draw("hist");
+     
+    c1->cd(6);
+    h_hdeltas->Draw("hist");
+
+    c1->cd(7);
+    h_pdeltas->Draw("hist");
+    
+    c1->cd(8);
+    h_Pms->Draw("hist");
+    
+    c1->cd(9);
+    h_wprime2s_cut->SetTitle(Form("Wprime2: Run : %d", runs[r]));
+    h_wprime2s_cut->Draw(" hist");
+   
+
+    h_Q2s->Write();
+    h_W2s->Write();
+    h_xs->Write();
+    h_zs->Write();
+    h_hdeltas->Write();
+    h_pdeltas->Write();
+    h_nus->Write();
+    h_wprime2s_cut->Write();
+    h_wprime2s_nocut->Write();
+
+    h_Pms->Write();
+    c1->SaveAs(Form("padptJume17/base_plots_simconly_%d.pdf",runs[r]));
+    TCanvas *c2 = new TCanvas("c2","c2",800, 800);
+ 
+    c2->Divide(1,1);
+    c2->cd(1);gPad->SetLogz();gPad->SetGrid();
+    psinphi_vs_pcosphi_simc->Draw("colz");
+    psinphi_vs_pcosphi_simc->Write();
+    psinphi_vs_pcosphi_simc->GetXaxis()->SetTitle("p cosine (phi)");
+    psinphi_vs_pcosphi_simc->GetYaxis()->SetTitle("p sine (phi)");
+    psinphi_vs_pcosphi_simc->GetXaxis()->CenterTitle();
+    psinphi_vs_pcosphi_simc->GetYaxis()->CenterTitle();
+    psinphi_vs_pcosphi_simc->SetTitle("P sine(phi) vs p cosine (phi): simc");
+
+    c2->SaveAs(Form("padptJume17/psinphi_vs_pcaophi_%d.pdf",runs[r]));
+
+    
+    TCanvas *c3 = new TCanvas("c3","c3",1200, 800);
+    c3->Divide(2,2);
+
+    c3->cd(1);gPad->SetGrid();
+    hphi->Draw("hist");
+    hphi->Write();
+    hphi->GetXaxis()->SetTitle(" (phi), Rad");
+    hphi->GetYaxis()->SetTitle("Entries");
+    hphi->GetXaxis()->CenterTitle();
+    hphi->GetYaxis()->CenterTitle();
+    hphi->SetLineWidth(2);
+    hphi->SetTitle(" (phi), simc");
+
+    
+    c3->cd(3);gPad->SetGrid();
+    hsinphi->Draw("hist");
+    hsinphi->Write();
+    hsinphi->GetXaxis()->SetTitle(" sine (phi)");
+    hsinphi->GetYaxis()->SetTitle("Entries");
+    hsinphi->GetXaxis()->CenterTitle();
+    hsinphi->GetYaxis()->CenterTitle();
+    hsinphi->SetLineWidth(2);
+    hsinphi->SetTitle(" sine (phi), simc");
+
+    c3->cd(4);gPad->SetGrid();
+    hcosphi->Draw("hist");
+    hcosphi->Write();
+    hcosphi->GetXaxis()->SetTitle("cosine (phi))");
+    hcosphi->GetYaxis()->SetTitle("Entries");
+    hcosphi->GetXaxis()->CenterTitle();
+    hcosphi->GetYaxis()->CenterTitle();
+    hcosphi->SetLineWidth(2);
+    hcosphi->SetTitle(" cosine (phi), simc");
+
+
+    c3->SaveAs(Form("pdf_sincos/psinphi_pcaophi_1d_%d.pdf",runs[r]));
+  }
+
+}
+
+
+//  c1->Update();
+// c1->GetFrame()->SetFillColor(21);
+// c1->GetFrame()->SetBorderSize(12);
+// c1->Modified();
