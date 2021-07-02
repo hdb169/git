@@ -1,3 +1,5 @@
+    TString filename  = Form("/home/hdbhatt/ROOTfiles/July2_factorization/file_%d_%s.root", runs[r], target[r].c_str());
+
 //2019 May 20
 //This is the script to test the hms and shms Drift distance, residual, drift time, residual vs wire number, drift time vs wire number,distance vs wirenum 
 //need to run separately for hms and shms, and the bins in wire number is made 1 bin for 1 wire
