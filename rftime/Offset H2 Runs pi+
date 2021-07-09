@@ -1,4 +1,5 @@
 ///===================Final H2/Al/D2/July 08, 2021================
+//not all corr
 
 //kin1-2
 if(runs[r]>=12 && runs[r]<=34){offsetrf = 399.1;}//kin1-2
@@ -65,7 +66,89 @@ if(runs[r]>=6309 && runs[r]<=6311){offsetrf = 397.05;}
 if(runs[r]>=6312 && runs[r]<=6321){offsetrf = 399.00;}    
 if(runs[r]>=6322 && runs[r]<=6323){offsetrf = 399.05;}   
 if(runs[r]>=6324 && runs[r]<=6332){offsetrf = 399.00;}
-if(runs[r]>=6333 && runs[r]<=6336){offsetrf = 398.90;}
+if(runs[r]>=6333 && runs[r]<=6336){offsetrf = 398.90;}if(runs[r]>=6099 && runs[r]<= 6125){offsetrf =399.05;}//all good
+25
+if(runs[r]>=6126 && runs[r]<= 6128){offsetrf =399.0;}//all good
+26
+if(runs[r]==6129){offsetrf= 398.95;}//all good 
+27
+if(runs[r]>=6130 && runs[r]<= 6144){offsetrf =396.95;}//all good
+28
+if(runs[r]>=6145 && runs[r]<=6175){offsetrf =401.05;}//all good
+29
+if(runs[r]>=6176 && runs[r]<=6176){offsetrf =401.0;}//all good
+30
+if(runs[r]>=6179 && runs[r]<=6190){offsetrf =396.95;}//all good
+31
+//7-8
+32
+if(runs[r]>=6486 && runs[r]<=6487){offsetrf = 399.05;}
+33
+if(runs[r]==6488){offsetrf = 399.0;}
+34
+if(runs[r]==6489){offsetrf = 399.05;}   
+35
+if(runs[r]>=6490 && runs[r]<=6491){offsetrf = 399.0;}
+36
+if(runs[r]>=6492 && runs[r]<=6494){offsetrf = 398.95;}
+37
+if(runs[r]>=6495 && runs[r]<=6496){offsetrf = 398.9;}
+38
+if(runs[r]==6497){offsetrf = 394.9;}
+39
+if(runs[r]==6498){offsetrf = 394.8;}
+40
+if(runs[r]==6499){offsetrf = 394.87;}
+41
+if(runs[r]>=6500 && runs[r]<=6507){offsetrf = 399.05;}
+42
+if(runs[r]>=6509 && runs[r]<=6510){offsetrf = 399.0;}    
+43
+if(runs[r]==6512){offsetrf = 396.95;}
+44
+if(runs[r]>=6513 && runs[r]<=6517){offsetrf = 396.9;}
+45
+//9-10
+46
+if (runs[r]>=6194 && runs[r]<= 6195){offsetrf = 397.08;}
+47
+if (runs[r]>=6196 && runs[r]<= 6204){offsetrf = 397.05;}
+48
+if (runs[r]>=6205 && runs[r]<= 6212){offsetrf = 397.00;}
+49
+if (runs[r]>=6213 && runs[r]<= 6217){offsetrf = 396.95;}
+50
+if (runs[r]>=6219 && runs[r]<= 6225){offsetrf = 398.95;}
+51
+if (runs[r]>=6242 && runs[r]<= 6250){offsetrf = 399.05;}
+52
+if (runs[r]>=6251 && runs[r]<= 6252){offsetrf = 399.00;}
+53
+if (runs[r]>=6261 && runs[r]<= 6262){offsetrf = 399.00;}
+54
+if (runs[r]>=6263 && runs[r]<= 6267){offsetrf = 399.05;}
+55
+if (runs[r]>=6270 && runs[r]<= 6276){offsetrf = 396.95;}
+56
+​
+57
+//11-12
+58
+if(runs[r]>=6419 && runs[r]<= 6479){offsetrf = offsetrf = 399.05;}
+59
+//13_14
+60
+​
+61
+if(runs[r]>=6285 && runs[r]<=6293){offsetrf = 397.05;}    
+62
+if(runs[r]>=6294 && runs[r]<=6303){offsetrf = 397.00;}
+63
+if(runs[r]>=6304 && runs[r]<=6305){offsetrf = 396.97;}
+64
+if(runs[r]>=6306 && runs[r]<=6308){offsetrf = 397.00;}    
+65
+if(runs[r]>=6309 && runs[r]<=6311){offsetrf = 397.05;}
 if(runs[r]>=6339 && runs[r]<=6348){offsetrf = 398.94;}
 if(runs[r]>=6349 && runs[r]<=6351){offsetrf = 398.95;}
 if(runs[r]>=6352 && runs[r]<=6358){offsetrf = 398.92;}
