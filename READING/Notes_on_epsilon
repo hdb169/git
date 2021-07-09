@@ -1,0 +1,15 @@
+delta d = d_Dp - u_Dn = epsilon(x) * d_p - epsilon(x) *u_n
+        = epsilon(x) * [d_p - u_n]
+
+delta u = epsilon(x) *[u_p - d_n]
+
+
+delta d - delta u = epsilon(x)[ d_p - u_n - u_p + d_n]  ---1
+
+u_vDp = epsilon(x) * u_vp
+d_vDp = epsilon(x) * d_vp
+
+u_vDp + d_vDp = epsilon(x} *[u_vp + d_vp]---2
+
+1 divide 2 will cancel epsilon
+
