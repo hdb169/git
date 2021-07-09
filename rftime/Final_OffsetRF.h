@@ -44,10 +44,11 @@ if(runs[r]>=6513 && runs[r]<=6517){offsetrf = 396.9;}
 if (runs[r]>=6194 && runs[r]<= 6195){offsetrf = 397.08;}
 if (runs[r]>=6196 && runs[r]<= 6204){offsetrf = 397.05;}
 if (runs[r]>=6205 && runs[r]<= 6212){offsetrf = 397.00;}
-if (runs[r]>=6213 && runs[r]<= 6217){offsetrf = 396.95;}
-if (runs[r]>=6219 && runs[r]<= 6225){offsetrf = 398.95;}
-if (runs[r]>=6242 && runs[r]<= 6250){offsetrf = 399.05;}
+if (runs[r]>=6213 && runs[r]<= 6218){offsetrf = 396.95;}
+if (runs[r]>=6219 && runs[r]<= 6236){offsetrf = 398.95;}
+if (runs[r]>=6237 && runs[r]<= 6250){offsetrf = 399.05;}
 if (runs[r]>=6251 && runs[r]<= 6252){offsetrf = 399.00;}
+if (runs[r]>=6253 && runs[r]<= 6260){offsetrf = 399.05;}
 if (runs[r]>=6261 && runs[r]<= 6262){offsetrf = 399.00;}
 if (runs[r]>=6263 && runs[r]<= 6267){offsetrf = 399.05;}
 if (runs[r]>=6270 && runs[r]<= 6276){offsetrf = 396.95;}
