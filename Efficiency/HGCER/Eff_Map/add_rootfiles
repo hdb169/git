@@ -1,0 +1,68 @@
+//pos only
+
+
+hadd pos_397_1.root coin_replay_production_6205_-1.root coin_replay_production_6208_-1.root coin_replay_production_6209_-1.root coin_replay_production_6210_-1.root coin_replay_production_6211_-1.root coin_replay_production_6212_-1.root 
+
+
+
+hadd pos_3971_2.root coin_replay_production_602[0-9]_-1.root coin_replay_production_603[0-6]_-1.root 
+
+
+
+
+hadd pos_39705_3.root coin_replay_production_6038_-1.root coin_replay_production_6039_-1.root coin_replay_production_604[0-6]_-1.root coin_replay_production_619[4-9]_-1.root coin_replay_production_620[0-4]_-1.root coin_replay_production_6309_-1.root coin_replay_production_6310_-1.root coin_replay_production_6311_-1.root 
+
+
+
+ hadd pos_39905_4.root coin_replay_production_653[7-9]_-1.root coin_replay_production_654[1-4]_-1.root coin_replay_production_650[0-2]_-1.root coin_replay_production_6419_-1.root coin_replay_production_642[0-3]_-1.root coin_replay_production_642[5-6]_-1.root coin_replay_production_6429_-1.root coin_replay_production_643[0-3]_-1.root coin_replay_production_6427_-1.root coin_replay_production_6428_-1.root coin_replay_production_6322_-1.root coin_replay_production_6323_-1.root coin_replay_production_6387_-1.root coin_replay_production_6388_-1.root coin_replay_production_6397_-1.root coin_replay_production_6398_-1.root coin_replay_production_6398_-1.root coin_replay_production_6386_-1.root coin_replay_production_6389_-1.root coin_replay_production_6518_-1.root coin_replay_production_6519_-1.root coin_replay_production_6520_-1.root coin_replay_production_6521_-1.root coin_replay_production_653]3-6]_-1.root 
+
+
+ hadd pos_40105_5.root coin_replay_production_6145_-1.root coin_replay_production_6146_-1.root coin_replay_production_6154_-1.root coin_replay_production_6155_-1.root coin_replay_production_6168_-1.root coin_replay_production_6169_-1.root coin_replay_production_6142_-1.root coin_replay_production_6144_-1.root coin_replay_production_6163_-1.root coin_replay_production_6164_-1.root 
+
+
+hadd pos_399_6.root coin_replay_production_631[2-8]_-1.root
+
+hadd pos_40005_7.root coin_replay_production_763[5-9]_-1.root coin_replay_production_7640_-1.root coin_replay_production_7641_-1.root coin_replay_production_7763_-1.root coin_replay_production_7760_-1.root coin_replay_production_7762_-1.root coin_replay_production_776[5-7]_-1.root  coin_replay_production_777[2-9]_-1.root  coin_replay_production_7699_-1.root coin_replay_production_7697_-1.root coin_replay_production_7698_-1.root coin_replay_production_7702_-1.root coin_replay_production_7703_-1.root coin_replay_production_7706_-1.root coin_replay_production_7707_-1.root coin_replay_production_7708_-1.root coin_replay_production_7709_-1.root coin_replay_production_7710_-1.root coin_replay_production_7711_-1.root coin_replay_production_7712_-1.root 
+
+
+
+hadd pos_40005_10.root coin_replay_production_7808_-1.root coin_replay_production_7809_-1.root coin_replay_production_781[1-4]_-1.root
+
+/////
+=========================================================================
+T->Draw("(fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 399.05 ,4.008))>>h(100,0,4) "," P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-8 && H.gtr.dp<8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 && P.aero.npeSum>5 && P.cal.etottracknorm<0.8 && H.cal.etottracknorm>0.7 && H.cer.npeSum>2&&CTime.ePiCoinTime_ROC2>43 && CTime.ePiCoinTime_ROC2<47")
+=================================================================
+
+==============================
+Total = Pos
+
+===================================Piminus=================================================
+
+offset 399.05
+
+hadd pim_39905_1.root coin_replay_production_606[6-8]_-1.root coin_replay_production_654[5-9]_-1.root coin_replay_production_655[0-2]_-1.root coin_replay_production_6104_-1.root coin_replay_production_6105_-1.root coin_replay_production_6106_-1.root coin_replay_production_6109_-1.root coin_replay_production_6110_-1.root coin_replay_production_6111_-1.root coin_replay_production_6112_-1.root coin_replay_production_611[4-9]_-1.root coin_replay_production_6120_-1.root coin_replay_production_6121_-1.root coin_replay_production_6486_-1.root coin_replay_production_6487_-1.root coin_replay_production_624[2-7]_-1.root coin_replay_production_6237_-1.root coin_replay_production_6240_-1.root coin_replay_production_6241_-1.root coin_replay_production_6248_-1.root coin_replay_production_6249_-1.root coin_replay_production_6250_-1.root coin_replay_production_625[3-5]_-1.root coin_replay_production_626[3-7]_-1.root coin_replay_production_645[1-6]_-1.root coin_replay_production_6459_-1.root coin_replay_production_646[0-9]_-1.root coin_replay_production_6470_-1.root coin_replay_production_625[6-9]_-1.root coin_replay_production_6260_-1.root coin_replay_production_652[2-9]_-1.root coin_replay_production_6531_-1.root coin_replay_production_6532_-1.root
+
+hadd pim_3971_2.root coin_replay_production_6070_-1.root coin_replay_production_6071_-1.root coin_replay_production_6073_-1.root 
+
+
+hadd pim_3991_3.root coin_replay_production_608[0-9]_-1.root coin_replay_production_6090_-1.root 
+
+offset 399.0
+
+
+hadd pim_399_4.root coin_replay_production_6251_-1.root coin_replay_production_6252_-1.root coin_replay_production_6261_-1.root coin_replay_production_6262_-1.root coin_replay_production_6359_-1.root coin_replay_production_6360_-1.root coin_replay_production_6363_-1.root coin_replay_production_6364_-1.root coin_replay_production_6365_-1.root
+
+
+hadd pim_39705_5.root  coin_replay_production_628[5-9]_-1.root coin_replay_production_629[0-3]_-1.root 
+
+hadd pim_397_6.root coin_replay_production_629[4-9]_-1.root
+
+hadd pim_40005_7.root coin_replay_production_759[3-7]_-1.root coin_replay_production_760[0-9]_-1.root coin_replay_production_7610_-1.root coin_replay_production_7741_-1.root coin_replay_production_7742_-1.root coin_replay_production_7743_-1.root coin_replay_production_7737_-1.root coin_replay_production_7738_-1.root coin_replay_production_7739_-1.root coin_replay_production_7740_-1.root coin_replay_production_7747_-1.root coin_replay_production_7748_-1.root coin_replay_production_7749_-1.root  coin_replay_production_7796_-1.root coin_replay_production_7797_-1.root coin_replay_production_7793_-1.root coin_replay_production_7794_-1.root coin_replay_production_7798_-1.root coin_replay_production_7799_-1.root coin_replay_production_7800_-1.root coin_replay_production_7801_-1.root coin_replay_production_7802_-1.root
+
+
+
+hadd pim_40010_8.root  coin_replay_production_767[1-7]_-1.root  coin_replay_production_7679_-1.root coin_replay_production_7680_-1.root coin_replay_production_7681_-1.root coin_replay_production_7682_-1.root 
+
+
+hadd pim_39805_9.root coin_replay_production_7723_-1.root coin_replay_production_7724_-1.root coin_replay_production_7725_-1.root coin_replay_production_7729_-1.root coin_replay_production_7730_-1.root coin_replay_production_7733_-1.root coin_replay_production_7727_-1.root coin_replay_production_7728_-1.root coin_replay_production_7735_-1.root coin_replay_production_7736_-1.root 
+
