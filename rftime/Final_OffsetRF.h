@@ -41,7 +41,7 @@ if(runs[r]>=6509 && runs[r]<=6510){offsetrf = 399.0;}
 if(runs[r]==6512){offsetrf = 396.95;}
 if(runs[r]>=6513 && runs[r]<=6517){offsetrf = 396.9;}
 //9-10
-if (runs[r]>=6194 && runs[r]<= 6195){offsetrf = 397.08;}
+if (runs[r]>=6192 && runs[r]<= 6195){offsetrf = 397.08;}
 if (runs[r]>=6196 && runs[r]<= 6204){offsetrf = 397.05;}
 if (runs[r]>=6205 && runs[r]<= 6212){offsetrf = 397.00;}
 if (runs[r]>=6213 && runs[r]<= 6218){offsetrf = 396.95;}
