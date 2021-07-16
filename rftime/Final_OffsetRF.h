@@ -51,7 +51,8 @@ if (runs[r]>=6251 && runs[r]<= 6252){offsetrf = 399.00;}
 if (runs[r]>=6253 && runs[r]<= 6260){offsetrf = 399.05;}
 if (runs[r]>=6261 && runs[r]<= 6262){offsetrf = 399.00;}
 if (runs[r]>=6263 && runs[r]<= 6267){offsetrf = 399.05;}
-if (runs[r]>=6270 && runs[r]<= 6276){offsetrf = 396.95;}
+if (runs[r]>=6270 && runs[r]<= 6284){offsetrf = 396.95;}
+
 
 //11-12
 if(runs[r]>=6419 && runs[r]<= 6479){offsetrf = offsetrf = 399.05;}
