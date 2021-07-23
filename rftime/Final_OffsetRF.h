@@ -66,7 +66,7 @@ if(runs[r]>=6309 && runs[r]<=6311){offsetrf = 397.05;}
 if(runs[r]>=6312 && runs[r]<=6321){offsetrf = 399.00;}    
 if(runs[r]>=6322 && runs[r]<=6323){offsetrf = 399.05;}   
 if(runs[r]>=6324 && runs[r]<=6332){offsetrf = 399.00;}
-if(runs[r]>=6333 && runs[r]<=6336){offsetrf = 398.90;}
+if(runs[r]>=6333 && runs[r]<=6338){offsetrf = 398.90;}//see 37-38
 if(runs[r]>=6339 && runs[r]<=6348){offsetrf = 398.94;}
 if(runs[r]>=6349 && runs[r]<=6351){offsetrf = 398.95;}
 if(runs[r]>=6352 && runs[r]<=6358){offsetrf = 398.92;}
