@@ -1,0 +1,178 @@
+block H.cer.npe
+block P.ngcer.npeSum
+block P.kin.secondary.ph_xq
+block P.kin.secondary.th_xq
+
+#block T.*
+block T.coin.pT2_tdcMultiplicity
+#block T.coin.pTRIG*Time*
+block P.hod.starttime
+block H.hod.starttime 
+block P.hgcer.npeSum
+block P.hgcer.xAtCer
+block P.hgcer.yAtCer
+
+#block T.*
+#block CTime.CoinTime_RAW_ROC1
+#block CTime.CoinTime_RAW_ROC2
+
+
+#block P.dc.Ch1.nhit*
+#block H.dc.Ch1.nhit*
+
+#block P.tr.x
+#block P.tr.ph
+#block P.tr.y
+#block P.tr.th
+#block P.tr.beta
+
+
+
+
+#block H.*
+#block H.*
+#block P.cal.*
+#block H.cal.*
+#block g.*
+#block P.*
+#block T.*
+#block H.*
+
+block H.cal.eprtracknorm
+#block H.cal.eprtrack
+#block H.cal.etot
+block H.cal.etotnorm
+block H.cal.etottracknorm
+#block H.cal.etrack
+block H.cal.etracknorm
+#block H.cal.nhits
+#block H.cal.ntrack
+#block H.cal.ytrack
+#block H.cal.xtrack
+
+block P.cal.eprtracknorm
+#block P.cal.eprtrack
+#block P.cal.etot
+block P.cal.etotnorm
+block P.cal.etottracknorm
+#block P.cal.etrack
+block P.cal.etracknorm
+#block P.cal.nhits
+#block P.cal.ntracks
+#block P.cal.ytrack
+#block P.cal.xtrack
+
+
+
+
+
+
+
+
+
+
+block g.evnum
+
+
+
+
+
+
+
+#block P.*
+#block H.*
+block T.coin.pTRIG6_ROC2_tdcTimeRaw
+block T.coin.pTRIG2_ROC2_tdcTimeRaw
+block T.coin.pEDTM_tdcTimeRaw
+
+block P.gtr.p                     
+block H.gtr.p                    
+block P.gtr.beta                                                                                        
+block H.gtr.beta                     
+block H.gtr.dp                                                                                                 
+block P.gtr.dp                                                                                                   
+block P.cal.eprtracknorm                                                                                       
+block P.cal.etottracknorm                                                                                       
+block P.hgcer.npeSum
+#block P.ngcer.npeSum                   
+block P.aero.npeSum                                                         
+#block H.cal.eprtracknorm                                                    
+block H.cal.etottracknorm                           
+#block P.cal.etotnorm                                                          
+block H.cer.npeSum                     
+block CTime.ePiCoinTime_ROC2                   
+#block H.kin.primary.omega                    
+#block H.kin.primary.W
+#block H.kin.primary.Q2
+block H.kin.primary.x_bj
+block P.kin.secondary.th_xq
+block H.kin.primary.Q2
+block H.kin.primary.W
+block H.kin.primary.W2
+block H.kin.primary.nu
+block H.kin.primary.omega
+block H.kin.primary.ph_q
+
+block P.kin.secondary.emiss
+block P.kin.secondary.emiss_nuc
+block P.kin.secondary.pmiss
+
+
+
+#block P.kin.*
+block H.hod.goodstarttime                     
+block P.hod.goodstarttime                    
+block P.dc.InsideDipoleExit                     
+block H.dc.InsideDipoleExit                     
+block P.hod.goodscinhit                     
+block P.hod.betanotrack                     
+block P.dc.ntrack                   
+block H.hod.goodscinhit                     
+block H.hod.betanotrack                      
+block H.dc.ntrack                     
+block T.coin.pHODO_RF_tdcMultiplicity                     
+block T.coin.pHODO_RF_tdcTime                     
+block T.coin.pRF_tdcMultiplicity                     
+block T.coin.pRF_tdcTime                      
+#block T.coin.hHODO_RF_tdcMultiplicity                     
+#block T.coin.hHODO_RF_tdcTime                    
+#block T.coin.hRF_tdcMultiplicity                     
+#block T.coin.hRF_tdcTime                      
+block P.hod.fpHitsTime                                     
+#block H.hod.fpHitsTime                            
+block g.evtyp                    
+block H.gtr.y                     
+block P.gtr.y                     
+block H.cal.etotnorm                    
+block P.cal.etotnorm                     
+block T.coin.pEDTM_tdcTime                    
+block T.coin.pEDTM_tdcTimeRaw
+block H.gtr.x
+block H.gtr.th
+block H.gtr.ph
+block P.gtr.th
+block P.gtr.ph
+block P.gtr.beta
+block H.gtr.beta
+
+block H.kin.primary.nu
+block P.kin.secondary.pmiss
+block H.kin.primary.W2
+
+
+ 
+#Live Time
+
+block T.coin.pTRIG1_ROC2_tdcTime
+block T.coin.pTRIG4_ROC2_tdcTime
+block T.coin.pTRIG1_ROC2_tdcTimeRaw
+block T.coin.pTRIG4_ROC2_tdcTimeRaw
+block P.dc.Ch1.nhit
+block H.dc.Ch1.nhit
+block P.dc.Ch2.nhit
+block H.dc.Ch2.nhit
+block P.dc.nhit
+block H.dc.nhit
+
+block P.hod.beta
+blocl H.hod.bata
