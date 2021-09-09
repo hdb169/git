@@ -1,0 +1,104 @@
+#include <sstream>
+#include <string>
+#include <fstream>
+#include "TFile.h"
+#include "TCanvas.h"
+#include "TTree.h"
+#include "TH1.h"
+#include "TMath.h"
+#include "TRandom3.h"
+#include "TGraph.h"
+#include "TLegend.h"
+#include "TFrame.h"
+#include "TPaveLabel.h"
+
+void read_lt_vs_run(){
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
+  c1->SetGrid();
+
+  auto mg = new TMultiGraph("mg","TR Efficiency");
+  TFile * f1 = new TFile("root/phcal_eff.root","RECREATE");
+
+ 
+  //2
+  std::ifstream infile2("live_timeSept2021.txt");
+
+  std::string line2; 
+   vector <int> run; 
+  vector <double> run2; 
+  vector <double> tlt;//current
+
+  while (std::getline(infile2, line2)){
+
+    std::istringstream iss(line2);
+    double a2, b2 ;
+    if(line2[0] == '#') continue;
+
+    if (!(iss >> a2 >> b2 ))
+      {
+           
+	break;
+           
+      } 
+       
+    run2.push_back(a2);
+    tlt.push_back(b2);
+        run.push_back(a2);
+
+
+  }
+  //3
+ 
+  for (int i =0; i< run.size(); i++)
+    {
+      //cout<< run[i] <<endl;
+      cout <<run[i]<<"   "<<tlt[i]<<endl;//you have to cout each elements , so need i
+      
+     }
+  
+ 
+ 
+
+  auto gr2 = new TGraphErrors(run.size(), &run2[0], &tlt[0],0,0);
+  gr2->SetName("gr2");
+  gr2->SetMarkerStyle(21);
+  gr2->SetMarkerSize(1.4);
+  gr2->SetTitle("TLT vs Run Num");
+  gr2->SetLineColor(kRed);
+  gr2->SetLineWidth(2);
+  gr2->SetMarkerColor(kRed);
+  gr2->SetFillStyle(0);
+
+ 
+
+
+  // mg->SetMaximum(1.0005);
+  //mg->SetMinimum(0.955);
+  
+  mg->Add(gr2);
+ 
+  gr2->Draw("AP");//grlast->Draw();
+  mg->Draw("AP");
+  mg->Write();//Save as rootfile
+
+   mg->SetTitle("TLT; Run Num ; TLT");
+  // mg->SetTitle("SHMS TREfficiency; PTrig1 Rate (kHz) ; SHMS TR EFF");
+
+  //auto legend = new TLegend(0.1,0.7,0.48,0.9);
+  
+   
+  c1->BuildLegend();
+
+  
+  mg->GetYaxis()->CenterTitle(true);
+  mg->GetXaxis()->CenterTitle(true);
+  mg->SaveAs("pdf/LT_vs_Run.pdf");
+  c1->Print("pdf/LT_vs_Run.gif");
+
+}
+7593		0.994265
+7594		0.992223
+7595		0.99146
+7596		0.992618
+7597		0.990874
