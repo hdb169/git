@@ -1,4 +1,4 @@
-Run rate curr charge yield_uncorr(LT_boiling none) yield_corr Yield_err counts conts_err
+Run     rate      curr     charge    yield_uncorr(LT_boiling none) yield_corr Yield_err counts conts_err
 6018		452.94		30.144		44.267		107.1		110.77		1.6088		4741		68.855
 6019		451.7		30.055		50.348		110.63		114.2		1.5301		5570		74.632
 6020		451.78		30.055		36.526		216.5		223.49		2.5132		7908		88.927
