@@ -1,0 +1,272 @@
+
+//root -l aimple_method_allruns.C
+//make a "pdf" directory
+//give run list and write number of runs 
+#define ROOT_header
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TVectorD.h"
+#include "TMatrixD.h"
+#include "TDecompLU.h"
+#include "TMath.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include <time.h>
+#include <vector>
+#include <string>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TSpectrum.h>
+#include <TPolyMarker.h>
+#include <TMath.h>
+#include <TSystem.h>
+#define NRUNS 210//700
+void simple_method_allrunsSpring(){
+
+  ofstream txtfile("live_timeSept2021spring.txt",ios::app);
+  // txtfile <<" Run "<<"\t"<<std::setprecision(5)<<fixed<<"edtm acc. trig"<<"\t"<<"edtm trig"<<"\t"< "rmeas"<<"\t"<< "Live Time"<< "Error"<<endl;
+  txtfile <<" Run "<<"\t"<<"LT"<<"\t"<<"LT_err"<<"\t"<<"curr"<<"\t"<<"boiling_fact"<<endl;
+
+  /*  if (RunNumber == 0){
+      cout<<"enter a run number:";
+      cin >> RunNumber;
+      if(RunNumber <= 0)
+      return;
+      }
+  */
+  gROOT->SetBatch(kTRUE);
+  Int_t runs[NRUNS]={/*6018,6019,6020,6021,6022,6023,6024,6025,6026,6027,6028,6029,6030,6031,6032,6033,6034,6035,6036,6038,6039,6040,6041,6042,6043,6044,6045,6046,6049,6050,6051,6052,6053,6054,6055,6056,6057,6058,6059,6060,6061,6062,6063,6064,6065,6066,6067,6068,6070,6071,6073,6080,6081,6082,6083,6084,6085,6086,6087,6088,6089,6090,6091,6093,6094,6095,6096,6097,6098,6099,6101,6102,6103,6104,6105,6106,6109,6110,6111,6112,6114,6115,6116,6117,6118,6119,6120,6121,6122,6123,6124,6125,6126,6127,6128,6129,6130,6132,6133,6135,6136,6137,6138,6139,6140,6141,6142,6144,6145,6146,6154,6155,6163,6164,6166,6168,6169,6170,6171,6172,6174,6175,6177,6178,6179,6180,6181,6182,6183,6184,6185,6186,6187,6188,6189,6190,6192,6193,6194,6195,6196,6197,6198,6199,6200,6201,6202,6203,6204,6205,6208,6209,6210,6211,6212,6213,6214,6215,6216,6217,6219,6220,6221,6222,6223,6224,6225,6237,6240,6241,6242,6243,6244,6245,6246,6247,6248,6249,6250,6251,6252,6253,6254,6255,6256,6257,6258,6259,6260,6261,6262,6263,6264,6265,6266,6267,6270,6271,6272,6273,6274,6275,6276,6281,6282,6284,6285,6286,6287,6288,6289,6290,6291,6292,6293,6294,6295,6296,6297,6298,6299,6300,6301,6302,6304,6305,6306,6307,6308,6309,6310,6311,6312,6313,6314,6315,6316,6317,6318,6322,6323,6325,6326,6327,6328,6329,6331,6332,6334,6335,6336,6337,6338,6339,6340,6341,6342,6343,6344,6345,6346,6347,6348,6349,6350,6351,6352,6353,6354,6355,6356,6357,6358,6359,6360,6363,6364,6365,6367,6368,6370,6371,6372,6373,6374,6375,6376,6377,6378,6379,6380,6381,6382,6383,6385,6386,6387,6388,6389,6390,6391,6393,6394,6395,6396,6397,6398,6399,6400,6401,6402,6403,6404,6405,6406,6407,6408,6410,6411,6412,6413,6415,6416,6417,6419,6421,6422,6423,6425,6426,6427,6428,6429,6430,6431,6432,6433,6434,6435,6436,6439,6440,6441,6442,6443,6444,6445,6446,6447,6448,6451,6452,6453,6454,6455,6456,6459,6460,6461,6462,6463,6464,6465,6466,6467,6468,6469,6470,6471,6472,6473,6474,6475,6476,6477,6478,6479,6482,6483,6484,6485,6486,6487,6488,6489,6490,6491,6493,6494,6495,6496,6497,6498,6499,6500,6501,6502,6503,6504,6506,6507,6509,6510,6512,6513,6514,6515,6516,6517,6518,6519,6520,6521,6522,6523,6524,6525,6526,6527,6528,6529,6531,6532,6533,6534,6535,6536,6537,6538,6539,6541,6542,6543,6544,6545,6546,6547,6548,6549,6550,6551,6552,7593,7594,7595,7596,7597,7599,7600,7601,7602,7603,7604,7605,7606,7607,7608,7609,7610,7611,7612,7613,7614,7615,7616,7617,7618,7619,7620,7621,7622,7623,7625,7626,7627,7628,7629,7630,7631,7632,7633,7634,7635,7636,7637,7638,7639,7640,7641,7642,7643,7644,7645,7646,7647,7648,7649,7650,7651,7652,7654,7655,7657,7658,7659,7660,7661,7662,7663,7666,7667,7668,7669,7670,7671,7672,7673,7674,7675,7676,7677,7678,7679,7680,7681,7682,7684,7685,7686,7687,7688,7689,7690,7692,7694,7695,7697,7698,7699,7702,7703,7706,7707,7708,7709,7710,7711,7712,7713,7714,7715,7716,7717,7718,7719,7720,7721,7722,7723,7724,7725,7727,7728,7729,7730,7733,7735,7736,7737,*/7738,7739,7740,7741,7742,7743,7747,7748,7749,7750,7751,7752,7753,7754,7755,7757,7758,7759,7760,7762,7763,7765,7766,7768,7769,7770,7771,7772,7773,7774,7775,7776,7777,7778,7779,7781,7782,7783,7784,7785,7786,7787,7790,7791,7792,7793,7794,7796,7797,7798,7799,7800,7801,7802,7803,7804,7805,7806,7807,7808,7809,7811,7812,7813,7814,7815,7816,7817,7819,7820};
+ 
+  
+
+  
+  gStyle->SetOptStat(111111);
+  gStyle->SetErrorX(0);
+
+  for(Int_t r=0; r<NRUNS; r++){
+
+    TString filename  = Form("/lustre19/expphy/volatile/hallc/c-csv/hdbhatt/ROOTfiles/neweff/coin_replay_production_%d_-1.root", runs[r]);//6381
+    TFile *f = new TFile(filename, "READ");
+
+    // cout<< "Opening Run Num = "<< runs[r] <<endl; 
+    
+    if(f->IsZombie()){
+      std::cout << "Error opening file "<< std::endl;
+      exit(-1);
+    }
+
+  
+    TTree * tt = (TTree *)f->Get("T");
+    TTree * ss = (TTree *)f->Get("TSP");
+    //  TFile *ff = new TFile("root/livetime_pm.root","RECREATE");   
+
+    double total_scaler1MHztime=0.;
+    double total_bcm1charge=0;
+    double total_ptrig6scaler=0;
+    double total_pedtmscaler=0;
+    double total_ptrig1scaler=0;//added
+
+    double previous_scaler1MHztime =0;
+    double previous_bcmcharge =0;
+    double previous_ptrig6scaler=0;;
+    double previous_pedtmscaler=0;
+    double previous_ptrig1scaler=0;//addeds
+
+    double total_scaler1MHztime_new=0;
+    double total_bcm1charge_new=0;
+    double total_ptrig6scaler_new=0;
+    double total_pedtmscaler_new=0;
+    double total_ptrig1scaler_new=0;//added
+
+
+    TH1F *hcurrent = new TH1F("current","",100, -10, 100);
+    TH1F *hcurrent_bcmcut = new TH1F("hcurrent_bcmcut","",100, -10, 100);
+    TH1F *hcurrent_nobcmcut = new TH1F("hcurrent_nobcmcut","",100, -10, 100);
+
+    TH1F *hcharge = new TH1F("hcharge","",100, -10, 15000);
+    TH1F *hchargecut = new TH1F("hchargecut","",100, -10, 15000);
+
+    TH1F *htime = new TH1F("htime","",100, -1000, 5000);
+    TH1F *htimecut = new TH1F("htimecut","",100, -1000, 5000);
+
+
+
+
+    double data_eventnum,ngcer,pcaletottrack,pcaleprtrack,pcaletotnorm,pdelta,xptar,ytar,pdcntrack,eventtype,phodbetanotrack,phodgoodscinhit,pdctnhit,edtmtdctimeraw,ptrig6tdctimeraw,ptrig2tdctimeraw,pelcleantdctimeraw;
+
+    double scaler_eventnum,bcm1charge,bcm1current,scaler1MHztime,scaler1MHztimecut,bcm1chargecut,s1xscaler,s1yscaler,s2xscaler,s2yscaler,ptrig1scaler,ptrig2scaler,ptrig3scaler,ptrig4scaler,ptrig6scaler,pedtmscaler,pelcleanscaler,pl1acceptscaler;
+
+    double  current_bcmcut, current_nobcmcut;
+    tt->SetBranchAddress("g.evnum",&data_eventnum);
+    tt->SetBranchAddress("P.ngcer.npeSum",&ngcer); 
+    tt->SetBranchAddress("P.cal.etottracknorm",&pcaletottrack);
+    tt->SetBranchAddress("P.cal.eprtracknorm",&pcaleprtrack);
+    tt->SetBranchAddress("P.cal.etotnorm",&pcaletotnorm);
+    tt->SetBranchAddress("P.gtr.dp",&pdelta);
+    tt->SetBranchAddress("P.gtr.th",&xptar);
+    tt->SetBranchAddress("P.gtr.y",&ytar);
+    tt->SetBranchAddress("P.dc.ntrack", &pdcntrack);
+    tt->SetBranchAddress("g.evtyp", &eventtype);
+    tt->SetBranchAddress("P.hod.betanotrack",&phodbetanotrack);    
+    tt->SetBranchAddress("P.hod.goodscinhit",&phodgoodscinhit);
+    tt->SetBranchAddress("P.dc.nhit",&pdctnhit);
+    tt->SetBranchAddress("T.coin.pEDTM_tdcTimeRaw",&edtmtdctimeraw);
+    tt->SetBranchAddress("T.coin.pTRIG6_ROC2_tdcTimeRaw",&ptrig6tdctimeraw);
+    tt->SetBranchAddress("T.coin.pTRIG2_ROC2_tdcTimeRaw",&ptrig2tdctimeraw);
+    //tt->SetBranchAddress("T.coin.pEL_CLEAN_ROC2_tdcTimeRaw",&pelcleantdctimeraw);
+
+
+    ss->SetBranchAddress("evNumber", &scaler_eventnum);
+    ss->SetBranchAddress("P.BCM1.scalerCharge", &bcm1charge);
+    ss->SetBranchAddress("P.BCM1.scalerCurrent", &bcm1current);
+    ss->SetBranchAddress("P.1MHz.scalerTime", &scaler1MHztime);
+    ss->SetBranchAddress("P.1MHz.scalerTimeCut",&scaler1MHztimecut);
+    ss->SetBranchAddress("P.BCM1.scalerChargeCut",&bcm1chargecut);
+    ss->SetBranchAddress("P.S1X.scaler", &s1xscaler);
+    ss->SetBranchAddress("P.S1Y.scaler", &s1yscaler);
+    ss->SetBranchAddress("P.S2X.scaler", &s2xscaler);
+    ss->SetBranchAddress("P.S2Y.scaler", &s2yscaler);
+    ss->SetBranchAddress("P.pTRIG1.scaler", &ptrig1scaler);
+    ss->SetBranchAddress("P.pTRIG2.scaler", &ptrig2scaler);
+    ss->SetBranchAddress("P.pTRIG3.scaler", &ptrig3scaler);
+    ss->SetBranchAddress("P.pTRIG4.scaler", &ptrig4scaler);
+    ss->SetBranchAddress("P.pTRIG6.scaler", &ptrig6scaler);
+    ss->SetBranchAddress("P.EDTM.scaler",&pedtmscaler);
+    ss->SetBranchAddress("P.pEL_CLEAN.scaler", &pelcleanscaler);
+    ss->SetBranchAddress("P.pL1ACCP.scaler",&pl1acceptscaler);
+ 
+
+    Long64_t nentriesD = tt->GetEntries();
+    // cout<<" Data entries = "<<nentriesD<<"  "<<endl;
+    Long64_t nscalerD = ss->GetEntries();
+    // cout<<" Scaler entries = "<<nscalerD<<"  "<<endl;
+
+    int ev_flag[nscalerD];
+    int scal_evt_num[nscalerD];
+  
+  
+    for (int j = 0; j < nscalerD; j++){
+      ss->GetEntry(j);
+    
+      hcurrent->Fill(bcm1current);
+      hcharge->Fill(bcm1charge);
+      hchargecut->Fill(bcm1chargecut);
+      htime->Fill(scaler1MHztime);
+      htimecut->Fill(scaler1MHztimecut);
+      current_bcmcut = bcm1chargecut/scaler1MHztimecut;
+      current_nobcmcut = bcm1charge/scaler1MHztime;
+      hcurrent_bcmcut->Fill(current_bcmcut);//take Integral 
+      hcurrent_nobcmcut->Fill(current_nobcmcut);//take Integarl
+
+    }
+    // double  current_integral_bcmcut   =  hcurrent_bcmcut->Integral();
+    //double  current_integral_nobcmcut =  hcurrent_nobcmcut->Integral();
+
+
+ 
+    TCanvas * c1 = new TCanvas ("c1", "c1", 600, 400);
+    c1->Divide(4,2);
+ 
+    c1->cd(1);
+    hcurrent->Draw();
+ 
+    c1->cd(2);
+    hcharge->Draw();
+    hcharge->SetTitle(Form("Run Number: %d", runs[r]));
+  
+    c1->cd(3);
+    hchargecut->Draw();
+ 
+    c1->cd(4);
+    htime->Draw();
+ 
+    c1->cd(5);
+    htimecut->Draw();
+ 
+    c1->cd(6);
+    hcurrent_nobcmcut->Draw();
+ 
+    c1->cd(7);
+    hcurrent_bcmcut->Draw();
+    /////////////////////////////////Main part//////////////////////
+    for (int k = 0; k < nscalerD; k++) {
+      ss->GetEntry(k);
+      // ev_flag[k] = 0;
+      scal_evt_num[k] = scaler_eventnum;
+
+      total_scaler1MHztime=scaler1MHztime;
+      total_bcm1charge=bcm1charge;
+      total_ptrig6scaler=ptrig6scaler;
+      total_pedtmscaler=pedtmscaler;
+
+      total_scaler1MHztime_new  =  total_scaler1MHztime_new + ( scaler1MHztime - previous_scaler1MHztime);
+      total_bcm1charge_new      =  total_bcm1charge_new + (bcm1charge - previous_bcmcharge);
+      total_ptrig6scaler_new    = total_ptrig6scaler_new + (ptrig6scaler - previous_ptrig6scaler);
+      total_pedtmscaler_new     = total_pedtmscaler_new + (pedtmscaler - previous_pedtmscaler); 
+
+      previous_scaler1MHztime = scaler1MHztime;
+      previous_bcmcharge = bcm1charge;
+      previous_ptrig6scaler = ptrig6scaler;
+      previous_pedtmscaler = pedtmscaler;
+
+    }
+
+
+    double ptrig6_rate = total_ptrig6scaler_new/total_scaler1MHztime_new/1000.;// unit KHz
+    double pedtm_rate = total_pedtmscaler_new/total_scaler1MHztime_new/1000.;//unit KHz
+    double ptrig1_rate = total_ptrig1scaler_new/total_scaler1MHztime_new/1000.;// unit KHz
+
+    //////////////////////data Tree/////////////
+    double total_pedtm_trigger_accp = 0.;
+    int scal = 0;
+    for (int kk=0; kk<nentriesD;  kk++){
+      tt->GetEntry(kk);
+      if( edtmtdctimeraw > 0) { total_pedtm_trigger_accp++; }  //-------------------Numerator
+      if(data_eventnum==scal_evt_num[scal]){scal++;}
+
+    }
+ 
+    double rmeas ;
+    double cpuLT_err;
+    double cpuLT_factor;
+
+    double  current_mean_bcmcut   =  hcurrent_bcmcut->GetMean();
+    double  current_mean_nobcmcut =  hcurrent_nobcmcut->GetMean();
+    double current_factor  = current_mean_nobcmcut/ current_mean_bcmcut;
+ 
+    //cout <<" mean current with bcm cut = " <<  current_mean_bcmcut  << endl;
+    //cout <<" mean current with no bcm cut = " <<  current_mean_nobcmcut  << endl;
+  
+    //cout<< " total_pedtm_trigger_accp = " << total_pedtm_trigger_accp << endl;
+    //cout<< " total_pedtmscaler_new = " <<  total_pedtmscaler_new << endl;
+  
+    rmeas = total_pedtm_trigger_accp / total_pedtmscaler_new;
+    //cout <<" rmeas " << rmeas << endl;
+    //cout<<" current_factor(f) = " <<current_factor<< endl;
+    double newlt = (rmeas - ( 1.0 - current_factor))/ current_factor;
+    cpuLT_err = sqrt(total_pedtm_trigger_accp) / total_pedtmscaler_new;
+    //cout << " Live Time = [rmeas - (1. - f)] / f = "<<  newlt << endl;
+    // cout << " Error in Live Time = "<< cpuLT_err << endl;
+    double boiling_fact = 1 + 0.00032 * current_mean_bcmcut;
+    // cout<<runs[r]<<"\t\t"<<boiling_fact<<endl;
+    //
+
+    // txtfile << runs[r] <<"\t"<<std::setprecision(0)<<fixed<<  total_pedtm_trigger_accp <<"\t"<< total_pedtmscaler_new  <<"\t"<<  rmeas <<"\t"<< newlt<<"\t"<<cpuLT_err<<"\t"<<endl;
+   // txtfile << runs[r] <<"\t"<< total_pedtm_trigger_accp <<"\t"<< total_pedtmscaler_new  <<"\t"<<  rmeas <<"\t"<< newlt<<"\t"<<cpuLT_err<<"\t"<<endl;
+    txtfile<<runs[r]<<"\t\t"<<newlt<<"\t\t"<<cpuLT_err<<"\t\t"<<current_mean_bcmcut<<"\t\t"<<boiling_fact << endl;
+    //cout<<runs[r]<<"\t\t"<<newlt<<"\t\t"<<cpuLT_err<<"\t\t"<<current_mean_bcmcut<<"\t\t"<<boiling_fact << endl;
+
+    c1->SaveAs(Form("pdf/current_%d.pdf",runs[r]));
+    c1->~TCanvas();
+    delete c1;
+    cout << " ======================================================== "<<endl;
+    cout << ""<<endl;
+
+  }
+}
