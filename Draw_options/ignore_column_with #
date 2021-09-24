@@ -1,0 +1,10 @@
+    std::istringstream iss(line);
+    double a, b, c, d, e, f, g, h, i, j, k, l, m;
+    if(line[0]=='#')continue
+    if (!(iss >> a >> b >> c >> d >> e >> f >> g >> h >> i >>j >>k>>l>>m))
+      {
+           
+	break;
+           
+      } 
+       
