@@ -1,0 +1,9 @@
+gStyle->SetPalette(1,0);
+  gStyle->SetOptFit(11);
+  gStyle->SetTitleOffset(1.5,"Y");
+  gStyle->SetTitleOffset(0.9,"X");
+  gStyle->SetLabelSize(0.05,"XY");
+  gStyle->SetTitleSize(0.05,"XY");
+  gStyle->SetPadLeftMargin(0.14);
+  gStyle->SetOptStat(1000111);
+  gStyle->SetErrorX(0);
