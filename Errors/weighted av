@@ -13,3 +13,4 @@ x_weighted_av = (x1*w1 +x2*w2+x3*w3)/(w1+w2+w3)
 Error = 1/sqrt(w1 + w2 + w3)
 
 Hence weigheed av is x_weighted_av +/- Error
+https://www.youtube.com/watch?v=8lvaV0af2CU&ab_channel=SimplyExcel
