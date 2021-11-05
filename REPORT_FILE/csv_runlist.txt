@@ -1,3 +1,4 @@
+SOme RATES WRONG HERE
 #Run Target	hms_angle hms_p hms_rate shms_angle shms_p shms_rate bcm1_cut_curr bcm1_cut_charge
 6018	2	-16.63	4.50	17.8	11.6	4.26	452.94	30.144	44.267
 6019	2	-16.63	4.50	17.8	11.6	4.26	451.69	30.055	50.348
