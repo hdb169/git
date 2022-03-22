@@ -1,6 +1,18 @@
 //July 8, 2021
 //kin1-2
 if(runs[r]>=12 && runs[r]<=34){offsetrf = 399.1;}//kin1-2
+if(runs[r]>=5300 && runs[r]<=5377){offsetrf = 403.05;}
+if(runs[r]>=5378 && runs[r]<=5601){offsetrf = 401.05;}
+if(runs[r]>=5602 && runs[r]<=5662){offsetrf = 403.05;}
+if(runs[r]>=5663 && runs[r]<=5839){offsetrf = 401.05;}
+if(runs[r]>=5840 && runs[r]<=5941){offsetrf = 403.05;}
+if(runs[r]>=5942 && runs[r]<=6008){offsetrf = 401.05;}
+
+
+
+
+
+
 
 if(runs[r]>=6020 && runs[r]<=6025){offsetrf = 397.1;}//kin1-2
 if(runs[r]>=6026 && runs[r]<=6029){offsetrf = 397.05;}
