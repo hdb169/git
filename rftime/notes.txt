@@ -1,0 +1,734 @@
+hist_z07_data_simc_kin1_2.C
+z07, 06, 05, 04 are below
+void hist_data_simc_kin1_2(Int_t simcPos, Int_t simcNeg, Int_t DataD2Pos, Int_t DataDumPos, Int_t DataD2Neg, Int_t DataDumNeg)
+//Fall New
+
+root -l 'hist_data_newsimc_kin1_2.C(602011, 606811, 6021, 6026, 6068, 6067)'
+root -l 'hist_data_newsimc_kin1_2.C(602911, 607311, 6030, 6027, 6073, 6080)'
+root -l 'hist_data_newsimc_kin1_2.C(604311, 608811, 6044, 6046, 6088, 6087)'
+root -l 'hist_data_newsimc_kin1_2.C(604911, 609111, 6052, 6058, 6093, 6098)'
+
+
+
+
+
+//Fall Old
+
+root -l 'hist_data_oldsimc_kin1_2.C(602011, 606811, 6021, 6026, 6068, 6067)'
+root -l 'hist_data_oldsimc_kin1_2.C(602911, 607311, 6030, 6027, 6073, 6080)'
+root -l 'hist_data_oldsimc_kin1_2.C(604311, 608811, 6044, 6046, 6088, 6087)'
+root -l 'hist_data_oldsimc_kin1_2.C(604911, 609111, 6052, 6058, 6093, 6098)'
+
+
+
+
+
+
+
+
+//spring New
+
+
+root -l 'hist_data_newsimc_kin1_2.C(763511, 759311, 7636, 7638, 7593, 7603)'
+root -l 'hist_data_newsimc_kin1_2.C(764211, 760811, 7644, 7641, 7609, 7605)'
+root -l 'hist_data_newsimc_kin1_2.C(764611, 761111, 7652, 7655, 7615, 7618)'
+root -l 'hist_data_newsimc_kin1_2.C(766111, 762511, 7669, 7658, 7634, 7622)'
+
+
+
+//spring Old
+
+
+root -l 'hist_data_oldsimc_kin1_2.C(763511, 759311, 7636, 7638, 7593, 7603)'
+root -l 'hist_data_oldsimc_kin1_2.C(764211, 760811, 7644, 7641, 7609, 7605)'
+root -l 'hist_data_oldsimc_kin1_2.C(764611, 761111, 7652, 7655, 7615, 7618)'
+root -l 'hist_data_oldsimc_kin1_2.C(766111, 762511, 7669, 7658, 7634, 7622)'
+
+/////////////////////////////////////////note Oct 9
+root -l 'hist_data_oldsimc_today.C(766111, 762511, 7661, 7657, 7625, 7620)'
+
+root -l 'hist_data_newsimc_today.C(766111, 762511, 7661, 7657, 7625, 7620)'
+
+
+/////////////z07
+
+root -l 'hist_data_oldsimc_today.C(763511, 759311, 7635, 7638, 7593, 7600)'
+
+root -l 'hist_data_newsimc_today.C(763511, 759311, 7635, 7638, 7593, 7600)'
+///////////
+
+root -l 'hist_data_newsimc_z04.C( 7661, 7657, 7625, 7620)'
+
+root -l 'hist_data_newsimc_z07.C( 7635, 7638, 7593, 7600)'
+
+
+///////////////////////////////////////////////////////////////
+For the z = 0.9 data,
+1)in kin1_2, we have an script rewrite_z09_7760.C
+first run it, and check if the plots are looking good, RF time, ctime etc.
+then, get the livetime and tracking efficiency and insert in the same sript.
+
+2)in kin33_34
+
+a)get simc histograms
+plot_hist_newsimcz09.
+get the simc rootfile and normfac
+
+b) add sidis,Rad+Excl,Rad+Excl,Rad+delta
+
+but, you should overlay Rad+Excl and Rad+delta histograms along with data, 3 added hists , and these two with different colors (4hists)
+add_3hists_z09.C 
+
+
+
+
+
+
+c)finally hist_data_newsimc_z09.C will take 4 data rootfiles, pi+D2, pi+dummy, pi-Data, pi-D2 but provide the simc 3added hists rootfile manually.
+do: 
+root -l 'hist_data_newsimc_z09.C( 7760, 7762, 7724, 7725)'
+==========
+root -l -b -q rewrite_z09_7760.C
+
+root -l plot_hist_newsimcz09.C
+
+root -l add_3hists_z09.C  
+
+//root -l 'hist_data_newsimc_z09.C( 7760, 7762, 7724, 7725)'
+
+
+root -l 'ratio_z09.C( 7760, 7762, 7724, 7725)'
+
+final hists are in pdf directory
+///////////////////kin 40 39
+
+
+
+
+
+
+
+1)data
+//root -l -b -q rewrite_z65_7808.C
+
+
+
+root -l -b -q rewrite_z65_7808_highrf.C 
+
+root -l plot_hist_4039.C
+
+root -l add_3hists_z4039.C
+
+root -l 'ratio_z4039_hibin.C( 7808, 7811, 7796, 7793)'
+
+
+
+//root -l 'add_3hists_z4039.C(780811, 780801, 7808012, 779611, 779601, 7796013)'
+
+
+
+4)
+//root -l 'hist_data_newsimc_z4039.C( 7808, 7811, 7796, 7793)'
+
+//root -l 'ratio_z4039.C( 7808, 7811, 7796, 7793)'
+
+
+
+
+(lower one)
+
+//root -l 'ratio_z4039.C( 780811, 780801, 7808012, 779611, 779601, 7796013, 7808, 7811, 7796, 7793)'
+/////////////////////////////////////////////////new with different bparam
+
+root -l -b -q rewrite_z65_7808_highrf_W2Mx2.C 
+
+root -l plot_hist_4039_diffb_W2Mx2.C 
+
+root -l add_3hists_z4039_W2Mx2.C
+
+root -l 'ratio_z4039_hibin_diffb_W2Mx2.C( 7808, 7811, 7796, 7793)'
+
+
+///////Mx2W2 30-40 7808, 7811, 7796,7793////////////////same b pi+ pi-----------------------------These 3 for kin 39-40 final same b 7513
+
+binkin391_401.h
+root -l -b -q rewrite_z65_7808_highrf_W2Mx2.C 
+
+root -l plot_hist_4039_W2Mx2.C 
+
+root -l add_3hists_z4039_W2Mx2.C
+
+root -l 'ratio_z4039_hibin_W2Mx2.C( 7808, 7811, 7796, 7793)'
+
+
+
+//////////////////////////////////Kin 39-40  x = 55, z = 55 ///////////// 2nd kin 7515
+bin7813.h
+root -l -b -q rewrite_z55_7813_highrf_W2Mx2.C 
+root -l plot_hist_7813_W2Mx2.C 
+
+root -l add_3hists_7813_W2Mx2.C
+
+root -l 'ratio_7813_hibin_W2Mx2.C( 7813, 7812, 7798, 7801)'
+
+///////////////////////////////Kin 39-40 x = 55, z = 45 3rd point
+
+DNP
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7815
+
+=============cut study 7815
+root -l rewrite_aero.C
+
+root -l 'ratio_7815_hibin_W2Mx2.C( 7815, 7819, 7805, 7803)'
+==================================================================================
+              x = 0.550	z = 0.450
+bin7815.h
+root -l -b -q rewrite_z45_7815_highrf_W2Mx2.C 
+
+root -l plot_hist_7815_W2Mx2.C 
+
+root -l add_3hists_7815_W2Mx2.C
+
+root -l 'ratio_7815_hibin_W2Mx2.C( 7815, 7819, 7805, 7803)'
+
+=====================================================================+APS 2021(actual plots) here===============================================>>>>>>>>>>>>>>>>>>>>>>>>>HERE
+all ROOTfiles are in home
+simcROOTfiles are also iin home
+al pdfs, root files will be under home/aps2021
+
+/home/hdbhatt/aps2021/yieldaps
+data plot
+
+dummy subtracted ratio of data
+
+
+root -l -b -q yield_kin39_40.C
+
+root -l 'ratio_kin39_40.C(7808, 7811, 7796, 7793)'
+root -l 'ratio_kin39_40.C(7813, 7812, 7798, 7801)'
+root -l 'ratio_kin39_40.C(7815, 7819, 7805, 7803)'
+
+root -l 'add_4simc_allruns.C(78081, 78082, 78083, 78084, 77961, 77962, 77963, 77964)'
+root -l 'add_4simc_allruns.C(78131, 78132, 78133, 78134, 77981, 77982, 77983, 77984)'
+root -l 'add_4simc_allruns.C(78151, 78152, 78153, 78154, 78051, 78052, 78053, 78054)'
+
+================================================================================APS Notes More here================================================>>>>>begin
+
+
+1)first I am doing for hallC meeting ratio
+
+2)
+run1=inclusive  78081,
+run2=exclusive  78082,
+run3=delta      78083,
+run4=rho        78084
+
+for example 78081,  78082, 78083, 78084
+
+3)
+exclusive and delta do not have z variable
+so 78152 || 78153 has to define new z variable
+
+4)Add inc+exc+delta and comp with data yield, and also plot separatelyto show the individulal yields.
+you may add rho too in simc
+
+
+
+=====================================================================+APS 2021===Kin39-40
+all ROOTfiles are in home
+/home/hdbhatt/simcROOTfilesaps
+
+all pdfs, root files will be under home/aps2021
+
+/home/hdbhatt/aps2021/yieldaps
+
+data plot
+dummy subtracted ratio of data
+
+root -l -b -q yield_kin39_40.C
+root -l 'ratio_kin39_40.C(7808, 7811, 7796, 7793)'
+
+root -l 'ratio_kin39_40.C(7813, 7812, 7798, 7801)'
+
+root -l 'ratio_kin39_40.C(7815, 7819, 7805, 7803)'
+
+
+STEPS HERE ONLY
+
+===================================Kin39/40==========================================================STEPS HERE ONLY======================================================>>>>>>>>>>>>>>>>>
+
+steps
+1)to run the data script for all D2/Dum runs
+
+/home/hdbhatt/aps2021/yieldaps
+
+
+
+1)
+root -l datayield_kin39.C
+root -l simcyield_kin39.C
+
+(give run num, charge, eff in script manually) the list of eff, charge is here (add all charge for the runs)
+
+~/aps2021/yieldaps/short_eff.txt
+
+
+rootfile is saved as 
+/home/hdbhatt/aps2021/root_yield/yield_run.root
+
+2)Dummy subtracted data yield, and ratio for all runs, give pi+ D2, Dum ; and pi- D2, dum serially as
+
+root -l -q 'dummysub_yieldratio_allruns.C(7808, 7811, 7796, 7793)'
+
+root -l -q 'dummysub_yieldratio_allruns.C(7813, 7812, 7798, 7801)'
+
+root -l -q 'dummysub_yieldratio_allruns.C(7815, 7819, 7805, 7803)'
+=================
+gives rootfile  /home/hdbhatt/aps2021/root_yield_ratio/data_yield_%d.root
+=================
+3)simc for kin39/40
+
+root -l simcyield_kin39.C
+(supply runs for all D2 settings as D2+ in 1 line (4 rootfiles) for first z,
+                                    D2- in 2nd line for first z, and so on in next 6 or 8 lines and the corresponding normfac manually)
+
+
+4)Now add all simc processes, by supplying 8 runs 4 for pi+ (inc,exc,del,rho) and 4 for pi-, in exact order for each z as:
+
+root -l 'add_4simc_allruns.C(78081, 78082, 78083, 78084, 77961, 77962, 77963, 77964, 7808)'
+
+
+root -l 'add_4simc_allruns.C(78131, 78132, 78133, 78134, 77981, 77982, 77983, 77984, 7813)'
+
+root -l 'add_4simc_allruns.C(78151, 78152, 78153, 78154, 78051, 78052, 78053, 78054, 7815)'
+
+5)Do the ratio of data to simc (simc has to be 3 processes, not rho, let's see), the hgcer and RF eff has to be added
+==================aps =====================this ==============================================================================================================>>end more APS plots
+
+keep this
+root -l 'add_4simc_allruns_7808.C(78081, 78082, 78083, 78084, 77961, 77962, 77963, 77964, 7808)'
+
+root -l 'add_4simc_allruns_7813.C(78131, 78132, 78133, 78134, 77981, 77982, 77983, 77984, 7813)'
+
+root -l 'add_4simc_allruns_7815.C(78151, 78152, 78153, 78154, 78051, 78052, 78053, 78054, 7815)'
+
+====================================================kin3/4==========================================BEAM ENERGY++++++++++++++++++
+
+1)
+root -l datayield_kin3.C
+
+
+next
+
+root -l simcyield_kin3.C
+
+
+~/aps2021/yieldaps/short_eff.txt
+
+rootfile is saved as 
+/home/hdbhatt/aps2021/root_yield/yield_run.root
+
+2)Dummy subtracted data yield, and ratio for all runs, give pi+ D2, Dum ; and pi- D2, dum serially as
+
+root -l 'dummysub_yieldratio_allruns.C(6537, 6538, 6545, 6546)'
+
+root -l 'dummysub_yieldratio_allruns.C(6541, 6539, 6548, 6547)'
+
+root -l 'dummysub_yieldratio_allruns.C(6542, 6544, 6550, 6552)'
+
+3)simc for kin39/40
+
+root -l simcyield_kin39.C
+(supply runs for all D2 settings as D2+ in 1 line (4 rootfiles) for first z,
+                                    D2- in 2nd line for first z, and so on in next 6 or 8 lines and the corresponding normfac manually)
+
+
+4)Now add all simc processes, by supplying 8 runs 4 for pi+ (inc,exc,del,rho) and 4 for pi-, in exact order for each z as:
+
+root -l 'add_4simc_allruns_kin3.C(65371, 65372, 65373, 65374, 65451, 65452, 65453, 65454, 6537)'
+
+root -l 'add_4simc_allruns_kin3.C(65411, 65412, 65413, 65414, 65481, 65482, 65483, 65484, 6541)'
+
+root -l 'add_4simc_allruns_kin3.C(65421, 65422, 65423, 65424, 65501, 65502, 65503, 65504, 6542)'
+
+5)Do the ratio of data to simc (simc has to be 3 processes, not rho, let's see), the hgcer and RF eff has to be added
+
+
+
+
+
+
+
+
+
+==============================================================================
+
+///////////Fall 6537 DONE=========This is working one
+
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin6537rho/
+
+root -l -q rewrite_z07_6537_highrf_W2Mx2.C
+
+root -l plot_hist_6537_W2Mx2.C
+
+root -l  add_3hists_6537_W2Mx2.C 
+
+root -l  'ratio_6537_hibin_W2Mx2.C( 6537, 6538, 6545, 6546)'
+
+\\\\\\\
+65370111 rho + = 0.890107E+09  Ngen =2000
+65450111 rho - = 0.890107E+09  Ngen = 2000
+
+====================================Jan26 hallc meeting is this Z = 0.7==========================HERE================================================>GOOD
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin6537rho$
+ 
+root -l -q bef_jan25_rewrite_z07_6537_highrf_W2Mx2.C 
+
+root -l plot_hist_6537_W2Mx2.C
+
+actually there are 3 hists
+root -l add_4simc_hists_6537_W2Mx2.C
+
+root -l 'ratio_6537_hibin_W2Mx2.C( 6537, 6538, 6545, 6546)'
+
+For z = 0.6
+
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin6541rho$
+
+root -l -q bef_jan25_rewrite_z07_6541_highrf_W2Mx2.C 
+root -l plot_hist_6541_W2Mx2.C
+root -l add_4simc_hists_6541_W2Mx2.C
+root -l 'ratio_6541_hibin_W2Mx2.C( 6541, 6539, 6548, 6547)'
+
+Run 6549 has problem see it
+
+For z = 0.5
+
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin6542rho$
+
+root -l -q bef_jan25_rewrite_z07_6542_highrf_W2Mx2.C 
+root -l plot_hist_6542_W2Mx2.C
+root -l add_4simc_hists_6542_W2Mx2.C
+root -l 'ratio_6542_hibin_W2Mx2.C( 6542, 6544, 6550, 6552)'
+
+try single run only using coin_root file (not done now)
+6543, 6544, 6550, 6552 (see charge)
+root -l -q bef_jan25_rewrite_z07_6543_highrf_W2Mx2.C 
+root -l plot_hist_6542_W2Mx2.C
+root -l add_4simc_hists_6542_W2Mx2.C
+root -l 'ratio_6542_hibin_W2Mx2.C( 6542, 6544, 6550, 6552)'
+==================================================================
+RF eff ONLY FOR RF EFFICIENCY kin~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808
+
+root -l rfeff_hallc_6541.C
+(here, give the run number and momentum, no need to do anything)
+root -l 'plot_rf_kaon_cont_fromfit_6541.C(6541, 6539, 6548, 6547, 3.195)' 
+
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/RFEFF
+
+33-34 hallC
+root -l 'plot_rf_kaon_cont_fromfit_7635.C(7635,  7593,  3.15)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7642.C(7642,  7608,  2.699)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7646.C(7646,  7611,  2.248)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7661.C(7661,  7625,  1.797)' 
+
+35-36
+
+root -l 'plot_rf_kaon_cont_fromfit_7699.C(7699,  7671,  3.514)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7706.C(7706,  7679,  2.928)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7716.C(7716,  7684,  2.341)' 
+
+Pls fix offset 7716
+37-38
+
+root -l 'plot_rf_kaon_cont_fromfit_7768.C(7768,  7735,  3.214)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7775.C(7775,  7737,  2.718)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7783.C(7783,  7757,  2.223)' 
+
+
+39-40
+
+root -l 'plot_rf_kaon_cont_fromfit_7808.C(7808,  7796,  3.461)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7813.C(7813,  7798,  2.928)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_7815.C(7815,  7805,  2.394)' 
+
+
+Fall Yield Ratio HallC 3-4
+========================
+root -l 'plot_rf_kaon_cont_fromfit_6537.C(6537, 6545, 3.729)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_6541.C(6541, 6548, 3.195)' 
+
+root -l 'plot_rf_kaon_cont_fromfit_6542.C(6542, 6550, 2.662)' 
+
+Finally, in ~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/RFEFF
+do, root -l read_rfeff_pos_neghgc.C to plot the RF eff vs momentum.
+
+==========================================================================RF eff
+(i already have all spring runs ready)
+(here, adjust the parameters, kaon position, height etc. The four runs are at same momentum, pip D2, Dum, and pim D2, Dum. Later, You may keep only D2
+Once, you have tcxtfile for many different settings of momentums, do the pion purity va momentum for positive runs, and negative runs, two color.
+===================================================================
+spring 7808-7796 z = 65, x = 55
+
+
+
+bin7808.h
+root -l -b -q rewrite_z65_7808_highrf_W2Mx2.C 
+
+root -l plot_hist_7808_W2Mx2.C 
+
+root -l add_3hists_7808_W2Mx2.C
+
+root -l 'ratio_7808_hibin_W2Mx2.C( 7808, 7811, 7796, 7793)'
+=================================================================done=============
+
+
+spring 7813-7798 z = 55, x = 55
+
+
+
+bin7813.h
+root -l -b -q rewrite_z55_7813_highrf_W2Mx2.C 
+
+root -l plot_hist_7813_W2Mx2.C 
+
+root -l add_3hists_7813_W2Mx2.C
+
+root -l 'ratio_7813_hibin_W2Mx2.C( 7813, 7812, 7798, 7801)'
+=================================================================done=============
+
+
+T->Draw("P.cal.etottracknorm>>h(100, 0.001,2)","P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-10 && H.gtr.dp<10 && H.cal.etottracknorm>0.8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 && H.cer.npeSum>5 &&   (fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 400.1 ,4.008))  > 0.5 && (fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 400.1 ,4.008)) <1.5  && CTime.ePiCoinTime_ROC2>42.5 && CTime.ePiCoinTime_ROC2<45.5 && P.aero.npeSum>5 && H.cal.eprtracknorm>0.06 && H.cal.eprtracknorm<0.6 && P.cal.eprtracknorm>0 && P.cal.eprtracknorm<0.1 && (P.cal.etottracknorm-P.cal.eprtracknorm) > 0  && (P.cal.etottracknorm-P.cal.eprtracknorm) < 0.8")
+
+P.cal.etottracknorm>0 && P.cal.etottracknorm<0.75
+
+
+T->Draw("H.cal.etottracknorm>>h(100, -0.2, 2)" ,"  P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-8 && H.gtr.dp<8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 &&   (fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 400.1 ,4.008))  > 0.5 && (fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 400.1 ,4.008)) <1.5  && CTime.ePiCoinTime_ROC2>42.5 && CTime.ePiCoinTime_ROC2<45.5 && P.aero.npeSum>5 && P.cal.etottracknorm<0.8 && H.cal.etottracknorm>0.7 && H.cer.npeSum>10")
+
+//7796
+T->Draw("(fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 400.05 ,4.008))>>h(100,0,4) "," P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-8 && H.gtr.dp<8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 && P.aero.npeSum>5 && P.cal.etottracknorm<0.8 && H.cal.etottracknorm>0.7 && H.cer.npeSum>2&&CTime.ePiCoinTime_ROC2>43 && CTime.ePiCoinTime_ROC2<45")
+
+//6537 ctime 43-47, rf 399.05
+T->Draw("(fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 399.05 ,4.008))>>h(100,0,4) "," P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-8 && H.gtr.dp<8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 && P.aero.npeSum>5 && P.cal.etottracknorm<0.8 && H.cal.etottracknorm>0.7 && H.cer.npeSum>2&&CTime.ePiCoinTime_ROC2>43 && CTime.ePiCoinTime_ROC2<47")
+
+//rf eff 
+
+1)3.461
+root -l
+.L plot_rf_kaon_cont_fromfit_7808.C
+plot_rf_kaon_cont_fromfit_7808(7808,7796,3.461)
+
+root -l 'plot_rf_kaon_cont_fromfit_7808.C(7808,7796,3.461)'
+
+root -l 'plot_rf_kaon_cont_fromfit_7808_aps.C(7808,7796,3.461)'
+2)3.514
+root -l 
+.L plot_rf_kaon_cont_fromfit_7699.C
+plot_rf_kaon_cont_fromfit_7699(7699,7671,3.514)
+
+root -l 'plot_rf_kaon_cont_fromfit_7699_aps.C(7699,7671,3.5)'
+
+3) 3.15
+root -l 
+.L plot_rf_kaon_cont_fromfit_7635.C 
+plot_rf_kaon_cont_fromfit_7635(7635,7593,3.15)
+
+4) 2.699
+root -l BAD
+.L plot_rf_kaon_cont_fromfit_7642.C 
+plot_rf_kaon_cont_fromfit_7642(7642,7608,2.699)
+
+5) 2.248
+root -l 
+.L plot_rf_kaon_cont_fromfit_7646.C 
+plot_rf_kaon_cont_fromfit_7646(7646,7611,2.248)
+
+
+6) 1.797
+root -l 
+.L plot_rf_kaon_cont_fromfit_7661.C 
+plot_rf_kaon_cont_fromfit_7671(7661,7625,1.797)
+
+
+
+Cal Eff vs z===================================================
+
+~/my_analysis/efficiency/cal
+
+
+root -l pcal_eff_6145_6185.C
+~/my_analysis/efficiency/cal/txtfile/
+you will get a text file with eff and error for various z bins. Break the table in orders z = 0.4, 0.5, 0.6, 0.7 (4 txtfiles cal07.txt,..cal04.txt)
+
+To read thses 4 separate txt files, do 
+~/my_analysis/efficiency/cal/txtfile
+root -l read4caleff.C
+
+Another 6537, 6541, 6542
+root -l pcal_eff_6145_6185.C 
+
+and 3 txtfiles are cal_07.txt, 06.txt, 05.txt
+
+root -l read4cal_eff.C 
+
+===================================================================
+
+Maybe you need a little more explanation on the RF time slide.
+You should explain that the accelerator beam arrives every 4.008 ns
+and that the RF pulse time is the reference time for when it arrives
+at the target and the hodoscope is ~ 20 m from the target and so the
+what you are calling the RF time is the time of flight between the
+target and hodoscope.  Also mention that the time has been offset to
+align the pions at 1.0
+
+So you say something like
+RF time = time of flight between the target and hodoscope (~ 20 m
+apart) for beam buckets  arriving at the target every 4.008 ns. The
+time is offset to align the pions at 1.0
+
+
+shuo simc
+/u/group/c-csv/shuo/simc_gfortran
+rootfiles
+/lustre19/expphy/volatile/hallc/c-csv/shuo/worksim
+
+For HallC Meeting Jan 25
+~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808
+All RF Efficiency 
+pdf for RF eff plot ~/Desktop/data_simc/rad_dat_simc/kin33_34/kin7808/pdf_zbin
+txtfile for RF eff kin7808/txtfile
+(done) root -l -q rfeff_hallc.C
+
+to print the RF efficiency or kaon Contamination pi+D, Dum, pi- D, dumm, mom
+
+1)
+ root -l 'plot_rf_kaon_cont_fromfit_6537.C( 6537, 6538, 6545, 6546, 3.729)' 
+
+
+===================Pi+/Pi- Data
+===================Pi+/Pi- Simc Sum
+
+===================Plot
+
+
+
+
+root -l -b -q 'run_cal.C("coin_replay_production", 10000, 1, 7796)'
+
+// y vx x with cuts
+T->Draw("P.hgcer.xAtCer:P.hgcer.yAtCer>>h(100, -40, 40, 100,-40, 40)","P.gtr.dp>-10&&P.gtr.dp<20&&H.gtr.dp>-10&&H.gtr.dp<10&&P.cal.etottracknorm<0.75&&H.cal.etottracknorm>0.75&&P.aero.npeSum>4&&CTime.ePiCoinTime_ROC2>43&&CTime.ePiCoinTime_ROC2<47&&(fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 397.08 ,4.008))>0.5 && (fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 397.08 ,4.008))<1.5","colz")
+
+T->Draw("P.gtr.p>>h(100, 0,10)"," ")
+
+./hcswif.py --mode replay --spectrometer COIN --run 6073 --events -1 --project c-sidis18 --name filename --ram 1000000000 --disk 1000000000 --cpu 1
+
+
+
+/u/group/shms/wmhenry/hcswif|
+/u/group/shms/wmhenry/hcswif> ls 
+
+./hcswif.py --mode replay --spectrometer COIN --run 6018 6019 6020 6021 6022 6026 6027 6028 6029 6030 6031 6032 6043 6044 6045 6046 6049 6050 6051 6052 6053 6054 6055 6056 6057 6058 6067 6068 6070 6071 6073 6080 6081 6087 6088 6089 6090 6091 6093 6094 6095 6096 6097 6098 6109 6110 6111 6112 6114 6115 6116 6119 6120 6124 6125 6127 6128 6129 6130 6132 6133 6135 6136 6137 6138 6145 6146 6154 6155 6166 6168 6169 6170 6171 6172 6179 6180 6181 6182 6183 6184 6185 6186 6187 6194 6195 6196 6197 6198 6199 6205 6208 6209 6210 6211 6212 6213 6214 6215 6216 6217 6219 6220 6242 6243 6244 6245 6246 6247 6248 6249 6250 6251 6252 6261 6262 6263 6264 6265 6266 6267 6270 6271 6272 6273 6274 6275 6276  6288 6289 6290 6291 6292 6293 6294 6295 6296 6304 6305 6306 6307 6308 6309 6310 6311 6312 6317 6318 6322 6323 6325 6326 6327 6328 6329 6339 6340 6341 6342 6343 6344 6345 6346 6347 6348 6349 6350 6351 6352 6353 6354 6359 6360 6363 6364 6365 6367 6368 6370 6371 6372 6373 6374 6375 6376 6377 6378 6379 6380 6381 6382 6383 6385 6386 6387 6388 6389 6390 6391 6393 6394 6395 6396 6397 6398 6399 6400 6401 6402 6403 6404 6405 6406 6407 6408 6410 6411 6412 6413 6415 6416 6417 6419 6421 6422 6423 6425 6426 6427 6428 6429 6430 6431 6432 6433 6434 6435 6436 6439 6440 6441 6442 6443 6444 6445 6446 6447 6448 6451 6452 6453 6454 6455 6456 6459 6460 6461 6462 6463 6464 6465 6466 6467 6468 6469 6470 6471 6472 6473 6474 6475 6476 6477 6478 6479 6482 6483 6484 6485 6486 6487 6488 6489 6490 6491 6493 6494 6495 6496 6497 6498 6499 6500 6501 6502 6503 6504 6506 6507 6509 6510 6512 6513 6514 6515 6516 6517 6518 6519 6520 6521 6522 6523 6524 6525 6526 6527 6528 6529 6531 6532 6533 6534 6535 6536 6537 6538 6539 6541 6542 6543 6544 6545 6546 6547 6548 6549 6550 6551 6552 7593 7594 7595 7596 7597 7599 7600 7601 7602 7603 7604 7605 7606 7607 7608 7609 7610 7611 7612 7613 7614 7615 7616 7617 7618 7619 7620 7621 7622 7623 7625 7626 7627 7628 7629 7630 7631 7632 7633 7634 7635 7636 7637 7638 7639 7640 7641 7642 7643 7644 7645 7646 7647 7648 7649 7650 7651 7652 7654 7655 7657 7658 7659 7660 7661 7662 7663 7666 7667 7668 7669 7670 7671 7672 7673 7674 7675 7676 7677 7678 7679 7680 7681 7682 7684 7685 7686 7687 7688 7689 7690 7692 7694 7695 7697 7698 7699 7702 7703 7706 7707 7708 7709 7710 7711 7712 7713 7714 7715 7716 7717 7718 7719 7720 7721 7722 7724 7725 7727 7728 7735 7736 7737 7738 7739 7740 7747 7748 7749 7750 7751 7752 7757 7758 7759 7760 7762 7768 7769 7770 7771 7772 7773 7774 7775 7776 7777 7783 7784 7785 7786 7787 7790 7791 7792 7793 7794 7796 7797 7798 7799 7800 7801 7802 7803 7804 7805 7806 7807 7808 7809 7811 7812 7813 7814 7815 7816 7817 7819 7820 --events -1 --project c-sidis18 --name filename --ram 2000000000 --disk 3000000000 --cpu 1
+
+
+
+
+//all runs 
+T->Draw("(fmod(-T.coin.pRF_tdcTime+P.hod.fpHitsTime+ 399.05 ,4.008))>>h(100,0,4) "," P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-8 && H.gtr.dp<8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 && P.aero.npeSum>5 && P.cal.etottracknorm<0.8 && H.cal.etottracknorm>0.7 && H.cer.npeSum>2&&CTime.ePiCoinTime_ROC2>42.5 && CTime.ePiCoinTime_ROC2<47.5&&P.hgcer.npeSum>0.5&&H.gtr.th>-0.08&&H.gtr.th<0.08 && H.gtr.ph>-0.04 && H.gtr.ph < 0.04 && P.gtr.th>-0.05&&P.gtr.th<0.05 && P.gtr.ph>-0.05 && P.gtr.ph < 0.05 &&g.evtyp>3")
+
+
+
+For the combined >2.9 Gev runs fall+spring
+ (D2,al,H2)
+
+
+T->Draw("P.hgcer.xAtCer:P.hgcer.yAtCer>>h(300, -50, 50, 300,-50, 50)","P.gtr.dp>-10&&P.gtr.dp<20&&H.gtr.dp>-8&&H.gtr.dp<8 &&P.cal.etottracknorm<0.7&&H.cal.etottracknorm>0.75&&P.aero.npeSum>4&&CTime.ePiCoinTime_ROC2>42.5&&CTime.ePiCoinTime_ROC2<47.5 && H.hod.goodstarttime==1&& P.hod.goodstarttime==1&& P.dc.InsideDipoleExit==1&& H.dc.InsideDipoleExit==1&&H.cer.npeSum>1&&H.gtr.th>-0.08&&H.gtr.th<0.08 && H.gtr.ph>-0.04 && H.gtr.ph < 0.04 && P.gtr.th>-0.05&&P.gtr.th<0.05 && P.gtr.ph>-0.05 && P.gtr.ph < 0.05 &&g.evtyp>3&&P.hgcer.npeSum>0.5","colz")
+
+
+T->Draw("CTime.ePiCoinTime_ROC2>>h(100,35,55) "," P.gtr.dp>-10&&P.gtr.dp<20 && H.gtr.dp>-8 && H.gtr.dp<8 &&g.evtyp>3&&P.dc.InsideDipoleExit==1 && H.dc.InsideDipoleExit==1 && P.aero.npeSum>5 && P.cal.etottracknorm<0.8 && H.cal.etottracknorm>0.7 && H.cer.npeSum>2&&P.hgcer.npeSum>0.5 &&H.gtr.th>-0.08&&H.gtr.th<0.08 && H.gtr.ph>-0.04 && H.gtr.ph < 0.04 && P.gtr.th>-0.05&&P.gtr.th<0.05 && P.gtr.ph>-0.05 && P.gtr.ph < 0.05 &&g.evtyp>3")
+
+
+/////1//////////Define as many hists////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+these will be similar to these, 21 such
+TH1F *histcer1 = new TH1F("histcer1","", 100, 0,30);
+TH1F *histcer2 = new TH1F("histcer2","", 100, 0,30);
+
+short form is 
+TH1F *histcer[21];
+for(int i=1;i<22;i++){
+  histcer[i] = new TH1F(Form("histcer[%d]",i),"", 50, 0,35);
+ }
+
+
+/////2//////////Fill hists as 
+if(mom>2.9&&mom<=3.0){histcer0->Fill(hgcer);}
+if(mom>3.0&&mom<=3.1){histcer1->Fill(hgcer);}
+short form is 
+
+for(int i=1;i<22;i++){
+	  if(mom>2.8+0.1*i  &&  mom<=2.9+0.1*i){ histcer[i]->Fill(hgcer);}
+	}
+///////3/////////Define fit function for poisson dist
+
+ TF1 *f1 = new TF1("f1","[0]*TMath::Power(([1]/[2]),(x/[2]))*(TMath::Exp(-([1]/[2])))/TMath::Gamma((x/[2])+1)",2,12 );
+    f1->SetParameters(3500,5,1);
+ TF1 *f2 = new TF1("f2","[0]*TMath::Power(([1]/[2]),(x/[2]))*(TMath::Exp(-([1]/[2])))/TMath::Gamma((x/[2])+1)",2,12 );
+    f2->SetParameters(3500,5,1);
+
+.....21 such is done in short as
+
+ TF1 *fit[21];
+    for(int i=1;i<22;i++){
+
+      fit[i] = new TF1(Form("fit[%d]",i),"[0]*TMath::Power(([1]/[2]),(x/[2]))*(TMath::Exp(-([1]/[2])))/TMath::Gamma((x/[2])+1)",2,30 );
+      fit[i]->SetParameters(3500,8,0.2);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+6Remove region hole +left right strip
+
+      central_hole = (pow(hgc_yAtCer-1.33, 2) +  pow(hgc_xAtCer-0.83, 2) >= pow(2.54, 2));
+      right_or_left_of_hole = ((hgc_yAtCer > 1.33 && (hgc_xAtCer < 0.47 ||  hgc_xAtCer > 2.34) ) ||  (hgc_yAtCer < 1.33 && (hgc_xAtCer < 0.26 ||  hgc_xAtCer > 1.76)));
+
+///////////Pi- > 2.9 but some missings: 6559,60, 63,65,7679,7729 to 7735, 7793, 7794
+
+////////////////hadd pi- runs (miss 7699-7813, P>2.9GeV)
+
+hadd      pimpim_all_2p9plus_1.root coin_replay_production_6068_-1.root coin_replay_production_6070_-1.root coin_replay_production_6071_-1.root  coin_replay_production_6081_-1.root coin_replay_production_6080_-1.root coin_replay_production_6082_-1.root coin_replay_production_6083_-1.root coin_replay_production_6088_-1.root coin_replay_production_6089_-1.root coin_replay_production_6090_-1.root coin_replay_production_6087_-1.root coin_replay_production_6084_-1.root coin_replay_production_6085_-1.root coin_replay_production_6086_-1.root coin_replay_production_6545_-1.root coin_replay_production_6546_-1.root coin_replay_production_6548_-1.root coin_replay_production_6549_-1.root coin_replay_production_6547_-1.root coin_replay_production_6111_-1.root coin_replay_production_6112_-1.root coin_replay_production_6114_-1.root coin_replay_production_6109_-1.root coin_replay_production_6110_-1.root coin_replay_production_6104_-1.root coin_replay_production_6105_-1.root coin_replay_production_6106_-1.root coin_replay_production_6486_-1.root coin_replay_production_6487_-1.root coin_replay_production_6245_-1.root coin_replay_production_6246_-1.root coin_replay_production_6247_-1.root coin_replay_production_6242_-1.root coin_replay_production_6243_-1.root coin_replay_production_6244_-1.root coin_replay_production_6237_-1.root coin_replay_production_6240_-1.root coin_replay_production_6241_-1.root coin_replay_production_6248_-1.root coin_replay_production_6249_-1.root coin_replay_production_6250_-1.root coin_replay_production_6251_-1.root coin_replay_production_6252_-1.root coin_replay_production_6253_-1.root coin_replay_production_6255_-1.root coin_replay_production_6451_-1.root coin_replay_production_6452_-1.root coin_replay_production_6453_-1.root coin_replay_production_6454_-1.root coin_replay_production_6455_-1.root coin_replay_production_6459_-1.root coin_replay_production_6460_-1.root coin_replay_production_6461_-1.root coin_replay_production_6462_-1.root coin_replay_production_6463_-1.root coin_replay_production_6464_-1.root coin_replay_production_6456_-1.root coin_replay_production_6290_-1.root coin_replay_production_6291_-1.root coin_replay_production_6288_-1.root coin_replay_production_6289_-1.root coin_replay_production_6285_-1.root coin_replay_production_6286_-1.root coin_replay_production_6524_-1.root coin_replay_production_6525_-1.root coin_replay_production_6526_-1.root coin_replay_production_6522_-1.root coin_replay_production_6523_-1.root coin_replay_production_6527_-1.root coin_replay_production_6528_-1.root coin_replay_production_6529_-1.root coin_replay_production_6531_-1.root coin_replay_production_6532_-1.root coin_replay_production_7593_-1.root coin_replay_production_7594_-1.root coin_replay_production_7595_-1.root coin_replay_production_7596_-1.root coin_replay_production_7597_-1.root coin_replay_production_7600_-1.root coin_replay_production_7601_-1.root coin_replay_production_7602_-1.root coin_replay_production_7603_-1.root coin_replay_production_7604_-1.root coin_replay_production_7671_-1.root coin_replay_production_7672_-1.root coin_replay_production_7673_-1.root coin_replay_production_7674_-1.root coin_replay_production_7727_-1.root coin_replay_production_7728_-1.root coin_replay_production_7727_-1.root coin_replay_production_7728_-1.root coin_replay_production_7796_-1.root coin_replay_production_7797_-1.root coin_replay_production_7798_-1.root coin_replay_production_7799_-1.root coin_replay_production_7800_-1.root coin_replay_production_7801_-1.root coin_replay_production_7802_-1.root 
+//neg
+//6073 is not coin_replay_production_6073_-1.root
+
+Int_t runs[]=             { 6081,6068,6070,6071,6073,6081,6080,6082,6083,6088,6089,6090,6087,6084,6085,6086,6545,6546,6546,6548,6549,6547,6111,6112,6114,6109,6110,6104,6105,6106,6486,
+                            6487,6245,6246,6247,6242,6243,6244,6237,6250,6241,6248,6249,6250,6251,6252,6253,6255,6451,6452,6453,6454,6455,6459,6460,6461,6462,6463,6564,6456,6290,6291,
+			    6288,6289,6285,6286,6524,6525,6526,6522,6523,6527,6528,6529,6531,6532,7593,9594,7595,7596,7597,7600,7601,7602,7603,7604,7671,7672,7673,7674,7627,7728,7727,
+		I
+//_replay_production_6073_-1.root 
+
+=======missing July 1 piminus 
+
+
+===============
+t coin_replay_production_6070_-1.root 	    7728,7796,7797,7798,7799,7800,7801,7802 };
+
+////////////////hadd pi+ runs (miss 7699-7813, P>2.9GeV)
+hadd      piplus_gt2p9.root  coin_replay_production_6020_-1.root coin_replay_production_6021_-1.root coin_replay_production_6022_-1.root coin_replay_production_6026_-1.root coin_replay_production_6023_-1.root coin_replay_production_6024_-1.root coin_replay_production_6025_-1.root coin_replay_production_6026_-1.root coin_replay_production_6029_-1.root coin_replay_production_6030_-1.root coin_replay_production_6031_-1.root coin_replay_production_6032_-1.root coin_replay_production_6027_-1.root coin_replay_production_6028_-1.root coin_replay_production_6033_-1.root coin_replay_production_6034_-1.root coin_replay_production_6035_-1.root coin_replay_production_6036_-1.root coin_replay_production_6043_-1.root coin_replay_production_6044_-1.root coin_replay_production_6045_-1.root coin_replay_production_6046_-1.root coin_replay_production_6039_-1.root coin_replay_production_6038_-1.root coin_replay_production_6040_-1.root coin_replay_production_6041_-1.root coin_replay_production_6042_-1.root coin_replay_production_6537_-1.root coin_replay_production_6538_-1.root coin_replay_production_6541_-1.root coin_replay_production_6539_-1.root coin_replay_production_6145_-1.root coin_replay_production_6146_-1.root coin_replay_production_6154_-1.root coin_replay_production_6155_-1.root coin_replay_production_6168_-1.root coin_replay_production_6142_-1.root coin_replay_production_6144_-1.root coin_replay_production_6163_-1.root coin_replay_production_6164_-1.root coin_replay_production_6500_-1.root coin_replay_production_6501_-1.root coin_replay_production_6502_-1.root coin_replay_production_6194_-1.root coin_replay_production_6195_-1.root coin_replay_production_6196_-1.root coin_replay_production_6192_-1.root coin_replay_production_6193_-1.root coin_replay_production_6198_-1.root coin_replay_production_6199_-1.root coin_replay_production_6197_-1.root coin_replay_production_6200_-1.root coin_replay_production_6201_-1.root coin_replay_production_6419_-1.root coin_replay_production_6421_-1.root coin_replay_production_6422_-1.root coin_replay_production_6423_-1.root coin_replay_production_6525_-1.root coin_replay_production_6426_-1.root coin_replay_production_6429_-1.root coin_replay_production_6430_-1.root coin_replay_production_6431_-1.root coin_replay_production_6432_-1.root coin_replay_production_6433_-1.root coin_replay_production_6427_-1.root coin_replay_production_6428_-1.root coin_replay_production_6309_-1.root coin_replay_production_6310_-1.root coin_replay_production_6311_-1.root coin_replay_production_6312_-1.root coin_replay_production_6313_-1.root coin_replay_production_6314_-1.root coin_replay_production_6387_-1.root coin_replay_production_6388_-1.root coin_replay_production_6397_-1.root coin_replay_production_6398_-1.root coin_replay_production_6386_-1.root coin_replay_production_6389_-1.root coin_replay_production_6518_-1.root coin_replay_production_6519_-1.root coin_replay_production_6520_-1.root coin_replay_production_6521_-1.root coin_replay_production_6535_-1.root coin_replay_production_6536_-1.root coin_replay_production_6533_-1.root coin_replay_production_6534_-1.root coin_replay_production_7635_-1.root coin_replay_production_7636_-1.root coin_replay_production_7637_-1.root coin_replay_production_7638_-1.root coin_replay_production_7639_-1.root coin_replay_production_7699_-1.root coin_replay_production_7702_-1.root coin_replay_production_7703_-1.root coin_replay_production_7706_-1.root coin_replay_production_7707_-1.root coin_replay_production_7708_-1.root coin_replay_production_7709_-1.root coin_replay_production_7710_-1.root coin_replay_production_7711_-1.root coin_replay_production_7712_-1.root coin_replay_production_7763_-1.root coin_replay_production_7760_-1.root coin_replay_production_7762_-1.root coin_replay_production_7765_-1.root coin_replay_production_7766_-1.root coin_replay_production_7768_-1.root coin_replay_production_7769_-1.root coin_replay_production_7770_-1.root coin_replay_production_7771_-1.root coin_replay_production_7772_-1.root coin_replay_production_7808_-1.root coin_replay_production_7809_-1.root coin_replay_production_7811_-1.root coin_replay_production_7812_-1.root 
+
+//6420 does not work
+
+//pos
+ Int_t runs[] =     {6020,6021,7808,6022,6023,6026,6024,6025,6026,6029,6030,6031,6032,6027,6028,6033,6034,6035,6036,6043,6044,6045,6046,6039,6038,6040,6041,6042,6537,6538,6040,6041,6042,
+		      6537,6538,6541,6539,6145,6146,6154,6155,6168,6142,6144,6163,6164,6500,6501,6502,6194,6195,6196,6192,6193,6198,6199,6197,6200,6201,6419,6420,6421,6422,6423,6525,6426,
+		      6429,6430,6431,6432,6433,6427,6428,6309,6310,6311,6312,6313,6314,6387,6388,6397,6398,6386,6389,6518,6519,6520,6521,6535,6536,6533,6534,7635,7636,7637,7638,7639,7699,
+		      7702,7703,7706,7707,7708,7709,7710,7711,7712,1163,7760,7762,7765,7766,7768,7769,7770,7771,7772,7808,7809,7811,7812};//122
