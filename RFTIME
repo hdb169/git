@@ -1,0 +1,2 @@
+T->Draw("fmod(P.hod.starttime - T.coin.pRF_tdcTime+398.95,4.008)>>h1(100,0,4)","P.gtr.dp>-10&&P.gtr.dp<20&&H.gtr.dp>-8&&H.gtr.dp<8&&P.aero.npeSum>4&&H.cer.npeSum>2&&H.cal.etottracknorm>0.8&&P.cal.etottracknorm<0.8&&CTime.ePiCoinTime_ROC2>43.5&&CTime.ePiCoinTime_ROC2<47.5")
+Run 6556
