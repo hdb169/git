@@ -1,0 +1,3 @@
+covert .txt to .csv ubuntu terminal
+
+tr '\t' ',' < input.txt > output.csv
